@@ -1,20 +1,28 @@
 const cheerio = require('cheerio');
 var request = require('request-promise');
 
+/**
+ * Gets the semeter codes UVic uses to organize courses
+ *
+ * @returns {Object} an object containing semester values and calling values
+ */
 const getSemesterCodes = async () => {
 	try {
 		let response = await request('https://www.uvic.ca/BAN1P/bwckschd.p_disp_dyn_sched');
-		let data = {};
-
 		const $ = cheerio.load(response);
 
+		let data = {};
+
+		// Gets the p_calling key value pair
 		const input = $('input').get(0);
 		data.callingKey = $(input).attr('name');
 		data.callingValue = $(input).attr('value');
 
+		// Gets the p_term key
 		const select = $('select').get(0);
 		data.termKey = $(select).attr('name');
 
+		// Gets all active semester codes
 		const codes = [];
 		const semesters = $('option');
 		semesters.each((i, element) => {
