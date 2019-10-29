@@ -1,0 +1,23 @@
+Request:{
+  query:  "CSC 110",
+  semester: 201901
+}
+
+Responce:{
+  courses:[
+    {
+      title: "XXXXXXXX",
+      subject: "CSC",
+      code: 110,
+    },
+
+    {
+      .
+      .
+      .
+      .
+    }
+
+    ...
+  ]
+}
