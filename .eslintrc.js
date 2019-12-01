@@ -4,7 +4,7 @@ module.exports = {
     commonjs: true,
     es6: true,
   },
-  extends: 'eslint:recommended',
+  extends: ['eslint:recommended', 'plugin:node/recommended'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
@@ -18,5 +18,7 @@ module.exports = {
     'no-extra-semi': 'error',
     'no-regex-spaces': 'error',
     'array-callback-return': 'error',
+    'node/no-unpublished-require': 'off',
+    'node/no-unsupported-features/node-builtins': 'off',
   },
 };
