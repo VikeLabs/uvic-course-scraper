@@ -45,7 +45,7 @@ const getDepartments = async () => {
  *
  * @returns {string[]} an array of course codes
  */
-const getCourses = async (department: string) => {
+const getCourseCodes = async (department: string) => {
   try {
     const response = await request(`${BASE_URL}${department}`);
     const $ = cheerio.load(response);
@@ -84,6 +84,7 @@ const getSections = async (params: string) => {
     });
     return crns;
   } catch (error) {
+    console.error(error);
     throw new Error('Failed to get sections');
   }
 };
@@ -134,45 +135,81 @@ const getOffered = async (subject: string, code: string) => {
 
 const main = async () => {
   // Get all courses currently being offered
-  const failed = [];
-  const courses: {
-    [key: string]: string[];
-  } = {};
-  const departments = await getDepartments();
-  process.stdout.write('Getting courses for ');
-  for (const department of departments) {
-    process.stdout.cursorTo(20);
-    process.stdout.write(`${department}  `);
-    try {
-      const temp = await getCourses(department);
-      courses[department] = temp;
-    } catch (error) {
-      failed.push(department);
-    }
-  }
-  process.stdout.clearLine(0);
-  process.stdout.cursorTo(0);
-
+  const failed: string[] = [];
+  //   const courses: {
+  //     [key: string]: string[];
+  //   } = {};
   // Get data about each course - e.g. crns, terms offered
   const start = performance.now();
 
-  const test = [];
-  process.stdout.write('Getting data for ');
-  for (const subject of Object.keys(courses)) {
-    for (const code of courses[subject]) {
-      process.stdout.cursorTo(17);
-      process.stdout.write(`${subject} ${code}  `);
-      const avaliable = await getOffered(subject, code);
-      test.push(avaliable);
+  const departments = await getDepartments();
+
+  const results: Course[] = [];
+  for (const department of departments) {
+    try {
+      const courseCodes = await getCourseCodes(department);
+      console.log(`Getting courses for ${department}`);
+      const courses = await Promise.all(courseCodes.map(courseCode => getOffered(department, courseCode)));
+      console.log(`Completed getting courses for ${department}`);
+      if (!courses.flat) {
+        console.log('No flat method');
+        console.log(courses);
+      }
+      results.push(...courses.flat());
+    } catch (err) {
+      console.error(err);
     }
   }
-  process.stdout.clearLine(0);
-  process.stdout.cursorTo(0);
+
+  //   const results = getDepartments().then(departments =>
+  //     departments.map(department =>
+  //       getCourseCodes(department)
+  //         .then(courseCodes =>
+  //           courseCodes.map(course =>
+  //             getOffered(department, course).catch(() => {
+  //               failed.push(`failed to get offered: ${department} ${course}`);
+  //             })
+  //           )
+  //         )
+  //         .catch(() => {
+  //           failed.push(`Failed to get course codes: ${department}`);
+  //         })
+  //     )
+  //   );
+
+  //   const departments = await getDepartments();
+  //   process.stdout.write('Getting courses for ');
+  //   for (const department of departments) {
+  //     process.stdout.cursorTo(20);
+  //     process.stdout.write(`${department}  `);
+  //     try {
+  //       const depatmentCourses = await getCourseCodes(department);
+  //       courses[department] = depatmentCourses;
+  //     } catch (error) {
+  //       failed.push(department);
+  //     }
+  //   }
+  //   process.stdout.clearLine(0);
+  //   process.stdout.cursorTo(0);
+
+  //   const test = [];
+  //   process.stdout.write('Getting data for ');
+  //   for (const subject of Object.keys(courses)) {
+  //     for (const code of courses[subject]) {
+  //       process.stdout.cursorTo(17);
+  //       process.stdout.write(`${subject} ${code}  `);
+  //       const avaliable = await getOffered(subject, code);
+  //       test.push(avaliable);
+  //     }
+  //   }
+  //   process.stdout.clearLine(0);
+  //   process.stdout.cursorTo(0);
 
   const finish = performance.now();
+  console.log(failed);
   console.log(`Getting course data took ${(finish - start) / 60000} minutes`);
 
-  fs.writeFileSync('courses.json', JSON.stringify(test.flat()));
+  fs.writeFileSync('courses.json', JSON.stringify(results));
 };
 
 main();
