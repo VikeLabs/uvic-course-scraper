@@ -71,20 +71,29 @@ const getCourseCodes = async (department: string) => {
  * @returns {number[]} - an array of crns
  */
 const getSections = async (params: string) => {
+  const url = `${SECTIONS_URL}${params}`;
   try {
-    const response = await request(`${SECTIONS_URL}${params}`);
+    let response;
+    try {
+      response = await request(url, { family: 4 });
+    } catch (err) {
+      console.error('request error, getSections');
+      console.error(err);
+      throw new Error(err);
+    }
     const $ = cheerio.load(response);
 
     const crns: string[] = [];
     $('a').each((index, element) => {
       const temp = $(element).attr('href');
-      if (temp && /crn_in=(\d+)/g.test(temp)) {
-        crns.push(temp.match(/crn_in=(\d+)/)![1]);
+      const match = temp ? temp.match(/crn_in=(\d+)/) : undefined;
+      if (match) {
+        crns.push(match[1]);
       }
     });
     return crns;
   } catch (error) {
-    console.error(error);
+    console.error(url);
     throw new Error('Failed to get sections');
   }
 };
@@ -105,8 +114,17 @@ const getSections = async (params: string) => {
  * @returns {Course} - an array of all courses currently offered
  */
 const getOffered = async (subject: string, code: string) => {
+  const url = `${BASE_URL}${subject}/${code}.html`;
   try {
-    const response = await request(`${BASE_URL}${subject}/${code}.html`);
+    let response;
+    try {
+      response = await request(url, { family: 4 });
+    } catch (err) {
+      console.error('request error, getOffered');
+      console.error(err);
+
+      throw new Error(err);
+    }
     const $ = cheerio.load(response);
 
     const title = $('h2').text();
@@ -129,17 +147,13 @@ const getOffered = async (subject: string, code: string) => {
     }
     return courses;
   } catch (error) {
+    console.error(url);
     throw new Error('Failed to get avaliable sections');
   }
 };
 
 const main = async () => {
-  // Get all courses currently being offered
   const failed: string[] = [];
-  //   const courses: {
-  //     [key: string]: string[];
-  //   } = {};
-  // Get data about each course - e.g. crns, terms offered
   const start = performance.now();
 
   const departments = await getDepartments();
@@ -148,62 +162,16 @@ const main = async () => {
   for (const department of departments) {
     try {
       const courseCodes = await getCourseCodes(department);
-      console.log(`Getting courses for ${department}`);
-      const courses = await Promise.all(courseCodes.map(courseCode => getOffered(department, courseCode)));
-      console.log(`Completed getting courses for ${department}`);
-      if (!courses.flat) {
-        console.log('No flat method');
-        console.log(courses);
-      }
+      process.stdout.clearLine(0);
+      process.stdout.cursorTo(0);
+      process.stdout.write(`Getting courses for ${department}`);
+      const courses = await Promise.all(courseCodes.map(async courseCode => await getOffered(department, courseCode)));
+      //   console.log(`Completed getting courses for ${department}`);
       results.push(...courses.flat());
     } catch (err) {
       console.error(err);
     }
   }
-
-  //   const results = getDepartments().then(departments =>
-  //     departments.map(department =>
-  //       getCourseCodes(department)
-  //         .then(courseCodes =>
-  //           courseCodes.map(course =>
-  //             getOffered(department, course).catch(() => {
-  //               failed.push(`failed to get offered: ${department} ${course}`);
-  //             })
-  //           )
-  //         )
-  //         .catch(() => {
-  //           failed.push(`Failed to get course codes: ${department}`);
-  //         })
-  //     )
-  //   );
-
-  //   const departments = await getDepartments();
-  //   process.stdout.write('Getting courses for ');
-  //   for (const department of departments) {
-  //     process.stdout.cursorTo(20);
-  //     process.stdout.write(`${department}  `);
-  //     try {
-  //       const depatmentCourses = await getCourseCodes(department);
-  //       courses[department] = depatmentCourses;
-  //     } catch (error) {
-  //       failed.push(department);
-  //     }
-  //   }
-  //   process.stdout.clearLine(0);
-  //   process.stdout.cursorTo(0);
-
-  //   const test = [];
-  //   process.stdout.write('Getting data for ');
-  //   for (const subject of Object.keys(courses)) {
-  //     for (const code of courses[subject]) {
-  //       process.stdout.cursorTo(17);
-  //       process.stdout.write(`${subject} ${code}  `);
-  //       const avaliable = await getOffered(subject, code);
-  //       test.push(avaliable);
-  //     }
-  //   }
-  //   process.stdout.clearLine(0);
-  //   process.stdout.cursorTo(0);
 
   const finish = performance.now();
   console.log(failed);
