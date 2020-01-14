@@ -10,7 +10,6 @@
   "author": "Joel Kerfoot",
   "license": "ISC",
   "dependencies": {
-    "@types/request-promise": "^4.1.45",
     "cheerio": "^1.0.0-rc.3",
     "form-data": "^2.5.1",
     "request": "^2.88.0",
@@ -18,6 +17,7 @@
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.15",
+    "@types/request-promise": "^4.1.45",
     "@typescript-eslint/eslint-plugin": "^2.15.0",
     "@typescript-eslint/parser": "^2.15.0",
     "eslint": "^6.8.0",
