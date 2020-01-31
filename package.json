@@ -4,10 +4,11 @@
   "description": "Uvic Web Scrapper",
   "main": "index.js",
   "scripts": {
+    "dev": "ts-node-dev src/scraper.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src/**/*.ts"
   },
-  "author": "Joel Kerfoot",
+  "author": "Vikelabs",
   "license": "ISC",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
@@ -25,6 +26,7 @@
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-prettier": "^3.1.2",
     "prettier": "^1.19.1",
+    "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.7.4"
   }
 }
