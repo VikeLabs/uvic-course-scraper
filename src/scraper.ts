@@ -2,6 +2,7 @@ import cheerio from 'cheerio';
 import request from 'request-promise';
 import { performance } from 'perf_hooks';
 import fs from 'fs';
+import * as readline from 'readline';
 
 const BASE_URL = 'https://web.uvic.ca/calendar2020-01/CDs/';
 const SECTIONS_URL = 'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse';
@@ -71,29 +72,21 @@ const getCourseCodes = async (department: string) => {
  * @returns {number[]} - an array of crns
  */
 const getSections = async (params: string) => {
-  const url = `${SECTIONS_URL}${params}`;
   try {
-    let response;
-    try {
-      response = await request(url, { family: 4 });
-    } catch (err) {
-      console.error('request error, getSections');
-      console.error(err);
-      throw new Error(err);
-    }
+    // response = await request(url, { family: 4 });
+    const response = await request(`${SECTIONS_URL}${params}`);
     const $ = cheerio.load(response);
 
     const crns: string[] = [];
     $('a').each((index, element) => {
       const temp = $(element).attr('href');
-      const match = temp ? temp.match(/crn_in=(\d+)/) : undefined;
-      if (match) {
-        crns.push(match[1]);
+      if (temp && /crn_in=(\d+)/g.test(temp)) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        crns.push(temp.match(/crn_in=(\d+)/)![1]);
       }
     });
     return crns;
   } catch (error) {
-    console.error(url);
     throw new Error('Failed to get sections');
   }
 };
@@ -114,17 +107,8 @@ const getSections = async (params: string) => {
  * @returns {Course} - an array of all courses currently offered
  */
 const getOffered = async (subject: string, code: string) => {
-  const url = `${BASE_URL}${subject}/${code}.html`;
   try {
-    let response;
-    try {
-      response = await request(url, { family: 4 });
-    } catch (err) {
-      console.error('request error, getOffered');
-      console.error(err);
-
-      throw new Error(err);
-    }
+    const response = await request(`${BASE_URL}${subject}/${code}.html`);
     const $ = cheerio.load(response);
 
     const title = $('h2').text();
@@ -147,34 +131,41 @@ const getOffered = async (subject: string, code: string) => {
     }
     return courses;
   } catch (error) {
-    console.error(url);
     throw new Error('Failed to get avaliable sections');
   }
 };
 
 const main = async () => {
-  const failed: string[] = [];
+  // Hide cursor and start timer
+  process.stdout.write('\u001B[?25l');
   const start = performance.now();
 
+  const failed: string[] = [];
   const departments = await getDepartments();
 
+  process.stdout.write('Getting courses for ');
   const results: Course[] = [];
   for (const department of departments) {
     try {
+      readline.cursorTo(process.stdout, 20);
+      process.stdout.write(`${department}  `);
       const courseCodes = await getCourseCodes(department);
-      process.stdout.clearLine(0);
-      process.stdout.cursorTo(0);
-      process.stdout.write(`Getting courses for ${department}`);
-      const courses = await Promise.all(courseCodes.map(async courseCode => await getOffered(department, courseCode)));
-      //   console.log(`Completed getting courses for ${department}`);
+      const courses = await Promise.all(courseCodes.map(async code => await getOffered(department, code)));
       results.push(...courses.flat());
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      failed.push(department);
     }
   }
+  readline.clearLine(process.stdout, 0);
+  readline.cursorTo(process.stdout, 0);
 
+  // Stop timer and show cursor
   const finish = performance.now();
-  console.log(failed);
+  process.stdout.write('\u001B[?25h');
+
+  if (failed.length) {
+    console.log(failed);
+  }
   console.log(`Getting course data took ${(finish - start) / 60000} minutes`);
 
   fs.writeFileSync('courses.json', JSON.stringify(results));
