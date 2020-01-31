@@ -4,7 +4,7 @@
   "description": "Uvic Web Scrapper",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev src/temp.ts",
+    "dev": "ts-node-dev src/scraper.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src/**/*.ts"
   },
