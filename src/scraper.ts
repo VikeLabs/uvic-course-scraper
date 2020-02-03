@@ -2,6 +2,7 @@ import cheerio from 'cheerio';
 import request from 'request-promise';
 import { performance } from 'perf_hooks';
 import fs from 'fs';
+import * as readline from 'readline';
 
 const BASE_URL = 'https://web.uvic.ca/calendar2020-01/CDs/';
 const SECTIONS_URL = 'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse';
@@ -45,7 +46,7 @@ const getDepartments = async () => {
  *
  * @returns {string[]} an array of course codes
  */
-const getCourses = async (department: string) => {
+const getCourseCodes = async (department: string) => {
   try {
     const response = await request(`${BASE_URL}${department}`);
     const $ = cheerio.load(response);
@@ -72,6 +73,7 @@ const getCourses = async (department: string) => {
  */
 const getSections = async (params: string) => {
   try {
+    // response = await request(url, { family: 4 });
     const response = await request(`${SECTIONS_URL}${params}`);
     const $ = cheerio.load(response);
 
@@ -79,6 +81,7 @@ const getSections = async (params: string) => {
     $('a').each((index, element) => {
       const temp = $(element).attr('href');
       if (temp && /crn_in=(\d+)/g.test(temp)) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         crns.push(temp.match(/crn_in=(\d+)/)![1]);
       }
     });
@@ -133,46 +136,39 @@ const getOffered = async (subject: string, code: string) => {
 };
 
 const main = async () => {
-  // Get all courses currently being offered
-  const failed = [];
-  const courses: {
-    [key: string]: string[];
-  } = {};
+  // Hide cursor and start timer
+  process.stdout.write('\u001B[?25l');
+  const start = performance.now();
+
+  const failed: string[] = [];
   const departments = await getDepartments();
+
   process.stdout.write('Getting courses for ');
+  const results: Course[] = [];
   for (const department of departments) {
-    process.stdout.cursorTo(20);
-    process.stdout.write(`${department}  `);
     try {
-      const temp = await getCourses(department);
-      courses[department] = temp;
+      readline.cursorTo(process.stdout, 20);
+      process.stdout.write(`${department}  `);
+      const courseCodes = await getCourseCodes(department);
+      const courses = await Promise.all(courseCodes.map(async code => await getOffered(department, code)));
+      results.push(...courses.flat());
     } catch (error) {
       failed.push(department);
     }
   }
-  process.stdout.clearLine(0);
-  process.stdout.cursorTo(0);
+  readline.clearLine(process.stdout, 0);
+  readline.cursorTo(process.stdout, 0);
 
-  // Get data about each course - e.g. crns, terms offered
-  const start = performance.now();
-
-  const test = [];
-  process.stdout.write('Getting data for ');
-  for (const subject of Object.keys(courses)) {
-    for (const code of courses[subject]) {
-      process.stdout.cursorTo(17);
-      process.stdout.write(`${subject} ${code}  `);
-      const avaliable = await getOffered(subject, code);
-      test.push(avaliable);
-    }
-  }
-  process.stdout.clearLine(0);
-  process.stdout.cursorTo(0);
-
+  // Stop timer and show cursor
   const finish = performance.now();
+  process.stdout.write('\u001B[?25h');
+
+  if (failed.length) {
+    console.log(failed);
+  }
   console.log(`Getting course data took ${(finish - start) / 60000} minutes`);
 
-  fs.writeFileSync('courses.json', JSON.stringify(test.flat()));
+  fs.writeFileSync('courses.json', JSON.stringify(results));
 };
 
 main();
