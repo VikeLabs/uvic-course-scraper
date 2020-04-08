@@ -5,10 +5,9 @@ import fs from 'fs';
 import * as readline from 'readline';
 
 const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
-const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/'
 const SECTIONS_URL = 'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse';
 
-const TERMS = ["201909", "202101", "202005"];
+const TERMS = ['201909', '202101', '202005'];
 
 interface Course {
   code: string;
@@ -18,28 +17,28 @@ interface Course {
   term: string;
 }
 
-interface course {
-  [key: string]: any
-  __catalogCourseId: string
-  pid: string
-  subject: string
-  code: string
+interface ParsedCourse {
+  [key: string]: string;
+  __catalogCourseId: string;
+  pid: string;
+  subject: string;
+  code: string;
 }
 
 /**
  * Gets Course subject, code, pid for all courses
  *
- * @returns {course[]} an array of all the courses
+ * @returns {ParsedCourse[]} an array of all the courses
  */
-const getCourses = async (): Promise<course[]> => {
+const getCourses = async (): Promise<ParsedCourse[]> => {
   try {
     const response = await request(COURSES_URL);
-    let courses = JSON.parse(response);
-    for (let course of courses) {
-      course.subject = course.subjectCode.name
-      course.code = course.__catalogCourseId.slice(course.subject.length)
+    const courses = JSON.parse(response);
+    for (const course of courses) {
+      course.subject = course.subjectCode.name;
+      course.code = course.__catalogCourseId.slice(course.subject.length);
     }
-    return courses
+    return courses;
   } catch (error) {
     console.log(error);
     throw new Error('Failed to get department data');
@@ -91,7 +90,7 @@ const getSections = async (params: string) => {
  */
 const getOffered = async (title: string, subject: string, code: string) => {
   try {
-    const schedules: string[] = TERMS.map((term) => `?term_in=${term}&subj_in=${subject}&crse_in=${code}&schd_in=`)
+    const schedules: string[] = TERMS.map(term => `?term_in=${term}&subj_in=${subject}&crse_in=${code}&schd_in=`);
 
     const courses: Course[] = [];
     for (const schedule of schedules) {

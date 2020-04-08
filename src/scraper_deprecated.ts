@@ -78,7 +78,7 @@ const getCourseCodes = async (department: string) => {
 const getSections = async (params: string) => {
   try {
     // response = await request(url, { family: 4 });
-    console.log(`${SECTIONS_URL}${params}`)
+    console.log(`${SECTIONS_URL}${params}`);
     const response = await request(`${SECTIONS_URL}${params}`);
     const $ = cheerio.load(response);
 
@@ -150,11 +150,11 @@ const main = async () => {
 
   process.stdout.write('Getting courses for ');
   const results: Course[] = [];
-  let idx = 0
+  let idx = 0;
   for (const department of departments) {
-    idx++
+    idx++;
     if (idx > 2) {
-      break
+      break;
     }
     try {
       readline.cursorTo(process.stdout, 20);
