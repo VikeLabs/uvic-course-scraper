@@ -4,10 +4,12 @@ import { performance } from 'perf_hooks';
 import fs from 'fs';
 import * as readline from 'readline';
 
+import { getCurrentTerms } from './utils';
+
 const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
 const SECTIONS_URL = 'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse';
 
-const TERMS = ['201909', '202101', '202005'];
+const TERMS = getCurrentTerms(1);
 
 interface Course {
   code: string;
