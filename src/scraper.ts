@@ -3,8 +3,9 @@ import request from 'request-promise';
 import { performance } from 'perf_hooks';
 import fs from 'fs';
 import * as readline from 'readline';
+import async from 'async';
 
-import { getCurrentTerms } from './utils';
+import { getCurrentTerms, rateLimitedRequest, totalRequests, failedRequests } from './utils';
 
 const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
 const COURSE_DETAIL_URLS = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
@@ -191,7 +192,7 @@ const getSections = async (course: Course, term: string) => {
       course.offerings[`${term}`] = sections;
     }
   } catch (error) {
-    throw new Error('Failed to get sections');
+    throw new Error(`Failed to get sections: ${error}`);
   }
 };
 
@@ -200,39 +201,47 @@ const getOfferings = async (course: Course) => {
     course.offerings = {};
   }
   for (const term of TERMS) {
-    await getSections(course, term);
+    try {
+      await getSections(course, term);
+    } catch (e) {
+      await getSections(course, term);
+    }
   }
 };
 
 const main = async () => {
-  // Hide cursor and start timer
-  process.stdout.write('\u001B[?25l');
+  // start timer
   const start = performance.now();
 
-  const failed: Course[] = [];
-  const courses = (await getCourses()).filter(e => e.catalogCourseId === 'CSC225');
+  console.log('Getting all course ids');
+  const courses = await getCourses();
 
-  process.stdout.write('Getting courses for ');
-  for (const course of courses) {
-    try {
-      readline.cursorTo(process.stdout, 20);
-      process.stdout.write(`${course.catalogCourseId}`);
-      await getOfferings(course);
-    } catch (error) {
-      failed.push(course);
-    }
+  console.log('Getting courses offering');
+  let current: Course[] = courses;
+  while (current.length !== 0) {
+    console.log(`Getting offerings for ${current.length} courses`);
+    const failedCourses: Course[] = [];
+    await async.forEachOfLimit(current, 30, async (course, key, callback) => {
+      console.log(`${course.catalogCourseId} ${key}`);
+      try {
+        await getOfferings(course);
+        callback();
+        return;
+      } catch (e) {
+        console.log(`Failed ${course.catalogCourseId} ${key}: ${e}`);
+        failedCourses.push(course);
+        callback();
+        return;
+      }
+    });
+    current = failedCourses;
   }
-  readline.clearLine(process.stdout, 0);
-  readline.cursorTo(process.stdout, 0);
 
   // Stop timer and show cursor
   const finish = performance.now();
-  process.stdout.write('\u001B[?25h');
 
-  if (failed.length) {
-    console.log(failed);
-  }
   console.log(`Getting course data took ${(finish - start) / 60000} minutes`);
+  console.log(`${(finish - start) / courses.length} ms/course`);
 
   fs.writeFileSync('courses.json', JSON.stringify(courses));
 };

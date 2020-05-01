@@ -1,3 +1,5 @@
+import request from 'request-promise';
+
 enum term {
   '01',
   '05',
@@ -47,4 +49,39 @@ export function getCurrentTerms(plusMinus: number): string[] {
   terms.push(getTermString(currentYear, currentTerm, 0));
 
   return terms.sort();
+}
+
+interface QueuedRequest {
+  url: string;
+  resolve: (value: any) => void;
+  reject: (reason: any) => void;
+}
+
+let activeRequests = 0;
+export let totalRequests = 0;
+export let failedRequests = 0;
+const REQ_LIMIT = 15;
+const waitlist: QueuedRequest[] = [];
+export function rateLimitedRequest(url: string): Promise<any> {
+  if (activeRequests < REQ_LIMIT) {
+    activeRequests++;
+    totalRequests++;
+    return request(url)
+      .catch(e => {
+        failedRequests++;
+        throw e;
+      })
+      .finally(() => {
+        activeRequests--;
+        if (waitlist.length) {
+          const qReq = waitlist.shift();
+          if (qReq) {
+            rateLimitedRequest(qReq.url)
+              .then(qReq.resolve)
+              .catch(qReq.reject);
+          }
+        }
+      });
+  }
+  return new Promise((resolvedfn, rejectfn) => waitlist.push({ url: url, resolve: resolvedfn, reject: rejectfn }));
 }
