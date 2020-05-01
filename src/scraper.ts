@@ -14,19 +14,18 @@ const SECTIONS_URL = 'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse';
 const TERMS = getCurrentTerms(1);
 
 interface Course {
+  [key: string]: string | Offerings;
+  catalogCourseId: string;
   code: string;
-  sections: Section[];
+  offerings: Offerings;
   subject: string;
   title: string;
   term: string;
+  pid: string;
 }
 
-interface ParsedCourse {
-  [key: string]: string;
-  __catalogCourseId: string;
-  pid: string;
-  subject: string;
-  code: string;
+interface Offerings {
+  [key: string]: Section[];
 }
 
 interface Section {
@@ -53,15 +52,16 @@ interface Seating {
 /**
  * Gets Course subject, code, pid for all courses
  *
- * @returns {ParsedCourse[]} an array of all the courses
+ * @returns {Course[]} an array of all the courses
  */
-const getCourses = async (): Promise<ParsedCourse[]> => {
+const getCourses = async (): Promise<Course[]> => {
   try {
     const response = await request(COURSES_URL);
     const courses = JSON.parse(response);
     for (const course of courses) {
       course.subject = course.subjectCode.name;
       course.code = course.__catalogCourseId.slice(course.subject.length);
+      course.catalogCourseId = course.__catalogCourseId;
     }
     return courses;
   } catch (error) {
@@ -116,17 +116,19 @@ const getSectionDetails = async (endpoint: string | undefined) => {
  *
  * @returns {number[]} - an array of crns
  */
-const getSections = async (term: string, subject: string, code: string) => {
+const getSections = async (course: Course, term: string) => {
   try {
     // ex: https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse?term_in=202005&subj_in=CSC&crse_in=225&schd_in=
-    const response = await request(`${SECTIONS_URL}?term_in=${term}&subj_in=${subject}&crse_in=${code}&schd_in=`);
+    const response = await request(
+      `${SECTIONS_URL}?term_in=${term}&subj_in=${course.subject}&crse_in=${course.code}&schd_in=`
+    );
     const $ = cheerio.load(response);
 
     const sections: Section[] = [];
 
     const sectionEntries = $(`table[summary="This layout table is used to present the sections found"]>tbody>tr`);
     for (let sectionIdx = 0; sectionIdx < sectionEntries.length; sectionIdx += 2) {
-      let section: Section = {};
+      const section: Section = {};
 
       // Parse Title block e.g. "Algorithms and Data Structures I - 30184 - CSC 225 - A01"
       const title = $('a', sectionEntries[sectionIdx]);
@@ -135,8 +137,8 @@ const getSections = async (term: string, subject: string, code: string) => {
       section['CRN'] = parsedTitle[1].trim();
       section['Section Code'] = parsedTitle[3].trim();
 
-      // Get more information from section details page
-      section = { ...section, ...(await getSectionDetails($('a', sectionEntries[sectionIdx]).attr('href'))) };
+      // Get more information from section details page. Uncommenting this would increase runtime by at least x2
+      // section = { ...section, ...(await getSectionDetails($('a', sectionEntries[sectionIdx]).attr('href'))) };
 
       // Section info is divided into 2 table rows, here we get the second one
       const sectionEntry = sectionEntries[sectionIdx + 1];
@@ -185,41 +187,20 @@ const getSections = async (term: string, subject: string, code: string) => {
 
       sections.push(section);
     }
-    console.log('hi');
-
-    return sections;
+    if (sections.length > 0) {
+      course.offerings[`${term}`] = sections;
+    }
   } catch (error) {
     throw new Error('Failed to get sections');
   }
 };
 
-/**
- * Gets the courses that are currently being offered
- *
- * @param {string} subject a subject/department code - e.g. 'CSC'
- * @param {string} code a subject code - e.g. '421'
- *
- * @typedef {Object} Course
- * @property {numer} code - course code
- * @property {number[]} crns - section crns
- * @property {string} subject - the course department/subject
- * @property {string} title - the course title
- * @property {number} term - the term the course is offered
- *
- * @returns {Course} - an array of all courses currently offered
- */
-const getOffered = async (title: string, subject: string, code: string) => {
-  try {
-    const courses: Course[] = [];
-    for (const term of TERMS) {
-      const sections = await getSections(term, subject, code);
-      if (sections.length) {
-        courses.push({ code, sections, subject, title, term: term || '0' });
-      }
-    }
-    return courses;
-  } catch (error) {
-    throw new Error('Failed to get avaliable sections');
+const getOfferings = async (course: Course) => {
+  if (!course.offerings) {
+    course.offerings = {};
+  }
+  for (const term of TERMS) {
+    await getSections(course, term);
   }
 };
 
@@ -228,23 +209,17 @@ const main = async () => {
   process.stdout.write('\u001B[?25l');
   const start = performance.now();
 
-  const failed: string[] = [];
-  const courseCodes = await getCourses();
+  const failed: Course[] = [];
+  const courses = (await getCourses()).filter(e => e.catalogCourseId === 'CSC225');
 
   process.stdout.write('Getting courses for ');
-  const results: Course[] = [];
-  for (const course of courseCodes) {
+  for (const course of courses) {
     try {
-      if (course.subject !== `CSC`) {
-        continue;
-      }
       readline.cursorTo(process.stdout, 20);
-      process.stdout.write(`${course.__catalogCourseId}  `);
-      const courses = await getOffered(course.title, course.subject, course.code);
-      results.push(...courses.flat());
-      break;
+      process.stdout.write(`${course.catalogCourseId}`);
+      await getOfferings(course);
     } catch (error) {
-      failed.push(course.__catalogCourseId);
+      failed.push(course);
     }
   }
   readline.clearLine(process.stdout, 0);
@@ -259,7 +234,7 @@ const main = async () => {
   }
   console.log(`Getting course data took ${(finish - start) / 60000} minutes`);
 
-  fs.writeFileSync('courses.json', JSON.stringify(results));
+  fs.writeFileSync('courses.json', JSON.stringify(courses));
 };
 
 main();
