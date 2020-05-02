@@ -71,6 +71,10 @@ const getCourses = async (): Promise<Course[]> => {
   }
 };
 
+const getCourseDetail = async (course: Course) => {
+  course.details = await request(COURSE_DETAIL_URLS + course.pid).then(JSON.parse);
+};
+
 /**
  * Gets more details of the section. Most importantly, the section capacities
  * @param endpoint section details endpoint provided by the sections page
@@ -209,33 +213,44 @@ const getOfferings = async (course: Course) => {
   }
 };
 
+const forEachHelper = async (courses: Course[], asyncfn: (course: Course) => void, rateLimit: number) => {
+  let current: Course[] = courses;
+  while (current.length > 0) {
+    console.log(`Running \'${asyncfn.name}\' on ${current.length} courses`);
+
+    const failedCourses: Course[] = [];
+    await async.forEachOfLimit(current, rateLimit, async (course, key, callback) => {
+      try {
+        await asyncfn(course);
+      } catch (e) {
+        console.log(`Failed ${course.catalogCourseId} ${key}: ${e}`);
+        failedCourses.push(course);
+      } finally {
+        callback();
+        return;
+      }
+    });
+
+    if (failedCourses.length > 0) {
+      console.log(`Failed to get data on ${failedCourses.length} courses, retring`);
+    }
+    current = failedCourses;
+  }
+  return;
+};
+
 const main = async () => {
   // start timer
   const start = performance.now();
 
   console.log('Getting all course ids');
-  const courses = await getCourses();
+  const courses = (await getCourses()).filter(e => e.subject === 'CSC');
+
+  console.log('Getting course details');
+  await forEachHelper(courses, getCourseDetail, 35);
 
   console.log('Getting courses offering');
-  let current: Course[] = courses;
-  while (current.length !== 0) {
-    console.log(`Getting offerings for ${current.length} courses`);
-    const failedCourses: Course[] = [];
-    await async.forEachOfLimit(current, 25, async (course, key, callback) => {
-      console.log(`${course.catalogCourseId} ${key}`);
-      try {
-        await getOfferings(course);
-        callback();
-        return;
-      } catch (e) {
-        console.log(`Failed ${course.catalogCourseId} ${key}: ${e}`);
-        failedCourses.push(course);
-        callback();
-        return;
-      }
-    });
-    current = failedCourses;
-  }
+  await forEachHelper(courses, getOfferings, 25);
 
   // Stop timer and show cursor
   const finish = performance.now();
