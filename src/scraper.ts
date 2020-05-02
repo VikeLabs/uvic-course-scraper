@@ -1,11 +1,10 @@
 import cheerio from 'cheerio';
-import request from 'request-promise';
+import got from 'got';
 import { performance } from 'perf_hooks';
 import fs from 'fs';
-import * as readline from 'readline';
 import async from 'async';
 
-import { getCurrentTerms, rateLimitedRequest, totalRequests, failedRequests } from './utils';
+import { getCurrentTerms } from './utils';
 
 const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
 const COURSE_DETAIL_URLS = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
@@ -15,7 +14,8 @@ const SECTIONS_URL = 'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse';
 const TERMS = getCurrentTerms(1);
 
 interface Course {
-  [key: string]: string | Offerings;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: string | Offerings | any;
   catalogCourseId: string;
   code: string;
   offerings: Offerings;
@@ -57,12 +57,11 @@ interface Seating {
  */
 const getCourses = async (): Promise<Course[]> => {
   try {
-    const response = await request(COURSES_URL);
-    const courses = JSON.parse(response);
+    const courses: Course[] = await got(COURSES_URL).json();
     for (const course of courses) {
       course.subject = course.subjectCode.name;
-      course.code = course.__catalogCourseId.slice(course.subject.length);
       course.catalogCourseId = course.__catalogCourseId;
+      course.code = course.__catalogCourseId.slice(course.subject.length);
     }
     return courses;
   } catch (error) {
@@ -72,7 +71,7 @@ const getCourses = async (): Promise<Course[]> => {
 };
 
 const getCourseDetail = async (course: Course) => {
-  course.details = await request(COURSE_DETAIL_URLS + course.pid).then(JSON.parse);
+  course.details = await got(COURSE_DETAIL_URLS + course.pid).json();
 };
 
 /**
@@ -84,8 +83,8 @@ const getSectionDetails = async (endpoint: string | undefined) => {
     return {};
   }
   // ex: https://www.uvic.ca/BAN1P/bwckschd.p_disp_detail_sched?term_in=202005&crn_in=30184
-  const response = await request(DOMAIN_URL + endpoint);
-  const $ = cheerio.load(response);
+  const response = await got(DOMAIN_URL + endpoint);
+  const $ = cheerio.load(response.body);
   const seatElement = $(`table[summary="This layout table is used to present the seating numbers."]>tbody>tr`);
 
   const seatInfo = seatElement
@@ -124,10 +123,10 @@ const getSectionDetails = async (endpoint: string | undefined) => {
 const getSections = async (course: Course, term: string) => {
   try {
     // ex: https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse?term_in=202005&subj_in=CSC&crse_in=225&schd_in=
-    const response = await request(
+    const response = await got(
       `${SECTIONS_URL}?term_in=${term}&subj_in=${course.subject}&crse_in=${course.code}&schd_in=`
     );
-    const $ = cheerio.load(response);
+    const $ = cheerio.load(response.body);
 
     const sections: Section[] = [];
 
