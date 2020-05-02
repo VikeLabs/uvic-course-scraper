@@ -3,15 +3,15 @@ import got from 'got';
 import { performance } from 'perf_hooks';
 import fs from 'fs';
 import async from 'async';
+import ProgressBar from 'progress';
 
 import { getCurrentTerms } from './utils';
+const TERMS = getCurrentTerms(1);
 
 const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
 const COURSE_DETAIL_URLS = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
 const DOMAIN_URL = 'https://www.uvic.ca';
 const SECTIONS_URL = 'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse';
-
-const TERMS = getCurrentTerms(1);
 
 interface Course {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -70,6 +70,11 @@ const getCourses = async (): Promise<Course[]> => {
   }
 };
 
+/**
+ * Adds infomation to the provided course object.
+ *
+ * @param {Course} course the course object to extend
+ */
 const getCourseDetail = async (course: Course) => {
   course.details = await got(COURSE_DETAIL_URLS + course.pid).json();
 };
@@ -199,32 +204,42 @@ const getSections = async (course: Course, term: string) => {
   }
 };
 
+/**
+ * Adds offerings (term:sections) to the course object
+ * @param {Course} course course to extend with offerings
+ */
 const getOfferings = async (course: Course) => {
   if (!course.offerings) {
     course.offerings = {};
   }
   for (const term of TERMS) {
-    try {
-      await getSections(course, term);
-    } catch (e) {
-      await getSections(course, term);
-    }
+    await getSections(course, term);
   }
 };
 
+/**
+ * This is a helper function to iterate through courses and apply a given function for each course.
+ * This helper will retry failed function calls until the given function passes for all courses.
+ *
+ * @param courses courses to iterate through
+ * @param asyncfn function to apply to each course
+ * @param rateLimit limit the number of concurrently running functions
+ */
 const forEachHelper = async (courses: Course[], asyncfn: (course: Course) => void, rateLimit: number) => {
   let current: Course[] = courses;
   while (current.length > 0) {
     console.log(`Running \'${asyncfn.name}\' on ${current.length} courses`);
 
+    const bar = new ProgressBar(':bar :current/:total', { total: current.length });
     const failedCourses: Course[] = [];
     await async.forEachOfLimit(current, rateLimit, async (course, key, callback) => {
       try {
         await asyncfn(course);
       } catch (e) {
-        console.log(`Failed ${course.catalogCourseId} ${key}: ${e}`);
+        bar.interrupt(`Failed ${course.catalogCourseId} ${key}: ${e}`);
         failedCourses.push(course);
       } finally {
+        bar.tick();
         callback();
         return;
       }
@@ -251,7 +266,7 @@ const main = async () => {
   console.log('Getting courses offering');
   await forEachHelper(courses, getOfferings, 25);
 
-  // Stop timer and show cursor
+  // Stop timer
   const finish = performance.now();
 
   console.log(`Getting course data took ${(finish - start) / 60000} minutes`);

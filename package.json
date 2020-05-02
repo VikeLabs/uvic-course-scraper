@@ -13,11 +13,13 @@
   "dependencies": {
     "async": "^3.2.0",
     "cheerio": "^1.0.0-rc.3",
-    "got": "^11.1.0"
+    "got": "^11.1.0",
+    "progress": "^2.0.3"
   },
   "devDependencies": {
     "@types/async": "^3.2.1",
     "@types/cheerio": "^0.22.15",
+    "@types/progress": "^2.0.3",
     "@typescript-eslint/eslint-plugin": "^2.15.0",
     "@typescript-eslint/parser": "^2.15.0",
     "eslint": "^6.8.0",
