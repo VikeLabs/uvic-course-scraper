@@ -4,12 +4,12 @@ import { performance } from 'perf_hooks';
 import fs from 'fs';
 import * as readline from 'readline';
 
-import { getCurrentTerms } from './utils';
-
-const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
+const BASE_URL = 'https://web.uvic.ca/calendar2020-01/CDs/';
 const SECTIONS_URL = 'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse';
 
-const TERMS = getCurrentTerms(1);
+/**
+ * This is the scraper for the old API. The API changed 2020-05
+ */
 
 interface Course {
   code: string;
@@ -19,31 +19,52 @@ interface Course {
   term: string;
 }
 
-interface ParsedCourse {
-  [key: string]: string;
-  __catalogCourseId: string;
-  pid: string;
-  subject: string;
-  code: string;
-}
-
 /**
- * Gets Course subject, code, pid for all courses
+ * Gets the department/subject codes
  *
- * @returns {ParsedCourse[]} an array of all the courses
+ * @returns {string[]} an array of department codes
  */
-const getCourses = async (): Promise<ParsedCourse[]> => {
+const getDepartments = async () => {
   try {
-    const response = await request(COURSES_URL);
-    const courses = JSON.parse(response);
-    for (const course of courses) {
-      course.subject = course.subjectCode.name;
-      course.code = course.__catalogCourseId.slice(course.subject.length);
-    }
-    return courses;
+    const response = await request(BASE_URL);
+    const $ = cheerio.load(response);
+
+    const departments: string[] = [];
+    $('a').each((index, element) => {
+      const department = $(element).attr('href');
+      if (department && /^[A-Z]+/g.test(department)) {
+        departments.push(department.slice(0, -1));
+      }
+    });
+    return departments;
   } catch (error) {
     console.log(error);
     throw new Error('Failed to get department data');
+  }
+};
+
+/**
+ * Gets the course number codes
+ *
+ * @param {string} department a department code - e.g. 'CSC'
+ *
+ * @returns {string[]} an array of course codes
+ */
+const getCourseCodes = async (department: string) => {
+  try {
+    const response = await request(`${BASE_URL}${department}`);
+    const $ = cheerio.load(response);
+
+    const courses: string[] = [];
+    $('a').each((index, element) => {
+      const course = $(element).attr('href');
+      if (course && /^[0-7]+/g.test(course)) {
+        courses.push(course.slice(0, course.indexOf('.')));
+      }
+    });
+    return courses;
+  } catch (error) {
+    throw new Error('Failed to get course data');
   }
 };
 
@@ -57,8 +78,8 @@ const getCourses = async (): Promise<ParsedCourse[]> => {
 const getSections = async (params: string) => {
   try {
     // response = await request(url, { family: 4 });
+    console.log(`${SECTIONS_URL}${params}`);
     const response = await request(`${SECTIONS_URL}${params}`);
-
     const $ = cheerio.load(response);
 
     const crns: string[] = [];
@@ -90,9 +111,20 @@ const getSections = async (params: string) => {
  *
  * @returns {Course} - an array of all courses currently offered
  */
-const getOffered = async (title: string, subject: string, code: string) => {
+const getOffered = async (subject: string, code: string) => {
   try {
-    const schedules: string[] = TERMS.map(term => `?term_in=${term}&subj_in=${subject}&crse_in=${code}&schd_in=`);
+    const response = await request(`${BASE_URL}${subject}/${code}.html`);
+    const $ = cheerio.load(response);
+
+    const title = $('h2').text();
+
+    const schedules: string[] = [];
+    $('#schedules')
+      .find('a')
+      .each((index, element) => {
+        const temp = $(element).attr('href');
+        if (temp) schedules.push(temp.slice(temp.indexOf('?'), temp.length));
+      });
 
     const courses: Course[] = [];
     for (const schedule of schedules) {
@@ -114,18 +146,24 @@ const main = async () => {
   const start = performance.now();
 
   const failed: string[] = [];
-  const courseCodes = await getCourses();
+  const departments = await getDepartments();
 
   process.stdout.write('Getting courses for ');
   const results: Course[] = [];
-  for (const course of courseCodes) {
+  let idx = 0;
+  for (const department of departments) {
+    idx++;
+    if (idx > 2) {
+      break;
+    }
     try {
       readline.cursorTo(process.stdout, 20);
-      process.stdout.write(`${course.__catalogCourseId}  `);
-      const courses = await getOffered(course.title, course.subject, course.code);
+      process.stdout.write(`${department}  `);
+      const courseCodes = await getCourseCodes(department);
+      const courses = await Promise.all(courseCodes.map(async code => await getOffered(department, code)));
       results.push(...courses.flat());
     } catch (error) {
-      failed.push(course.__catalogCourseId);
+      failed.push(department);
     }
   }
   readline.clearLine(process.stdout, 0);
