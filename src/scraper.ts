@@ -129,7 +129,7 @@ const getSections = async (course: Course, term: string) => {
 
     const sectionEntries = $(`table[summary="This layout table is used to present the sections found"]>tbody>tr`);
     for (let sectionIdx = 0; sectionIdx < sectionEntries.length; sectionIdx += 2) {
-      const section: Section = {};
+      let section: Section = {};
 
       // Parse Title block e.g. "Algorithms and Data Structures I - 30184 - CSC 225 - A01"
       const title = $('a', sectionEntries[sectionIdx]);
@@ -139,7 +139,7 @@ const getSections = async (course: Course, term: string) => {
       section['Section Code'] = parsedTitle[3].trim();
 
       // Get more information from section details page. Uncommenting this would increase runtime by at least x2
-      // section = { ...section, ...(await getSectionDetails($('a', sectionEntries[sectionIdx]).attr('href'))) };
+      section = { ...section, ...(await getSectionDetails($('a', sectionEntries[sectionIdx]).attr('href'))) };
 
       // Section info is divided into 2 table rows, here we get the second one
       const sectionEntry = sectionEntries[sectionIdx + 1];
@@ -221,7 +221,7 @@ const main = async () => {
   while (current.length !== 0) {
     console.log(`Getting offerings for ${current.length} courses`);
     const failedCourses: Course[] = [];
-    await async.forEachOfLimit(current, 30, async (course, key, callback) => {
+    await async.forEachOfLimit(current, 25, async (course, key, callback) => {
       console.log(`${course.catalogCourseId} ${key}`);
       try {
         await getOfferings(course);
