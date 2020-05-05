@@ -76,6 +76,7 @@ const getCourses = async (): Promise<Course[]> => {
  * @param {Course} course the course object to extend
  */
 const getCourseDetail = async (course: Course) => {
+  // ex: https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/r1xcyOamN
   course.details = await got(COURSE_DETAIL_URLS + course.pid).json();
 };
 
@@ -118,12 +119,10 @@ const getSectionDetails = async (endpoint: string | undefined) => {
 };
 
 /**
- * Gets section info from "Class schedule Listing page"
- * @param {string} term term code - e.g. '202005'
- * @param {string} subject a subject/department code - e.g. 'CSC'
- * @param {string} code a subject code - e.g. '421'
+ * Extends course object with section info for term.
  *
- * @returns {number[]} - an array of crns
+ * @param {Course} course the course object to extend
+ * @param {string} term the term code
  */
 const getSections = async (course: Course, term: string) => {
   try {
@@ -205,7 +204,9 @@ const getSections = async (course: Course, term: string) => {
 };
 
 /**
- * Adds offerings (term:sections) to the course object
+ * Extends course with all course offerings.
+ * Uses global TERMS const to get term strings.
+ *
  * @param {Course} course course to extend with offerings
  */
 const getOfferings = async (course: Course) => {
