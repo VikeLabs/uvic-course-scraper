@@ -52,4 +52,3 @@ export interface Course {
 }
 
 export interface CourseDocument extends Course, Document { }
-export const CourseModel = model<CourseDocument>('course', CourseSchema);
