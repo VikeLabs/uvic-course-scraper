@@ -5,6 +5,7 @@ import fs from 'fs';
 import async from 'async';
 import ProgressBar from 'progress';
 
+import { Course, Seating, Section, Schedule } from './types';
 import { getCurrentTerms } from './utils';
 const TERMS = getCurrentTerms(1);
 
@@ -12,42 +13,10 @@ const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506
 const COURSE_DETAIL_URLS = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
 const DOMAIN_URL = 'https://www.uvic.ca';
 const SECTIONS_URL = 'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse';
-
-interface Course {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: string | Offerings | any;
-  catalogCourseId: string;
-  code: string;
-  offerings: Offerings;
-  subject: string;
-  title: string;
-  term: string;
-  pid: string;
-}
-
-interface Offerings {
-  [key: string]: Section[];
-}
-
-interface Section {
-  schedule?: Schedule[];
-  [key: string]: string | string[] | Schedule[] | undefined | Seating;
-}
-
-interface Schedule {
-  Type: string;
-  Time: string;
-  Days: string;
-  Where: string;
-  'Date Range': string;
-  'Schedule Type': string;
-  Instructors: string;
-}
-
-interface Seating {
-  Capacity: number;
-  Actual: number;
-  Remaining: number;
+interface SectionDetails {
+  seats: Seating;
+  waitlistSeats: Seating;
+  requirements: string[];
 }
 
 /**
@@ -77,17 +46,14 @@ const getCourses = async (): Promise<Course[]> => {
  */
 const getCourseDetail = async (course: Course) => {
   // ex: https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/r1xcyOamN
-  course.details = await got(COURSE_DETAIL_URLS + course.pid).json();
+  Object.assign(course, await got(COURSE_DETAIL_URLS + course.pid).json());
 };
 
 /**
  * Gets more details of the section. Most importantly, the section capacities
  * @param endpoint section details endpoint provided by the sections page
  */
-const getSectionDetails = async (endpoint: string | undefined) => {
-  if (!endpoint) {
-    return {};
-  }
+const getSectionDetails = async (endpoint: string): Promise<SectionDetails> => {
   // ex: https://www.uvic.ca/BAN1P/bwckschd.p_disp_detail_sched?term_in=202005&crn_in=30184
   const response = await got(DOMAIN_URL + endpoint);
   const $ = cheerio.load(response.body);
@@ -104,17 +70,17 @@ const getSectionDetails = async (endpoint: string | undefined) => {
     .filter(e => e.length);
   const idx = requirements.findIndex(e => e === 'Restrictions:');
   return {
-    Seats: {
-      Capacity: seatInfo[0],
-      Actual: seatInfo[1],
-      Remaining: seatInfo[2],
+    seats: {
+      capacity: seatInfo[0],
+      actual: seatInfo[1],
+      remaining: seatInfo[2],
     },
-    'Waitlist Seats': {
-      Capacity: seatInfo[3],
-      Actual: seatInfo[4],
-      Remaining: seatInfo[5],
+    waitlistSeats: {
+      capacity: seatInfo[3],
+      actual: seatInfo[4],
+      remaining: seatInfo[5],
     },
-    Requirements: requirements.slice(idx + 1),
+    requirements: requirements.slice(idx + 1),
   };
 };
 
@@ -136,17 +102,20 @@ const getSections = async (course: Course, term: string) => {
 
     const sectionEntries = $(`table[summary="This layout table is used to present the sections found"]>tbody>tr`);
     for (let sectionIdx = 0; sectionIdx < sectionEntries.length; sectionIdx += 2) {
-      let section: Section = {};
+      const section = {} as Section;
 
       // Parse Title block e.g. "Algorithms and Data Structures I - 30184 - CSC 225 - A01"
       const title = $('a', sectionEntries[sectionIdx]);
-      section['Description'] = title.text();
+      section.description = title.text();
       const parsedTitle = title.text().split('-');
-      section['CRN'] = parsedTitle[1].trim();
-      section['Section Code'] = parsedTitle[3].trim();
+      section.CRN = parsedTitle[1].trim();
+      section.sectionCode = parsedTitle[3].trim();
 
       // Get more information from section details page. Uncommenting this would increase runtime by at least x2
-      section = { ...section, ...(await getSectionDetails($('a', sectionEntries[sectionIdx]).attr('href'))) };
+      const sectionDetailsEndpoint = $('a', sectionEntries[sectionIdx]).attr('href');
+      if (sectionDetailsEndpoint) {
+        Object.assign(section, await getSectionDetails(sectionDetailsEndpoint));
+      }
 
       // Section info is divided into 2 table rows, here we get the second one
       const sectionEntry = sectionEntries[sectionIdx + 1];
@@ -157,15 +126,14 @@ const getSections = async (course: Course, term: string) => {
         .split('\n')
         .filter(e => e.length)
         .map(e => e.trim());
-      section[`Additional Info`] = sectionInfo[0];
-      for (let i = 1; i < 4; i++) {
-        const temp = sectionInfo[i].split(/:(.+)/);
-        section[`${temp[0]}`] = temp[1];
-      }
-      section['Location'] = sectionInfo[4];
-      section['Section Type'] = sectionInfo[5];
-      section['Instructional Method'] = sectionInfo[6];
-      section['Credits'] = sectionInfo[7];
+      section.additionalInfo = sectionInfo[0];
+      section.associatedTerm = sectionInfo[1].split(/:(.+)/)[1];
+      section.registrationDates = sectionInfo[2].split(/:(.+)/)[1];
+      section.levels = sectionInfo[3].split(/:(.+)/)[1];
+      section.location = sectionInfo[4];
+      section.sectionType = sectionInfo[5];
+      section.instructionalMethod = sectionInfo[6];
+      section.credits = sectionInfo[7];
 
       // Parse schedule table
       let scheduleEntries = $(
@@ -182,21 +150,21 @@ const getSections = async (course: Course, term: string) => {
           break;
         }
         scheduleData.push({
-          Type: scheduleEntries[0],
-          Time: scheduleEntries[1],
-          Days: scheduleEntries[2],
-          Where: scheduleEntries[3],
-          'Date Range': scheduleEntries[4],
-          'Schedule Type': scheduleEntries[5],
-          Instructors: scheduleEntries[6],
+          type: scheduleEntries[0],
+          time: scheduleEntries[1],
+          days: scheduleEntries[2],
+          where: scheduleEntries[3],
+          dateRange: scheduleEntries[4],
+          scheduleType: scheduleEntries[5],
+          instructors: scheduleEntries[6],
         });
       }
-      section['Schedule'] = scheduleData;
+      section.schedule = scheduleData;
 
       sections.push(section);
     }
     if (sections.length > 0) {
-      course.offerings[`${term}`] = sections;
+      course.offerings.push({ term: term, sections: sections });
     }
   } catch (error) {
     throw new Error(`Failed to get sections: ${error}`);
@@ -211,7 +179,7 @@ const getSections = async (course: Course, term: string) => {
  */
 const getOfferings = async (course: Course) => {
   if (!course.offerings) {
-    course.offerings = {};
+    course.offerings = [];
   }
   for (const term of TERMS) {
     await getSections(course, term);
@@ -259,7 +227,8 @@ const main = async () => {
   const start = performance.now();
 
   console.log('Getting all course ids');
-  const courses = (await getCourses()).filter(e => e.subject === 'CSC');
+  // const courses = (await getCourses()).filter(e => e.subject === 'CSC');
+  const courses = await getCourses();
 
   console.log('Getting course details');
   await forEachHelper(courses, getCourseDetail, 35);

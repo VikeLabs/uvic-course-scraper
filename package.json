@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "upload": "ts-node-dev src/uploader.ts",
-    "dev-scrape": "ts-node-dev src/scraper.ts",
+    "scrape": "ts-node-dev src/scraper.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src/**/*.ts"
   },

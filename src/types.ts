@@ -1,13 +1,13 @@
 import { Document, model } from 'mongoose';
 import { CourseSchema } from './schemas';
 
-interface Seating {
+export interface Seating {
   capacity: number;
   actual: number;
   remaining: number;
 }
 
-interface Schedule {
+export interface Schedule {
   type: string;
   time: string;
   days: string;
@@ -17,21 +17,38 @@ interface Schedule {
   instructors: string;
 }
 
-interface Term {
+export interface Section {
   term: string;
   CRN: string;
-  waitlist: Seating;
+  waitlistSeats: Seating;
   seats: Seating;
-  schdule: Schedule[];
+  schedule: Schedule[];
+  requirements: string[];
+  description: string;
+  sectionCode: string; //A01, B02, etc..
+  additionalInfo: string;
+  location: string;
+  sectionType: string;
+  instructionalMethod: string;
+  credits: string;
+  associatedTerm: string;
+  registrationDates: string;
+  levels: string;
+}
+
+interface Term {
+  term: string;
+  sections: Section[];
 }
 
 export interface Course {
-  courseId: string;
+  [key: string]: string | Term[] | any;
+  courseCatalogId: string;
+  code: string;
   subject: string;
-  courseCode: string;
   title: string;
-  description: string;
-  terms: Term[];
+  pid: string;
+  offerings: Term[];
 }
 
 export interface CourseDocument extends Course, Document { }
