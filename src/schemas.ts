@@ -16,19 +16,38 @@ const ScheduleSchema = new Schema({
   instructors: String,
 });
 
-const TermSchema = new Schema({
+const SectionSchema = new Schema({
   term: String,
   CRN: String,
-  waitlist: SeatingSchema,
+  waitlistSeats: SeatingSchema,
   seats: SeatingSchema,
-  schdule: [ScheduleSchema],
+  schedule: [ScheduleSchema],
+  requirements: [String],
+  description: String,
+  sectionCode: String, //A01, B02, etc..
+  additionalInfo: String,
+  location: String,
+  sectionType: String,
+  instructionalMethod: String,
+  credits: String,
+  associatedTerm: String,
+  registrationDates: String,
+  levels: String,
 });
 
-export const CourseSchema = new Schema({
-  courseId: String,
-  subject: String,
-  courseCode: String,
-  title: String,
-  description: String,
-  terms: [TermSchema],
+const TermSchema = new Schema({
+  term: String,
+  sections: [SectionSchema],
 });
+
+export const CourseSchema = new Schema(
+  {
+    courseCatalogId: String,
+    subject: String,
+    code: String,
+    title: String,
+    description: String,
+    offerings: [TermSchema],
+  },
+  { strict: false }
+);

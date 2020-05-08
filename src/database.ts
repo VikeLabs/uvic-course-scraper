@@ -31,3 +31,7 @@ export const disconnect = () => {
   }
   mongoose.disconnect();
 };
+
+export const clearDB = () => {
+  return database.dropCollection('courses');
+};
