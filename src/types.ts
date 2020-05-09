@@ -50,4 +50,4 @@ export interface Course {
   offerings: Term[];
 }
 
-export interface CourseDocument extends Course, Document { }
+export interface CourseDocument extends Course, Document {}
