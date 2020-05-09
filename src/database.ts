@@ -1,28 +1,32 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
 let database: mongoose.Connection;
 
+dotenv.config();
+
 export const connect = async () => {
-  // add your own uri below
-  const uri = 'mongodb://localhost:27017/test?retryWrites=true&w=majority';
   if (database) {
     return;
   }
-  await mongoose
-    .connect(uri, {
-      useNewUrlParser: true,
-      useFindAndModify: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    })
-    .catch(e => console.log(e));
+
+  let uri = process.env.MONGO_URI;
+  if (!uri) {
+    uri = 'mongodb://localhost:27017/test?retryWrites=true&w=majority';
+    console.log(`MONGO_URI not found, using default - ${uri}`);
+  }
+
+  console.log('Attempting to connect to mongo...');
+
+  await mongoose.connect(uri, {
+    useNewUrlParser: true,
+    useFindAndModify: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+  });
+
   database = mongoose.connection;
-  database.once('open', async () => {
-    console.log('Connected to database');
-  });
-  database.on('error', () => {
-    console.log('Error connecting to database');
-  });
+  console.log('Connected to mongo');
 };
 
 export const disconnect = () => {

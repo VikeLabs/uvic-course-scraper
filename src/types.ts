@@ -1,5 +1,4 @@
-import { Document, model } from 'mongoose';
-import { CourseSchema } from './schemas';
+import { Document } from 'mongoose';
 
 export interface Seating {
   capacity: number;

@@ -10,7 +10,12 @@ dotenv.config();
 
 const main = async () => {
   const courseData: Course[] = JSON.parse(fs.readFileSync('courses.json').toString());
-  await connect();
+  try {
+    await connect();
+  } catch (e) {
+    console.log(`Failed to connect to db ${e}`);
+    return;
+  }
   await clearDB();
 
   const CourseModel = model<CourseDocument>('course', CourseSchema);
