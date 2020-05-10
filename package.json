@@ -4,7 +4,8 @@
   "description": "Uvic Web Scrapper",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev src/scraper.ts",
+    "upload": "ts-node-dev src/uploader.ts",
+    "scrape": "ts-node-dev src/scraper.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src/**/*.ts"
   },
@@ -13,12 +14,15 @@
   "dependencies": {
     "async": "^3.2.0",
     "cheerio": "^1.0.0-rc.3",
+    "dotenv": "^8.2.0",
     "got": "^11.1.0",
+    "mongoose": "^5.9.12",
     "progress": "^2.0.3"
   },
   "devDependencies": {
     "@types/async": "^3.2.1",
     "@types/cheerio": "^0.22.15",
+    "@types/mongoose": "^5.7.15",
     "@types/progress": "^2.0.3",
     "@typescript-eslint/eslint-plugin": "^2.15.0",
     "@typescript-eslint/parser": "^2.15.0",
