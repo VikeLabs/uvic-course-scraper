@@ -1,37 +1,40 @@
 {
-  "name": "scrapper",
+  "name": "scheduler-scraper",
   "version": "1.0.0",
-  "description": "Uvic Web Scrapper",
+  "description": "UVic Web Scrapper",
   "main": "index.js",
   "scripts": {
     "upload": "ts-node-dev src/uploader.ts",
     "scrape": "ts-node-dev src/scraper.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "eslint src/**/*.ts"
   },
-  "author": "Vikelabs",
-  "license": "ISC",
+  "author": "VikeLabs",
+  "license": "GPL-3.0",
   "dependencies": {
     "async": "^3.2.0",
     "cheerio": "^1.0.0-rc.3",
     "dotenv": "^8.2.0",
-    "got": "^11.1.0",
-    "mongoose": "^5.9.12",
+    "got": "^11.7.0",
+    "jest": "^26.5.3",
+    "mongoose": "^5.10.9",
     "progress": "^2.0.3"
   },
   "devDependencies": {
-    "@types/async": "^3.2.1",
-    "@types/cheerio": "^0.22.15",
-    "@types/mongoose": "^5.7.15",
+    "@types/async": "^3.2.3",
+    "@types/cheerio": "^0.22.22",
+    "@types/jest": "^26.0.14",
+    "@types/mongoose": "^5.7.36",
     "@types/progress": "^2.0.3",
-    "@typescript-eslint/eslint-plugin": "^2.15.0",
-    "@typescript-eslint/parser": "^2.15.0",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
     "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.9.0",
+    "eslint-config-prettier": "^6.12.0",
     "eslint-plugin-node": "^10.0.0",
-    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-prettier": "^3.1.4",
     "prettier": "^1.19.1",
-    "ts-node-dev": "^1.0.0-pre.44",
-    "typescript": "^3.7.4"
+    "ts-jest": "^26.4.1",
+    "ts-node-dev": "^1.0.0-pre.63",
+    "typescript": "^3.9.7"
   }
 }
