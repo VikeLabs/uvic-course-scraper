@@ -1,7 +1,7 @@
 {
-  "name": "scrapper",
+  "name": "scheduler-scraper",
   "version": "1.0.0",
-  "description": "Uvic Web Scrapper",
+  "description": "UVic Web Scrapper",
   "main": "index.js",
   "scripts": {
     "upload": "ts-node-dev src/uploader.ts",
@@ -9,8 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src/**/*.ts"
   },
-  "author": "Vikelabs",
-  "license": "ISC",
+  "author": "VikeLabs",
+  "license": "GPL-3.0",
   "dependencies": {
     "async": "^3.2.0",
     "cheerio": "^1.0.0-rc.3",
