@@ -1,0 +1,406 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
+<HTML lang="en">
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Pragma" name="Cache-Control" content="no-cache">
+<meta http-equiv="Cache-Control" name="Cache-Control" content="no-cache">
+<LINK REL="stylesheet" HREF="/css/web_defaultapp.css" TYPE="text/css">
+<LINK REL="stylesheet" HREF="/css/web_defaultprint.css" TYPE="text/css" media="print">
+<title>Search for Courses</title>
+<meta http-equiv="Content-Script-Type" name="Default_Script_Language" content="text/javascript">
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!-- Hide JavaScript from older browsers 
+window.onunload = function() {submitcount=0;}
+var submitcount=0;
+function checkSubmit() {
+if (submitcount == 0)
+   {
+   submitcount++;
+   return true;
+   }
+else
+   {
+alert("Your changes have already been submitted.");
+   return false;
+   }
+}
+//  End script hiding -->
+</SCRIPT>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!-- Hide JavaScript from older browsers 
+//  Function to open a window
+function windowOpen(window_url) {
+   helpWin = window.open(window_url,'','toolbar=yes,status=no,scrollbars=yes,menubar=yes,resizable=yes,directories=no,location=no,width=350,height=400');
+   if (document.images) { 
+       if (helpWin) helpWin.focus()
+   }
+}
+//  End script hiding -->
+</SCRIPT>
+<script src="/js/uvic.pack.js" language="javascript1.4" type="text/javascript" ></script>
+</head>
+<body>
+<div class="headerwrapperdiv">
+<div class="pageheaderdiv1">
+<a href="#main_content" onMouseover="window.status='Go to Main Content'; return true" onMouseout="window.status=''; return true" OnFocus="window.status='Go to Main Content'; return true" onBlur="window.status=''; return true" class="skiplinks">Go to Main Content</a>
+<h1>UVic</h1></DIV><div class="headerlinksdiv">
+</DIV>
+<table  CLASS="plaintable" SUMMARY="This table displays Menu Items and Banner Search textbox."
+         WIDTH="100%">
+<tr>
+<TD CLASS="pldefault">
+<div class="headerlinksdiv2">
+&nbsp;
+</div>
+</TD>
+<TD CLASS="pldefault"><p class="rightaligntext" /p>
+<SPAN class="pageheaderlinks">
+<a href="/wtlhelp/twbhhelp.htm" accesskey="H" onClick="popup = window.open('/wtlhelp/twbhhelp.htm', 'PopupPage','height=500,width=450,scrollbars=yes,resizable=yes'); return false" target="_blank" onMouseOver="window.status='';  return true" onMouseOut="window.status=''; return true"onFocus="window.status='';  return true" onBlur="window.status=''; return true"  class="submenulinktext2">HELP</a>
+|
+<a href="twbkwbis.P_Logout" accesskey="3" class="submenulinktext2">EXIT</a>
+</span>
+</TD>
+</tr>
+</table>
+</DIV>
+<div class="pagetitlediv">
+<table  CLASS="plaintable" SUMMARY="This table displays title and static header displays."
+   WIDTH="100%">
+<tr>
+<TD CLASS="pldefault">
+<h2>Search for Courses</h2>
+</TD>
+<TD CLASS="pldefault">
+&nbsp;
+</TD>
+<TD CLASS="pldefault"><p class="rightaligntext" /p>
+<div class="staticheaders">
+Second Term: Jan - Apr 2020<br>
+Oct 15, 2020<br>
+</div>
+</TD>
+</tr>
+<tr>
+<TD class="bg3" width="100%" colSpan=3><img src="/wtlgifs/web_transparent.gif" alt="Transparent Image" CLASS="headerImg" TITLE="Transparent Image"  NAME="web_transparent" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=3 WIDTH=10 /></TD>
+</tr>
+</table>
+<a name="main_content"></a>
+</DIV>
+<div class="pagebodydiv">
+<!--  ** END OF twbkwbis.P_OpenDoc **  -->
+<div class="infotextdiv"><table  CLASS="infotexttable" SUMMARY="This layout table contains information that may be helpful in understanding the content and functionality of this page.  It could be a brief set of instructions, a description of error messages, or other special information."><tr><td CLASS="indefault"><SPAN class="infotext"> Use any combination of selection options to narrow your search for courses.  You must choose at least one Subject.  When your selection is complete, choose Get Courses to perform the search.
+
+<script src="/js/ssb/bwckctlg.p_disp_dyn_ctlg.js" language="javascript1.4" type="text/javascript" ></script></SPAN></td></tr></table><p></DIV>
+<br />
+<form action="/BAN1P/bwckctlg.p_display_courses" method="post">
+<input type="hidden" name="term_in" value="202001" />
+<input type="hidden" name="call_proc_in" value="bwckctlg.p_disp_dyn_ctlg" />
+<input type="hidden" name="sel_subj" value="dummy" />
+<input type="hidden" name="sel_levl" value="dummy" />
+<input type="hidden" name="sel_schd" value="dummy" />
+<input type="hidden" name="sel_coll" value="dummy" />
+<input type="hidden" name="sel_divs" value="dummy" />
+<input type="hidden" name="sel_dept" value="dummy" />
+<input type="hidden" name="sel_attr" value="dummy" />
+<table  CLASS="dataentrytable" SUMMARY="This table is used for input criteria for catalog courses.">
+<tr>
+<td CLASS="delabel" scope="row" ><LABEL for=subj_id><SPAN class="fieldlabeltext">Subject: </SPAN></LABEL></td>
+<TD CLASS="dedefault">
+<select name="sel_subj" size="3" MULTIPLE ID="subj_id">
+<OPTION VALUE="CYCB">Aboriginal Community Based Cou</OPTION>
+<OPTION VALUE="AGEI">Ageing</OPTION>
+<OPTION VALUE="ASL">American Sign Language</OPTION>
+<OPTION VALUE="ANTH">Anthropology</OPTION>
+<OPTION VALUE="ART">Art</OPTION>
+<OPTION VALUE="AE">Art Education</OPTION>
+<OPTION VALUE="AHVS">Art History & Visual Studies</OPTION>
+<OPTION VALUE="ARTS">Arts</OPTION>
+<OPTION VALUE="ACAN">Arts of Canada</OPTION>
+<OPTION VALUE="ASTR">Astronomy</OPTION>
+<OPTION VALUE="BIOC">Biochemistry</OPTION>
+<OPTION VALUE="BCMB">Biochemistry and Microbiology</OPTION>
+<OPTION VALUE="BIOL">Biology</OPTION>
+<OPTION VALUE="BME">Biomedical Engineering</OPTION>
+<OPTION VALUE="BUS">Business</OPTION>
+<OPTION VALUE="MBMS">Business and Computer Science</OPTION>
+<OPTION VALUE="MBME">Business and Engineering</OPTION>
+<OPTION VALUE="CS">Canadian Studies</OPTION>
+<OPTION VALUE="CHEM">Chemistry</OPTION>
+<OPTION VALUE="CYCI">Child & Youth Care Internatnl</OPTION>
+<OPTION VALUE="CYC">Child and Youth Care</OPTION>
+<OPTION VALUE="CIVE">Civil Engineering</OPTION>
+<OPTION VALUE="HUFA">Co-op Humanities & Fine Arts</OPTION>
+<OPTION VALUE="COM">Commerce</OPTION>
+<OPTION VALUE="CD">Community Development</OPTION>
+<OPTION VALUE="CSC">Computer Science</OPTION>
+<OPTION VALUE="CW">Creative Writing</OPTION>
+<OPTION VALUE="CH">Cultural Heritage</OPTION>
+<OPTION VALUE="CSPT">Cultural, Social & Political T</OPTION>
+<OPTION VALUE="EDCI">Curriculum and Instruction</OPTION>
+<OPTION VALUE="DHUM">Digital Humanities</OPTION>
+<OPTION VALUE="DSST">Disability Studies</OPTION>
+<OPTION VALUE="DR">Dispute Resolution</OPTION>
+<OPTION VALUE="EOS">Earth and Ocean Sciences</OPTION>
+<OPTION VALUE="ECON">Economics</OPTION>
+<OPTION VALUE="ED-D">Ed Psyc and Leadership Studies</OPTION>
+<OPTION VALUE="EDUC">Education</OPTION>
+<OPTION VALUE="ECE">Electrical & Computer Engineer</OPTION>
+<OPTION VALUE="ENGR">Engineering</OPTION>
+<OPTION VALUE="ENGL">English</OPTION>
+<OPTION VALUE="ENT">Entrepreneurship and Small Bus</OPTION>
+<OPTION VALUE="ER">Environmental Restoration</OPTION>
+<OPTION VALUE="ES">Environmental Studies</OPTION>
+<OPTION VALUE="EUS">European Studies</OPTION>
+<OPTION VALUE="EPHE">Exercise Sc, Phys & Health Ed</OPTION>
+<OPTION VALUE="FA">Fine Arts</OPTION>
+<OPTION VALUE="FORB">Forest Biology</OPTION>
+<OPTION VALUE="FRAN">French (FRAN)</OPTION>
+<OPTION VALUE="GNDR">Gender Studies</OPTION>
+<OPTION VALUE="GEOG">Geography</OPTION>
+<OPTION VALUE="GMST">Germanic Studies</OPTION>
+<OPTION VALUE="GDS">Global Development Studies</OPTION>
+<OPTION VALUE="GS">Graduate Studies</OPTION>
+<OPTION VALUE="GREE">Greek</OPTION>
+<OPTION VALUE="GRS">Greek and Roman Studies</OPTION>
+<OPTION VALUE="HLTH">Health and Community Services</OPTION>
+<OPTION VALUE="HS">Health and Society</OPTION>
+<OPTION VALUE="HINF">Health Information Science</OPTION>
+<OPTION VALUE="HSTR">History</OPTION>
+<OPTION VALUE="HA">History in Art</OPTION>
+<OPTION VALUE="HOS">Hospitality</OPTION>
+<OPTION VALUE="HSD">Human and Social Development</OPTION>
+<OPTION VALUE="HDCC">Human Dimensions - Climate Chg</OPTION>
+<OPTION VALUE="HUMA">Humanities</OPTION>
+<OPTION VALUE="ICDG">Indigenous Com Dev Governance</OPTION>
+<OPTION VALUE="IED">Indigenous Education</OPTION>
+<OPTION VALUE="IGOV">Indigenous Governance</OPTION>
+<OPTION VALUE="IN">Indigenous Nationhood</OPTION>
+<OPTION VALUE="INGH">Indigenous Peoples Health</OPTION>
+<OPTION VALUE="IS">Indigenous Studies</OPTION>
+<OPTION VALUE="ISP">Intercultural Studies and Prac</OPTION>
+<OPTION VALUE="INTD">Interdisciplinary</OPTION>
+<OPTION VALUE="IB">International Business</OPTION>
+<OPTION VALUE="INTS">International Health Studies</OPTION>
+<OPTION VALUE="ITAL">Italian</OPTION>
+<OPTION VALUE="KINE">Kinesiology</OPTION>
+<OPTION VALUE="LATI">Latin</OPTION>
+<OPTION VALUE="LAS">Latin American Studies</OPTION>
+<OPTION VALUE="LAW">Law</OPTION>
+<OPTION VALUE="LING">Linguistics</OPTION>
+<OPTION VALUE="MRNE">Marine Science</OPTION>
+<OPTION VALUE="MGB">Masters of Global Business</OPTION>
+<OPTION VALUE="MBA">Masters-Business Administratio</OPTION>
+<OPTION VALUE="MATH">Math</OPTION>
+<OPTION VALUE="MECH">Mechanical Engineering</OPTION>
+<OPTION VALUE="MEDS">Medical Sciences</OPTION>
+<OPTION VALUE="MEDI">Medieval Studies</OPTION>
+<OPTION VALUE="MICR">Microbiology</OPTION>
+<OPTION VALUE="MUS">Music</OPTION>
+<OPTION VALUE="NRSC">Neuroscience</OPTION>
+<OPTION VALUE="NUED">Nurse Educator</OPTION>
+<OPTION VALUE="NURS">Nursing</OPTION>
+<OPTION VALUE="NURA">Nursing Advanced Practice</OPTION>
+<OPTION VALUE="NURP">Nursing Policy and Practice</OPTION>
+<OPTION VALUE="NUNP">Nursing Practitioners</OPTION>
+<OPTION VALUE="NUHI">Nursing/Health Info Science</OPTION>
+<OPTION VALUE="PAAS">Pacific and Asian Studies</OPTION>
+<OPTION VALUE="PHIL">Philosophy</OPTION>
+<OPTION VALUE="PHYS">Physics</OPTION>
+<OPTION VALUE="POLI">Political Science</OPTION>
+<OPTION VALUE="PORT">Portuguese</OPTION>
+<OPTION VALUE="PSYC">Psychology</OPTION>
+<OPTION VALUE="ADMN">Public Administration</OPTION>
+<OPTION VALUE="PADR">Public Admn & Dispute Resolutn</OPTION>
+<OPTION VALUE="PHSP">Public Health & Social Policy</OPTION>
+<OPTION VALUE="RHED">Recreation and Health</OPTION>
+<OPTION VALUE="RS">Religious Studies</OPTION>
+<OPTION VALUE="SCIE">Science</OPTION>
+<OPTION VALUE="SMGT">Service Management</OPTION>
+<OPTION VALUE="SLST">Slavic Studies</OPTION>
+<OPTION VALUE="SDH">Social Dimensions of Health</OPTION>
+<OPTION VALUE="SJS">Social Justice Studies</OPTION>
+<OPTION VALUE="SOSC">Social Sciences</OPTION>
+<OPTION VALUE="SOCW">Social Work</OPTION>
+<OPTION VALUE="SOCI">Sociology</OPTION>
+<OPTION VALUE="SENG">Software Engineering</OPTION>
+<OPTION VALUE="SPAN">Spanish</OPTION>
+<OPTION VALUE="STAT">Statistics</OPTION>
+<OPTION VALUE="SPP">Study in Policy and Practice</OPTION>
+<OPTION VALUE="ED-P">Teacher Ed: Seminar & Pract.</OPTION>
+<OPTION VALUE="TS">Technology and Society</OPTION>
+<OPTION VALUE="THEA">Theatre</OPTION>
+<OPTION VALUE="VIRS">Visiting Research</OPTION>
+<OPTION VALUE="WKEX">Work Experience</OPTION>
+<OPTION VALUE="WRIT">Writing</OPTION>
+</select>
+</TD>
+</tr>
+<tr>
+<td CLASS="delabel" scope="row" ><LABEL for=crse_id_from><SPAN class="fieldlabeltext">Course Number Range: </SPAN></LABEL></td>
+<td colspan="7" CLASS="dedefault"> from <input type="text" name="sel_crse_strt" size="6" maxlength="5" ID="crse_id_from" /><LABEL for=crse_id_to><SPAN class="fieldlabeltextinvisible">Course To</SPAN></LABEL> to <input type="text" name="sel_crse_end" size="6" maxlength="5" ID="crse_id_to" /></td>
+</tr>
+<tr>
+<td CLASS="delabel" scope="row" ><LABEL for=title_id><SPAN class="fieldlabeltext">Title: </SPAN></LABEL></td>
+<td colspan="7" CLASS="dedefault"><input type="text" name="sel_title" size="33" maxlength="30" ID="title_id" /></td>
+</tr>
+<tr>
+<td CLASS="delabel" scope="row" ><LABEL for=levl_id><SPAN class="fieldlabeltext">Level: </SPAN></LABEL></td>
+<TD CLASS="dedefault">
+<select name="sel_levl" size="3" MULTIPLE ID="levl_id">
+<OPTION VALUE="%" SELECTED>All</OPTION>
+<OPTION VALUE="GR">Graduate</OPTION>
+<OPTION VALUE="LW">Law</OPTION>
+<OPTION VALUE="UG">Undergraduate</OPTION>
+</select>
+</TD>
+</tr>
+<tr>
+<td CLASS="delabel" scope="row" ><LABEL for=schd_id><SPAN class="fieldlabeltext">Schedule Type: </SPAN></LABEL></td>
+<TD COLSPAN="7" CLASS="dedefault">
+<select name="sel_schd" size="3" MULTIPLE ID="schd_id">
+<OPTION VALUE="%" SELECTED>All</OPTION>
+<OPTION VALUE="LAB">Lab</OPTION>
+<OPTION VALUE="LEC">Lecture</OPTION>
+<OPTION VALUE="SEM">Seminar</OPTION>
+<OPTION VALUE="TUT">Tutorial</OPTION>
+</select>
+</TD>
+</tr>
+<tr>
+<td CLASS="delabel" scope="row" ><LABEL for=coll_id><SPAN class="fieldlabeltext">College: </SPAN></LABEL></td>
+<TD CLASS="dedefault">
+<select name="sel_coll" size="3" MULTIPLE ID="coll_id">
+<OPTION VALUE="%" SELECTED>All</OPTION>
+<OPTION VALUE="ED">Faculty of Education</OPTION>
+<OPTION VALUE="EN">Faculty of Engineering</OPTION>
+<OPTION VALUE="FA">Faculty of Fine Arts</OPTION>
+<OPTION VALUE="GS">Faculty of Graduate Studies</OPTION>
+<OPTION VALUE="HS">Faculty of Human & Social Dev.</OPTION>
+<OPTION VALUE="HU">Faculty of Humanities</OPTION>
+<OPTION VALUE="LW">Faculty of Law</OPTION>
+<OPTION VALUE="SC">Faculty of Science</OPTION>
+<OPTION VALUE="SS">Faculty of Social Sciences</OPTION>
+<OPTION VALUE="BU">PB Gustavson Schl of Business</OPTION>
+</select>
+</TD>
+</tr>
+<input type="hidden" name="sel_divs" value="%" />
+<tr>
+<td CLASS="delabel" scope="row" ><LABEL for=dept_id><SPAN class="fieldlabeltext">Department: </SPAN></LABEL></td>
+<TD CLASS="dedefault">
+<select name="sel_dept" size="3" MULTIPLE ID="dept_id">
+<OPTION VALUE="%" SELECTED>All</OPTION>
+<OPTION VALUE="1263">Academic and Tech Writing</OPTION>
+<OPTION VALUE="1012">Anthropology</OPTION>
+<OPTION VALUE="1096">Art History & Visual Studies</OPTION>
+<OPTION VALUE="1016">Biochemistry & Microbiology</OPTION>
+<OPTION VALUE="1017">Biology</OPTION>
+<OPTION VALUE="1020">Business</OPTION>
+<OPTION VALUE="1189">Centre for Studies in Rel/Soc</OPTION>
+<OPTION VALUE="1039">Chemistry</OPTION>
+<OPTION VALUE="1040">Child & Youth Care</OPTION>
+<OPTION VALUE="1253">Civil Engineering</OPTION>
+<OPTION VALUE="1043">Co-op and Career</OPTION>
+<OPTION VALUE="1045">Computer Science</OPTION>
+<OPTION VALUE="1051">Cultural, Sociall&Poltcl Thght</OPTION>
+<OPTION VALUE="1053">Curriculum and Instruction</OPTION>
+<OPTION VALUE="1061">Earth and Ocean Sciences</OPTION>
+<OPTION VALUE="1062">Economics</OPTION>
+<OPTION VALUE="1063">Educ Psychology & Leadership</OPTION>
+<OPTION VALUE="1064">Education</OPTION>
+<OPTION VALUE="1066">Electrical & Computer Engg</OPTION>
+<OPTION VALUE="1067">Elementary Teacher Education</OPTION>
+<OPTION VALUE="1068">Engineering</OPTION>
+<OPTION VALUE="1069">Engineering Co-op</OPTION>
+<OPTION VALUE="1070">English</OPTION>
+<OPTION VALUE="1071">Environmental Studies</OPTION>
+<OPTION VALUE="1158">Exercise Sc, Phys & Health Ed</OPTION>
+<OPTION VALUE="1076">Fine Arts</OPTION>
+<OPTION VALUE="1077">French</OPTION>
+<OPTION VALUE="1217">Gender Studies</OPTION>
+<OPTION VALUE="1085">Geography</OPTION>
+<OPTION VALUE="1086">Germanic & Slavic Studies</OPTION>
+<OPTION VALUE="1092">Greek and Roman Studies</OPTION>
+<OPTION VALUE="1093">Health Information Science</OPTION>
+<OPTION VALUE="1094">Hispanic & Italian Studies</OPTION>
+<OPTION VALUE="1095">History</OPTION>
+<OPTION VALUE="1098">Human & Social Devlmnt</OPTION>
+<OPTION VALUE="1100">Humanities</OPTION>
+<OPTION VALUE="1102">Indigenous Governance Prgrm</OPTION>
+<OPTION VALUE="1261">Indigenous Studies</OPTION>
+<OPTION VALUE="1112">Law</OPTION>
+<OPTION VALUE="1116">Liberal Arts</OPTION>
+<OPTION VALUE="1137">Linguistics</OPTION>
+<OPTION VALUE="1142">Mathematics and Statistics</OPTION>
+<OPTION VALUE="1143">Mechanical Engineering</OPTION>
+<OPTION VALUE="1144">Medieval Studies</OPTION>
+<OPTION VALUE="1146">Music</OPTION>
+<OPTION VALUE="1151">Nursing</OPTION>
+<OPTION VALUE="1154">Pacific & Asian Studies</OPTION>
+<OPTION VALUE="1157">Philosophy</OPTION>
+<OPTION VALUE="1159">Physics and Astronomy</OPTION>
+<OPTION VALUE="1160">Political Science</OPTION>
+<OPTION VALUE="1164">Psychology</OPTION>
+<OPTION VALUE="1165">Public Administration</OPTION>
+<OPTION VALUE="1169">Religious Studies</OPTION>
+<OPTION VALUE="1175">School Experiences - Educ</OPTION>
+<OPTION VALUE="1176">Science</OPTION>
+<OPTION VALUE="1177">Secondary Teacher Education</OPTION>
+<OPTION VALUE="1180">Social Sciences</OPTION>
+<OPTION VALUE="1181">Social Work</OPTION>
+<OPTION VALUE="1182">Sociology</OPTION>
+<OPTION VALUE="1192">Teacher Education Program</OPTION>
+<OPTION VALUE="1193">Theatre</OPTION>
+<OPTION VALUE="1212">Visual Arts</OPTION>
+<OPTION VALUE="1218">Writing</OPTION>
+</select>
+</TD>
+</tr>
+<tr>
+<td CLASS="delabel" scope="row" ><LABEL for=credit_id_from><SPAN class="fieldlabeltext">Credit Range: </SPAN></LABEL></td>
+<TD CLASS="dedefault"><input type="text" name="sel_from_cred" size="11" maxlength="10" ID="credit_id_from" /> hours to <LABEL for=credit_id_to><SPAN class="fieldlabeltextinvisible">Credit Range To:</SPAN></LABEL><input type="text" name="sel_to_cred" size="11" maxlength="10" ID="credit_id_to" /> hours
+</TD>
+</tr>
+<tr>
+<td CLASS="delabel" scope="row" ><LABEL for=attr_id><SPAN class="fieldlabeltext">Course Attribute: </SPAN></LABEL></td>
+</select>
+</TD>
+</tr>
+<tr>
+<td CLASS="dedefault"><input type="submit" value="Get Courses" /></td>
+<td CLASS="dedefault"><input type="reset" VALUE="Reset" /></td>
+</tr>
+</table>
+</form>
+
+<!--  ** START OF twbkwbis.P_CloseDoc **  -->
+<table  CLASS="plaintable" SUMMARY="This is table displays line separator at end of the page."
+                                             WIDTH="100%" cellSpacing=0 cellPadding=0 border=0><tr><TD class="bgtabon" width="100%" colSpan=2><img src="/wtlgifs/web_transparent.gif" alt="Transparent Image" CLASS="headerImg" TITLE="Transparent Image"  NAME="web_transparent" HSPACE=0 VSPACE=0 BORDER=0 HEIGHT=3 WIDTH=10 /></TD></tr></table>
+<a href="#top" onMouseover="window.status='Skip to top of page'; return true" onMouseout="window.status=''; return true" OnFocus="window.status='Skip to top of page'; return true" onBlur="window.status=''; return true" class="skiplinks">Skip to top of page</a>
+</DIV>
+<div class="footerbeforediv">
+
+</DIV>
+<div class="footerafterdiv">
+
+</DIV>
+<div class="globalafterdiv">
+
+</DIV>
+<div class="globalfooterdiv">
+
+</DIV>
+<div class="pagefooterdiv">
+<SPAN class="releasetext">Release: 8.7.2</SPAN>
+</DIV>
+<div class="poweredbydiv">
+</DIV>
+<DIV class="div1"></DIV>
+<DIV class="div2"></DIV>
+<DIV class="div3"></DIV>
+<DIV class="div4"></DIV>
+<DIV class="div5"></DIV>
+<DIV class="div6"></DIV>
+<div class="banner_copyright"></div>
+</body>
+</html>
