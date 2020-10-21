@@ -1,5 +1,3 @@
-import { Document } from 'mongoose';
-
 export interface Seating {
   capacity: number;
   actual: number;
@@ -49,5 +47,3 @@ export interface Course {
   pid: string;
   offerings: Term[];
 }
-
-export interface CourseDocument extends Course, Document {}
