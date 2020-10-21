@@ -97,6 +97,7 @@ const getSections = async (course: Course, term: string) => {
       `${SECTIONS_URL}?term_in=${term}&subj_in=${course.subject}&crse_in=${course.code}&schd_in=`
     );
     const $ = cheerio.load(response.body);
+    const regex = /(.+) - (\d+) - ([\w|-]{0,4} \w?\d+\w?) - ([A|B|T]\d+)/;
 
     const sections: Section[] = [];
 
@@ -107,9 +108,11 @@ const getSections = async (course: Course, term: string) => {
       // Parse Title block e.g. "Algorithms and Data Structures I - 30184 - CSC 225 - A01"
       const title = $('a', sectionEntries[sectionIdx]);
       section.description = title.text();
-      const parsedTitle = title.text().split('-');
-      section.CRN = parsedTitle[1].trim();
-      section.sectionCode = parsedTitle[3].trim();
+      const m = regex.exec(title.text());
+      if (m) {
+        section.CRN = m[2];
+        section.sectionCode = m[4];
+      }
 
       // Get more information from section details page. Uncommenting this would increase runtime by at least x2
       const sectionDetailsEndpoint = $('a', sectionEntries[sectionIdx]).attr('href');
