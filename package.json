@@ -4,7 +4,6 @@
   "description": "UVic Web Scrapper",
   "main": "index.js",
   "scripts": {
-    "upload": "ts-node-dev src/uploader.ts",
     "scrape": "ts-node-dev src/scraper.ts",
     "test": "jest",
     "lint": "eslint src/**/*.ts"
@@ -17,14 +16,12 @@
     "dotenv": "^8.2.0",
     "got": "^11.7.0",
     "jest": "^26.5.3",
-    "mongoose": "^5.10.9",
     "progress": "^2.0.3"
   },
   "devDependencies": {
     "@types/async": "^3.2.3",
     "@types/cheerio": "^0.22.22",
     "@types/jest": "^26.0.14",
-    "@types/mongoose": "^5.7.36",
     "@types/progress": "^2.0.3",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
