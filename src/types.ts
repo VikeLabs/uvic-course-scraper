@@ -14,27 +14,36 @@ export interface Schedule {
   instructors: string;
 }
 
+type levelType = 'law' | 'undergraduate' | 'graduate';
+export type sectionType = 'lecture' | 'lab' | 'tutorial';
+export type deliveryMethodType = 'synchronous' | 'asynchronous' | 'mixed';
+
 export interface Section {
   term: string;
   title: string;
   crn: string;
-  sectionCode: string; //A01, B02, etc...
+  sectionCode: string;
   waitlistSeats: Seating;
   seats: Seating;
   schedule: Schedule[];
   requirements: string[];
   additionalInfo: string;
   location: string;
-  sectionType: string;
+  sectionType: sectionType;
+  deliveryMethod: deliveryMethodType;
   instructionalMethod: string;
-  campus: 'online';
-  credits: string;
-  associatedTerm: string;
+  campus: 'online' | 'in-person';
+  credits: number;
+  associatedTerm: {
+    start: string;
+    end: string;
+  };
   registrationDates: {
     start: string;
     end: string;
   };
-  levels: string;
+  levels: levelType[];
+  addtionalNotes?: string;
 }
 
 interface Term {
