@@ -7,7 +7,7 @@ import { Section, Schedule } from '../../types';
  * @param {Course} course the course object to extend
  * @param {string} term the term code
  */
-export const classScheduleListingExtractor = async ($: cheerio.Root) => {
+export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Section[]> => {
   const regex = /(.+) - (\d+) - ([\w|-]{0,4} \w?\d+\w?) - ([A|B|T]\d+)/;
   try {
     const sections: Section[] = [];
