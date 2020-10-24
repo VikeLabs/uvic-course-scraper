@@ -10,7 +10,7 @@ export const scheduleUtil = async (term: string) => {
   console.log('dump:schedule - starting...\n');
   const start = performance.now();
 
-  const c: Course[] = courses;
+  const c = courses as Course[];
 
   await forEachHelper(
     c,
