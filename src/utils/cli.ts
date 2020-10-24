@@ -1,6 +1,9 @@
 import yargs from 'yargs/yargs';
 import { coursesUtil } from './kuali-dump';
 import { scheduleUtil } from './schedule-dump';
+import { detailedClassInformationUrl } from '../lib/urls';
+import got from 'got';
+import fs from 'fs';
 
 const argv = yargs(process.argv.slice(2)).options({
   term: { type: 'string', demandOption: true, description: 'term eg. 202009' },
@@ -11,11 +14,15 @@ const argv = yargs(process.argv.slice(2)).options({
     description: 'dump target type',
   },
   update: { type: 'boolean', default: false, alias: 'u' },
+  crn: {
+    alias: 'c',
+    type: 'string',
+  },
 }).argv;
 
-const handleClass = async () => {
-  console.error('not implemented yet!');
-  return 0;
+const handleClass = async (term: string, crn: string) => {
+  const response = await got(detailedClassInformationUrl(term, crn));
+  await fs.promises.writeFile(`tmp/${term}_${crn}.html`, response.rawBody);
 };
 
 const main = async () => {
@@ -27,7 +34,11 @@ const main = async () => {
       await scheduleUtil(argv.term);
       break;
     case 'class':
-      await handleClass();
+      if (!argv.crn) {
+        console.error('require CRN flag for class ');
+        return;
+      }
+      await handleClass(argv.term, argv.crn);
       break;
   }
 };
