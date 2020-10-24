@@ -29,7 +29,7 @@ export const detailedClassInformationUrl = (term: string, crn: string): string =
 };
 
 // GET: Course Listing Entries
-// Note: can hit this endpoint with a POST request too. Difference between 
+// Note: can hit this endpoint with a POST request too. Difference between
 // eg. https://www.uvic.ca/BAN1P/bwckctlg.p_display_courses?term_in=202009&one_subj=PAAS&sel_crse_strt=138&sel_crse_end=138&sel_subj=&sel_levl=&sel_schd=&sel_coll=&sel_divs=&sel_dept=&sel_attr=
 export const courseListingsEntriesUrl = (term: string, subject: string, course: string): string => {
   // TODO: figure out what the result of the fields mean.
