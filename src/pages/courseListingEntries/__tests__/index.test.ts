@@ -2,9 +2,10 @@ import * as cheerio from 'cheerio';
 import fs from 'fs';
 import path from 'path';
 import { classScheduleListingExtractor } from '../index';
+import appRoot from 'app-root-path';
 
 const getFilePath = (term: string, course: string) => {
-  return path.join(__dirname, `../../../static/${course}_${term}.html`);
+  return path.join(appRoot.toString(), `src/static/${course}_${term}.html`);
 };
 
 describe('Class Schedule Listing Parser', () => {

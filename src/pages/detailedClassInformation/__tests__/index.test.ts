@@ -2,9 +2,10 @@ import * as cheerio from 'cheerio';
 import fs from 'fs';
 import path from 'path';
 import { detailedClassInfoExtractor } from '../index';
+import appRoot from 'app-root-path';
 
 const getFilePath = (term: string, crn: string) => {
-  return path.join(__dirname, `../../../static/${term}_${crn}.html`);
+  return path.join(appRoot.toString(), `src/static/${term}_${crn}.html`);
 };
 
 describe('Detailed Class Information', () => {
