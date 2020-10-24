@@ -8,6 +8,7 @@ import { Section, Schedule } from '../../types';
  * @param {string} term the term code
  */
 export const classScheduleListingExtractor = async ($: cheerio.Root) => {
+  const regex = /(.+) - (\d+) - ([\w|-]{0,4} \w?\d+\w?) - ([A|B|T]\d+)/;
   try {
     const sections: Section[] = [];
     const sectionEntries = $(`table[summary="This layout table is used to present the sections found"]>tbody>tr`);
@@ -17,9 +18,11 @@ export const classScheduleListingExtractor = async ($: cheerio.Root) => {
       // Parse Title block e.g. "Algorithms and Data Structures I - 30184 - CSC 225 - A01"
       const title = $('a', sectionEntries[sectionIdx]);
       section.title = title.text();
-      const parsedTitle = title.text().split('-');
-      section.crn = parsedTitle[1].trim();
-      section.sectionCode = parsedTitle[3].trim();
+      const m = regex.exec(title.text());
+      if (m) {
+        section.crn = m[2];
+        section.sectionCode = m[4];
+      }
 
       // Get more information from section details page. Uncommenting this would increase runtime by at least x2
       // const sectionDetailsEndpoint = $('a', sectionEntries[sectionIdx]).attr('href');
