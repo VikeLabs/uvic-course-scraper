@@ -16,20 +16,24 @@ export interface Schedule {
 
 export interface Section {
   term: string;
-  CRN: string;
+  title: string;
+  crn: string;
+  sectionCode: string; //A01, B02, etc...
   waitlistSeats: Seating;
   seats: Seating;
   schedule: Schedule[];
   requirements: string[];
-  description: string;
-  sectionCode: string; //A01, B02, etc..
   additionalInfo: string;
   location: string;
   sectionType: string;
   instructionalMethod: string;
+  campus: 'online';
   credits: string;
   associatedTerm: string;
-  registrationDates: string;
+  registrationDates: {
+    start: string;
+    end: string;
+  };
   levels: string;
 }
 
