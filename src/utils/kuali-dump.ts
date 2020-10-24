@@ -27,7 +27,7 @@ const downloadCourses = async (): Promise<Course[]> => {
   }
 };
 
-const main = async () => {
+export const coursesUtil = async () => {
   // start timer
   const start = performance.now();
 
@@ -64,5 +64,3 @@ const main = async () => {
     })
   );
 };
-
-main();

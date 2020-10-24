@@ -4,8 +4,7 @@
   "description": "UVic Web Scrapper",
   "main": "index.js",
   "scripts": {
-    "dump:kuali": "ts-node src/utils/kuali-dump.ts",
-    "dump:schedule": "ts-node src/utils/schedule-dump.ts",
+    "dump": "ts-node src/utils/cli.ts",
     "scrape": "ts-node-dev src/scraper.ts",
     "test": "jest",
     "lint": "eslint src/**/*.ts"
@@ -25,6 +24,7 @@
     "@types/cheerio": "^0.22.22",
     "@types/jest": "^26.0.14",
     "@types/progress": "^2.0.3",
+    "@types/yargs": "^15.0.9",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "eslint": "^6.8.0",
@@ -35,7 +35,8 @@
     "jest-each": "^26.5.2",
     "prettier": "^1.19.1",
     "ts-jest": "^26.4.1",
-    "ts-node-dev": "^1.0.0-pre.63",
-    "typescript": "^3.9.7"
+    "ts-node-dev": "^1.0.0",
+    "typescript": "^3.9.7",
+    "yargs": "^16.1.0"
   }
 }
