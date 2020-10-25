@@ -17,14 +17,26 @@ This will execute tests using Jest files with the extension `*.test*`.
 ## Developer Tools
 This repository contains a CLI to make development related tasks easier.
 
-`npm run dump -- --term 202009 --type courses` 
+```
+npm run dump -- --term 202009 --type courses
+```
 - Dumps the course details for the `202009` term.
 - Outputs to a `courses.json` file.
 
-`npm run dump -- --term 202009 --type schedules` 
+```
+npm run dump -- --term 202009 --type schedules
+```
 - Dumps the schedule details for all `202009` term classes.
 - This schdule details corresponds to the `Class Schedule Listing` page view on BAN1P. 
 - This command can only be run after dumping courses data.
+
+```
+npm run dump -- --term 202009 --type class --crn 10953
+```
+- Dumps the HTML of a "Detailed Class Information" page for a given term and CRN.
+
+**Currently all file output is hardcoded to `tmp`.**
+
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
