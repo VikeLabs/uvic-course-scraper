@@ -1,5 +1,6 @@
 import cheerio from 'cheerio';
-import { Section, Schedule } from '../../types';
+import moment from 'moment';
+import { Section, Schedule, levelType, sectionType, deliveryMethodType } from '../../types';
 
 /**
  * Extends course object with section info for term.
@@ -12,7 +13,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
   try {
     const sections: Section[] = [];
     const sectionEntries = $(`table[summary="This layout table is used to present the sections found"]>tbody>tr`);
-    for (let sectionIdx = 0; sectionIdx < sectionEntries.length; sectionIdx += 2) {
+    for (let sectionIdx = 0; sectionIdx < sectionEntries.length; sectionIdx += 2) { //why += 2?
       const section = {} as Section;
 
       // Parse Title block e.g. "Algorithms and Data Structures I - 30184 - CSC 225 - A01"
@@ -33,15 +34,31 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
       // Section info is divided into 2 table rows, here we get the second one
       const sectionEntry = sectionEntries[sectionIdx + 1];
 
-      // Parse block before schdule table
+      // Parse block before schedule table
       const sectionInfo = $(`tr td`, sectionEntry)
         .text()
         .split('\n')
         .filter(e => e.length)
         .map(e => e.trim());
       section.additionalInfo = sectionInfo[0];
-      section.associatedTerm = sectionInfo[1].split(/:(.+)/)[1];
-      // section.registrationDates = sectionInfo[2].split(/:(.+)/)[1];
+
+      const startRegex = /(\w{3})\s*-/;
+      const endRegex = /-\s*(\w{3})/;
+      const yearRegex = /\d{4}/;
+      var start = '';
+      var end = '';
+      var year = '';
+      if(sectionInfo[2]){
+        start = moment().month(startRegex.exec(sectionInfo[2])![1]).format('MM');
+        end = moment().month(endRegex.exec(sectionInfo[2])![1]).format('MM');
+        year = yearRegex.exec(sectionInfo[2])![0];
+      }
+
+      section.associatedTerm = {
+        start: year + start,
+        end: year + end
+      };
+      section.registrationDates = sectionInfo[2].split(/:(.+)/)[1];
       section.levels = sectionInfo[3].split(/:(.+)/)[1];
       section.location = sectionInfo[4];
       section.sectionType = sectionInfo[5];
