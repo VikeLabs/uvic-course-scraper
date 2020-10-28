@@ -39,31 +39,48 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
         .text()
         .split('\n')
         .filter(e => e.length)
-        .map(e => e.trim());
+        .map(e => e.trim())
+        .filter(e => e);
       section.additionalInfo = sectionInfo[0];
 
-      const startRegex = /(\w{3})\s*-/;
-      const endRegex = /-\s*(\w{3})/;
-      const yearRegex = /\d{4}/;
-      var start = '';
-      var end = '';
-      var year = '';
-      if(sectionInfo[2]){
-        start = moment().month(startRegex.exec(sectionInfo[2])![1]).format('MM');
-        end = moment().month(endRegex.exec(sectionInfo[2])![1]).format('MM');
-        year = yearRegex.exec(sectionInfo[2])![0];
+      if(/Associated Term/.test(sectionInfo[1]) === false){
+        sectionInfo.splice(0, 1, sectionInfo[0] + ' ' + sectionInfo[1]);
+        sectionInfo.splice(1, 1);
       }
 
+      console.log(sectionInfo);
+
+      const associatedStartRegex = /(\w{3})\s*-/;
+      const associatedEndRegex = /-\s*(\w{3})/;
+      const yearRegex = /\d{4}/;
+
+      // get associated term start and end dates in MM format
+      const associatedStart = moment().month(associatedStartRegex.exec(sectionInfo[1])![1]).format('MM');
+      const associatedEnd = moment().month(associatedEndRegex.exec(sectionInfo[1])![1]).format('MM');
+      const year = yearRegex.exec(sectionInfo[1])![0];
+
       section.associatedTerm = {
-        start: year + start,
-        end: year + end
+        start: year + associatedStart,
+        end: year + associatedEnd
       };
-      section.registrationDates = sectionInfo[2].split(/:(.+)/)[1];
-      section.levels = sectionInfo[3].split(/:(.+)/)[1];
-      section.location = sectionInfo[4];
-      section.sectionType = sectionInfo[5];
-      section.instructionalMethod = sectionInfo[6];
-      section.credits = sectionInfo[7];
+
+      //{ start: 'Jun 22, 2020', end: 'Sep 25, 2020' }
+      const registrationStartRegex = /:\s*(.+)\sto/;
+      const registrationEndRegex = /to\s*(.+)/;
+
+      const registrationStart = registrationStartRegex.exec(sectionInfo[2])![1];
+      const registrationEnd = registrationEndRegex.exec(sectionInfo[2])![1];
+
+      section.registrationDates = {
+        start: registrationStart,
+        end: registrationEnd
+      };
+
+      // section.levels = sectionInfo[3].split(/:(.+)/)[1];
+      // section.location = sectionInfo[4];
+      // section.sectionType = sectionInfo[5];
+      // section.instructionalMethod = sectionInfo[6];
+      // section.credits = sectionInfo[7];
 
       // Parse schedule table
       let scheduleEntries = $(

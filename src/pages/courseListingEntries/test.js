@@ -6,16 +6,16 @@ request('https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse?term_in=202009&subj_
     if(!error && response.statusCode == 200){
         const $ = cheerio.load(html);
 
-        // console.log(html);
+        console.log(html);
 
         //th[contains(@class, 'title')]//a/text()
 
-        $('.ddtitle').each((i, el) => {
-            const title = $(el).find('a').text();
-            const regex = /\d{5}/;
-            console.log(regex.exec(title)[0]);
-        });
+        // $('.ddtitle').each((i, el) => {
+        //     const title = $(el).find('a').text();
+        //     const regex = /\d{5}/;
+        //     console.log(regex.exec(title)[0]);
+        // });
 
-        console.log('Scraping done...');
+        // console.log('Scraping done...');
     }
 });
