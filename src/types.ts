@@ -29,7 +29,7 @@ export interface Section {
   requirements: string[];
   additionalInfo: string;
   location: string;
-  sectionType: sectionType;
+  sectionType: string;
   deliveryMethod: deliveryMethodType;
   instructionalMethod: string;
   campus: 'online' | 'in-person';
@@ -42,7 +42,7 @@ export interface Section {
     start: string;
     end: string;
   };
-  levels: levelType[];
+  levels: string[];
   addtionalNotes?: string;
 }
 
