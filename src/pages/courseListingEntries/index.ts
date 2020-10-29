@@ -2,8 +2,6 @@ import cheerio from 'cheerio';
 import moment from 'moment';
 import { Section, Schedule, levelType, sectionType, deliveryMethodType } from '../../types';
 
-var cheerioTableparser = require('cheerio-tableparser');
-
 /**
  * Extends course object with section info for term.
  *
@@ -13,7 +11,6 @@ var cheerioTableparser = require('cheerio-tableparser');
 export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Section[]> => {
   const regex = /(.+) - (\d+) - ([\w|-]{0,4} \w?\d+\w?) - ([A|B|T]\d+)/;
   try {
-    cheerioTableparser($);
     const sections: Section[] = [];
     const sectionEntries = $(`table[summary="This layout table is used to present the sections found"]>tbody>tr`);
     for (let sectionIdx = 0; sectionIdx < sectionEntries.length; sectionIdx += 2) { //why += 2?
