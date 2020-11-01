@@ -1,6 +1,9 @@
 import cheerio from 'cheerio';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { Section, Schedule, levelType, sectionType, deliveryMethodType } from '../../types';
+
+dayjs.extend(customParseFormat);
 
 /**
  * Extends course object with section info for term.
@@ -75,8 +78,8 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
       const associatedStartRegex = /(\w{3})\s*-/;
       const associatedEndRegex = /-\s*(\w{3})/;
       const yearRegex = /\d{4}/;
-      const associatedStart = moment().month(associatedStartRegex.exec(sectionInfo[1])![1]).format('MM');
-      const associatedEnd = moment().month(associatedEndRegex.exec(sectionInfo[1])![1]).format('MM');
+      const associatedStart = dayjs(associatedStartRegex.exec(sectionInfo[1])![1], 'MMM').format('MM');
+      const associatedEnd = dayjs(associatedEndRegex.exec(sectionInfo[1],)![1], 'MMM').format('MM');
       const year = yearRegex.exec(sectionInfo[1])![0];
       section.associatedTerm = {
         start: year + associatedStart,
