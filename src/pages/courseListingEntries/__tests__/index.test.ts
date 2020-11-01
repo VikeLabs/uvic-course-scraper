@@ -23,7 +23,7 @@ describe('Class Schedule Listing Parser', () => {
     expect(parsed[0].credits).toBe('1.500');
     expect(parsed[0].levels).toStrictEqual(['law', 'undergraduate']);
     expect(parsed[0].schedule[0].type).toBe('Every Week');
-    expect(parsed[0].schedule[0].instructors).toStrictEqual('Michael David Adams (P)');
+    expect(parsed[0].schedule[0].instructors).toStrictEqual(['Michael David Adams (P)']);
   });
 });
 
@@ -42,6 +42,6 @@ describe('Class Schedule Listing Parser', () => {
     expect(parsed[0].credits).toBe('1.500');
     expect(parsed[0].levels).toStrictEqual(['law', 'undergraduate']);
     expect(parsed[0].schedule[0].type).toBe('Every Week');
-    expect(parsed[0].schedule[0].instructors).toBe('Neil   Burford (P), Cornelia   Bohne , Genevieve Nicole  Boice , J. Scott   McIndoe');
+    expect(parsed[0].schedule[0].instructors).toStrictEqual(['Neil   Burford (P)', 'Cornelia   Bohne' , 'Genevieve Nicole  Boice' , 'J. Scott   McIndoe']);
   });
 });

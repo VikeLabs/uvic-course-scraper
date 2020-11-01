@@ -11,7 +11,7 @@ export interface Schedule {
   where: string;
   dateRange: string;
   scheduleType: string;
-  instructors: string;
+  instructors: string[];
 }
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
@@ -29,7 +29,7 @@ export interface Section {
   requirements: string[];
   additionalInfo: string;
   location: string;
-  sectionType: string;
+  sectionType: sectionType;
   deliveryMethod: deliveryMethodType;
   instructionalMethod: string;
   campus: 'online' | 'in-person';
@@ -42,7 +42,7 @@ export interface Section {
     start: string;
     end: string;
   };
-  levels: string[];
+  levels: levelType[];
   addtionalNotes?: string;
 }
 

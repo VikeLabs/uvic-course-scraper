@@ -13,7 +13,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
   try {
     const sections: Section[] = [];
     const sectionEntries = $(`table[summary="This layout table is used to present the sections found"]>tbody>tr`);
-    for (let sectionIdx = 0; sectionIdx < sectionEntries.length; sectionIdx += 2) { //why += 2?
+    for (let sectionIdx = 0; sectionIdx < sectionEntries.length; sectionIdx += 2) {
       const section = {} as Section;
 
       // Parse Title block e.g. "Algorithms and Data Structures I - 30184 - CSC 225 - A01"
@@ -98,7 +98,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
       // i.e. "Levels: Law, Undergraduate" -> [law, undergraduate]
       const levelsRegex = /:\s*(.+)/;
       const levels = levelsRegex.exec(sectionInfo[3])![1].toLowerCase();
-      section.levels = levels.split(/,\s*/);
+      section.levels = levels.split(/,\s*/) as levelType[];
 
       // Check if online campus or in-person campus
       // Might change this because in the HTML it's either: online or main campus (might be other campuses too)
@@ -109,7 +109,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
         section.campus = 'in-person';
       }
 
-      section.sectionType = /(lecture|lab|tutorial)/i.exec(sectionInfo[5])![1].toLowerCase();
+      section.sectionType = /(lecture|lab|tutorial)/i.exec(sectionInfo[5])![1].toLowerCase() as sectionType;
 
       // Check if online or in-person instructional method
       if(/online/i.test(sectionInfo[6]) === true){
@@ -135,7 +135,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
           where: scheduleEntries[3],
           dateRange: scheduleEntries[4],
           scheduleType: scheduleEntries[5],
-          instructors: scheduleEntries[6],
+          instructors: scheduleEntries[6].split(/\s*,\s*/),
         });
       }
       section.schedule = scheduleData;
