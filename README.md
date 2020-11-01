@@ -11,7 +11,7 @@
 `git clone https://github.com/VikeLabs/scheduler-scraper.git`
 in your terminal.
 2. Once you have `schedule-scraper` open as a project, run `npm install` to get your environment set up with the dependencies this project uses.
-3. If you want, run and experiment with `example.js` to get a feel for how cheerio and RegEx works on the type of sites our project is hitting.
+3. If you want, run and experiment with `example.ts` using `npx ts-node-dev example.ts` to get a feel for how cheerio and RegEx works on the type of sites our project is hitting.
 4. Find an unassigned task on Zenhub to work on.
 5. Create a new branch using `git checkout -b <branch-name>` (make sure it's up to date with `master`)
 6. Commit the changes you've made and push to GitHub to create a Pull Request.

@@ -23,17 +23,17 @@ console.log('Starting scraping...');
     const table_rows = table.find('tr');
 
     // Since there are multiple table rows in table_rows, we can iterate through them all
-    table_rows.each((i, el) => {
+    table_rows.each((i: number, el: any) => {
         const info = $(el)
             .text()                 // get the text attributes of what we found
             .split('\n')            // split the text into an array, splitting at any new line
-            .map(e => e.trim());    // trim each element of the array so there's no extra white space
+            .map((e:string) => e.trim());    // trim each element of the array so there's no extra white space
 
         console.log(info);
 
         const regex = /\d{2}/;
         // Test if any elements in the info parsed above matches the given RegEx pattern
-        info.forEach(el => {
+        info.forEach((el: string) => {
             if(regex.test(el)){
                 console.log('Found a \`td\` element with 2 numbers in it', el);
             }
