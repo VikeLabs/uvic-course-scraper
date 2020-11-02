@@ -11,10 +11,10 @@ export interface Schedule {
   where: string;
   dateRange: string;
   scheduleType: string;
-  instructors: string;
+  instructors: string[];
 }
 
-type levelType = 'law' | 'undergraduate' | 'graduate';
+export type levelType = 'law' | 'undergraduate' | 'graduate';
 export type sectionType = 'lecture' | 'lab' | 'tutorial';
 export type deliveryMethodType = 'synchronous' | 'asynchronous' | 'mixed';
 
@@ -33,7 +33,7 @@ export interface Section {
   deliveryMethod: deliveryMethodType;
   instructionalMethod: string;
   campus: 'online' | 'in-person';
-  credits: number;
+  credits: string;
   associatedTerm: {
     start: string;
     end: string;
