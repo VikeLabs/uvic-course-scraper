@@ -3,8 +3,15 @@ import { Seating } from '../../types';
 interface SectionDetails {
   seats: Seating;
   waitlistSeats: Seating;
-  requirements: string[];
+  requirements: requirements;
 }
+
+interface requirements {
+  level: string;
+  fieldOfStudy: string[];
+}
+
+
 
 /**
  * Gets more details of the section. Most importantly, the section capacities
@@ -33,6 +40,9 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
       actual: seatInfo[4],
       remaining: seatInfo[5],
     },
-    requirements: requirements.slice(idx + 1),
+    requirements: {
+      level: "Undergraduate",
+      fieldOfStudy: ['EN: Biomedical Engineering', 'EN: Computer Engineering', 'EN: Electrical Engr', 'EN: Software Engineering BSENG'],
+    }
   };
 };

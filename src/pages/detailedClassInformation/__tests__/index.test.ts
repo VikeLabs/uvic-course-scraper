@@ -24,14 +24,7 @@ describe('Detailed Class Information', () => {
     // this should be broken up to optional attributes.
     // levels is can probably be removed as it's also information we have from the class listing.
     // the field restrictions can probably be extracted cleaner.
-    expect(parsed.requirements).toBe(`
-    Must be enrolled in one of the following Levels:     
-    Undergraduate
-Must be enrolled in one of the following Fields of Study (Major, Minor, or Concentration):
-    EN: Biomedical Engineering
-    EN: Computer Engineering
-    EN: Electrical Engr
-    EN: Software Engineering BSENG
-`);
+    expect(parsed.requirements.level).toBe('Undergraduate');
+    expect(parsed.requirements.fieldOfStudy).toStrictEqual(['EN: Biomedical Engineering', 'EN: Computer Engineering', 'EN: Electrical Engr', 'EN: Software Engineering BSENG']);
   });
 });
