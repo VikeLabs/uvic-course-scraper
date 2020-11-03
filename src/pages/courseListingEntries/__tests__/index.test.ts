@@ -50,7 +50,7 @@ describe('Class Schedule Listing Parser', () => {
 });
 
 describe('Class Schedule Listing Parser (CRN) CSC', () => {
-  const paths = getScheduleBySubject('202009', 'CSC');
+  const paths = [...getScheduleBySubject('202009', 'CSC'), ...getScheduleBySubject('202101', 'CSC')];
 
   // load the HTML file from the file system, in this case
   each(paths).it.concurrent('%s has the expected title ', async (p: string) => {
