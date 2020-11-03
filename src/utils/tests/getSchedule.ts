@@ -12,6 +12,11 @@ export const getScheduleBySubject = (term: string, subject: string) => {
   return globby.sync(pattern);
 };
 
+export const getScheduleByTerm = (term: string) => {
+  const pattern = path.join(appRoot.toString(), `static/schedule/${term}/*/*.html`);
+  return globby.sync(pattern);
+};
+
 export const getSchedule = async (term: string, subject: string, code: string) => {
   return fs.promises.readFile(getFilePath(term, subject, code));
 };
