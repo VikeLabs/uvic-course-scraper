@@ -64,17 +64,36 @@ describe('Class Schedule Listing Parser (CRN) CSC', () => {
   });
 });
 
-describe('Class Schedule Listing Parser (CRN) All', () => {
-  const paths = [...getScheduleByTerm('202009'), ...getScheduleByTerm('202101')];
+describe('Class Schedule Listing Parser All', () => {
+  describe('202001 term', () => {
+    const paths = getScheduleByTerm('202009');
+    // load the HTML file from the file system, in this case
+    each(paths).it('%s parses correctly', async (name: string, p: string) => {
+      //   pass the HTML file to cheerio to interact with the DOM
+      const $ = cheerio.load(await fs.promises.readFile(p));
+      // expect all BAN1P pages to have 'Class Schedule Listing' in their title
+      const parsed = await classScheduleListingExtractor($);
+      parsed.forEach(e => {
+        expect(e.crn).toMatch(/\d{5}/);
+        expect(e.sectionCode).toMatch(/[A|B|T]\d+/);
+        expect(e.credits).toMatch(/\d\.\d{3}/);
+      });
+    });
+  });
 
-  // load the HTML file from the file system, in this case
-  each(paths).it('%s has the expected title ', async (name: string, p: string) => {
-    //   pass the HTML file to cheerio to interact with the DOM
-    const $ = cheerio.load(await fs.promises.readFile(p));
-    // expect all BAN1P pages to have 'Class Schedule Listing' in their title
-    const parsed = await classScheduleListingExtractor($);
-    parsed.forEach(e => {
-      expect(e.crn).toMatch(/\d{5}/);
+  describe('202101 term', () => {
+    const paths = getScheduleByTerm('202101');
+    // load the HTML file from the file system, in this case
+    each(paths).it('%s parses correctly', async (name: string, p: string) => {
+      //   pass the HTML file to cheerio to interact with the DOM
+      const $ = cheerio.load(await fs.promises.readFile(p));
+      // expect all BAN1P pages to have 'Class Schedule Listing' in their title
+      const parsed = await classScheduleListingExtractor($);
+      parsed.forEach(e => {
+        expect(e.crn).toMatch(/\d{5}/);
+        expect(e.sectionCode).toMatch(/[A|B|T]\d+/);
+        expect(e.credits).toMatch(/\d\.\d{3}/);
+      });
     });
   });
 });
