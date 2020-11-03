@@ -24,7 +24,7 @@ describe('Detailed Class Information', () => {
     // this should be broken up to optional attributes.
     // levels is can probably be removed as it's also information we have from the class listing.
     // the field restrictions can probably be extracted cleaner.
-    expect(parsed.requirements.level).toBe('Undergraduate');
-    expect(parsed.requirements.fieldOfStudy).toStrictEqual(['EN: Biomedical Engineering', 'EN: Computer Engineering', 'EN: Electrical Engr', 'EN: Software Engineering BSENG']);
+    expect(parsed.requirements.level).toStrictEqual(['undergraduate']);
+    expect(parsed.requirements.fieldOfStudy).toStrictEqual(['BME', 'ECE', 'SENG']);
   });
 });

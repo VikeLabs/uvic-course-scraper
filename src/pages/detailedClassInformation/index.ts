@@ -1,4 +1,4 @@
-import { Seating } from '../../types';
+import { levelType, Seating, fieldType } from '../../types';
 
 interface SectionDetails {
   seats: Seating;
@@ -7,11 +7,9 @@ interface SectionDetails {
 }
 
 interface requirements {
-  level: string;
-  fieldOfStudy: string[];
+  level: levelType[];
+  fieldOfStudy: fieldType[];
 }
-
-
 
 /**
  * Gets more details of the section. Most importantly, the section capacities
@@ -24,6 +22,8 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
     .split('\n')
     .map(e => parseInt(e, 10))
     .filter(e => !Number.isNaN(e));
+
+  //TODO 
   const requirements = $(`table[summary="This table is used to present the detailed class information."]>tbody>tr>td`)
     .text()
     .split('\n')
@@ -40,9 +40,10 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
       actual: seatInfo[4],
       remaining: seatInfo[5],
     },
+    //currently hard coded
     requirements: {
-      level: "Undergraduate",
-      fieldOfStudy: ['EN: Biomedical Engineering', 'EN: Computer Engineering', 'EN: Electrical Engr', 'EN: Software Engineering BSENG'],
+      level: ['undergraduate'],
+      fieldOfStudy: ['BME', 'ECE', 'SENG'],
     }
   };
 };
