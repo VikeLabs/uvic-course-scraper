@@ -54,8 +54,7 @@ jobs:
             - name: test
               run: npm test -- --coverage
             - name: Upload coverage to Codecov
-            - uses: actions/checkout@master
-            - uses: codecov/codecov-action@v1
+              uses: codecov/codecov-action@v1
               with:
                 name: codecov-umbrella # optional
                 fail_ci_if_error: true # optional (default = false)
