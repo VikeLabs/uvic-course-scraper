@@ -53,7 +53,7 @@ describe('Class Schedule Listing Parser (CRN) CSC', () => {
   const paths = [...getScheduleBySubject('202009', 'CSC'), ...getScheduleBySubject('202101', 'CSC')];
 
   // load the HTML file from the file system, in this case
-  each(paths).it.concurrent('%s has the expected title ', async (p: string) => {
+  each(paths).it('%s has the expected title ', async (name: string, p: string) => {
     //   pass the HTML file to cheerio to interact with the DOM
     const $ = cheerio.load(await fs.promises.readFile(p));
     // expect all BAN1P pages to have 'Class Schedule Listing' in their title
@@ -64,11 +64,11 @@ describe('Class Schedule Listing Parser (CRN) CSC', () => {
   });
 });
 
-describe.skip('Class Schedule Listing Parser (CRN) All', () => {
+describe('Class Schedule Listing Parser (CRN) All', () => {
   const paths = [...getScheduleByTerm('202009'), ...getScheduleByTerm('202101')];
 
   // load the HTML file from the file system, in this case
-  each(paths).it('%s has the expected title ', async (p: string) => {
+  each(paths).it('%s has the expected title ', async (name: string, p: string) => {
     //   pass the HTML file to cheerio to interact with the DOM
     const $ = cheerio.load(await fs.promises.readFile(p));
     // expect all BAN1P pages to have 'Class Schedule Listing' in their title

@@ -9,12 +9,26 @@ const getFilePath = (term: string, subject: string, code: string) => {
 
 export const getScheduleBySubject = (term: string, subject: string) => {
   const pattern = path.join(appRoot.toString(), `static/schedule/${term}/${subject}/*.html`);
-  return globby.sync(pattern);
+  const files = globby.sync(pattern);
+  return files.map(p => [
+    path
+      .basename(p)
+      .replace('_', ' ')
+      .replace('.html', ''),
+    p,
+  ]);
 };
 
 export const getScheduleByTerm = (term: string) => {
   const pattern = path.join(appRoot.toString(), `static/schedule/${term}/*/*.html`);
-  return globby.sync(pattern);
+  const files = globby.sync(pattern);
+  return files.map(p => [
+    path
+      .basename(p)
+      .replace('_', ' ')
+      .replace('.html', ''),
+    p,
+  ]);
 };
 
 export const getSchedule = async (term: string, subject: string, code: string) => {
