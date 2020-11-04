@@ -2,7 +2,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![Build Status][build-shield]][build-url]
-[![Code Coverage][coverage-shield]
+[![Code Coverage][coverage-shield]][https://codecov.io/gh/VikeLabs/scheduler-scraper]
 # scheduler-scraper
 
 ## Getting Started
