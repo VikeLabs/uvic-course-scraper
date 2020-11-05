@@ -2,6 +2,7 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![Build Status][build-shield]][build-url]
+[![Code Coverage][coverage-shield]][coverage-url]
 
 # scheduler-scraper
 
@@ -65,3 +66,5 @@ npm run dump -- --term 202009 --type class --crn 10953
 [issues-url]: https://github.com/othneildrew/VikeLabs/scheduler-scraper/issues
 [build-shield]: https://travis-ci.com/VikeLabs/scheduler-scraper.svg?branch=master
 [build-url]: https://travis-ci.com/VikeLabs/scheduler-scraper
+[coverage-shield]: https://codecov.io/gh/VikeLabs/scheduler-scraper/branch/master/graph/badge.svg?token=06B7FNZ8TH
+[coverage-url]: https://codecov.io/gh/VikeLabs/scheduler-scraper
