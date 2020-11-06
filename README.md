@@ -6,27 +6,33 @@
 
 # scheduler-scraper
 
-## Getting Started
-0. Get VSCode set up.
-1. Clone the repo to your machine by running
-`git clone https://github.com/VikeLabs/scheduler-scraper.git`
-in your terminal.
+Scheduler Scraper is a Node.js library that parses information from [University of Victoria](https://uvic.ca) (UVic) course calandar and course schedule information sources. It uses [Cheerio](https://cheerio.js.org/) under the hood to parse HTML.
+
+As a developer, you would use this to parse HTML and JSON from Kuali and BAN1P which would be retrieved by any method like fetch etc. 
+
+# Development
+0. Get [VS Code](https://code.visualstudio.com/) set up.
+1. Clone the repo to your machine by running the following in your terminal:
+```
+git clone https://github.com/VikeLabs/scheduler-scraper.git
+```
 2. Once you have `schedule-scraper` open as a project, run `npm install` to get your environment set up with the dependencies this project uses.
 3. If you want, run and experiment with `example.ts` using `npx ts-node-dev example.ts` to get a feel for how cheerio and RegEx works on the type of sites our project is hitting.
-4. Find an unassigned task on Zenhub to work on.
+4. Find an unassigned task on [ZenHub](https://app.zenhub.com/workspaces/team-schedule-courses-5f973f50ae36d70012eb5b2e/board?repos=216653028) to work on.
 5. Create a new branch using `git checkout -b <branch-name>` (make sure it's up to date with `master`)
 6. Commit the changes you've made and push to GitHub to create a Pull Request.
 
-## Testing
-Easy as:
 
-`npm test`
+
+
+# Testing
+This project uses [Jest](https://jestjs.io/) testing framework. You can execute tests by running `npm test`.
 
 This will execute tests using Jest files with the extension `*.test*`.  
 
-`npm test -- --watch` will put Jest into watch mode, which will execute tests as files change.
+`npx jest --watch` will put Jest into watch mode, which will execute tests as files change.
 
-## Developer Tools
+# Developer Tools
 This repository contains a CLI to make development related tasks easier.
 
 ```
@@ -47,14 +53,36 @@ npm run dump -- --term 202009 --type class --crn 10953
 ```
 - Dumps the HTML of a "Detailed Class Information" page for a given term and CRN.
 
-- Example links for sites we're hitting:
+# Target Pages
+The following are some of the pages we are currently parsing.
 
-    * Class Schedule Listing: https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse?term_in=202009&subj_in=ECE&crse_in=260&schd_in=. This is where all the information for a specific class will be parsed such as when the term is, location, CRN, etc. You can change the parameters `term_in`, `subj_in`, and `crse_in` to anything you'd like to view other class listings. For example, `202101`, `CHEM`, and `101` could be put in the respective locations.
-    * Detailed Class Information: https://www.uvic.ca/BAN1P/bwckschd.p_disp_detail_sched?term_in=202009&crn_in=10953. This is where all the information for a specific section of a class will be parsed such as the class and waitlist capacity. You can change the parameters `term_in`, `crn_in`, to anything you'd like to view other class listings. For example, `202101` and `12345` could be put in the respective locations.
-    * Kuali course catalog: https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225. This is the mass JSON response which has every course UVIC is offering for the semester.
+## Schedule Information (BAN1P)
 
-**Currently all file output is hardcoded to `tmp`.**
+### Class Schedule Listing
+[Class Schedule Listing - ECE 260 - 202009](https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse?term_in=202009&subj_in=ECE&crse_in=260&schd_in=)
 
+This is where all the information for a specific class will be parsed such as when the term is, location, CRN, etc. You can change the query string parameters `term_in`, `subj_in`, and `crse_in` to anything you'd like to view other class listings. For example, `202101`, `CHEM`, and `101` could be put in the respective locations.
+
+### Detailed Class Information
+[Detailed Class Information](https://www.uvic.ca/BAN1P/bwckschd.p_disp_detail_sched?term_in=202009&crn_in=10953) 
+
+This is where all the information for a specific section of a class will be parsed such as the class and waitlist capacity. You can change the parameters `term_in`, `crn_in`, to anything you'd like to view other class listings. For example, `202101` and `12345` could be put in the respective locations.
+
+## Course Information (Kuali)
+The course information from this source is _mostly_ in `JSON` already so this library does not do much and is mainly used to create a list of courses for other processes. However, there is some parsing done. The `preAndCorequisites` field is `HTML` so we _intend_ to parse this. 
+
+[Kuali Courses Catalog Info](https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225)
+
+This is the `JSON` file which contains **basic** information about every course being offered and some courses that were offered recently.
+
+To get more detailed information about a course, one much make another request using the `pid` value from the above `JSON`
+
+[Kuali Course Info](https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/ByS23Pp7E)
+
+This contains detailed information about a class like:
+- Description
+- Requirements
+- Pre and co-requisites
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
