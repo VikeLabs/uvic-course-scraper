@@ -41,7 +41,8 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
 
       // Parse schedule table
       // This must be done before sectionInfo because sectionInfo removes this table from the cheerio object
-      // Having this table in the cheerio object was causing inconsistent errors whilst parsing the prior section, thus I removed it.
+      // Having this table in the cheerio object was causing inconsistent errors whilst parsing the prior section, thus I removed it.\
+      // ***This doesn't have to be before sectionInfo anymore, but it's not make or break being here
       let scheduleEntries = $(
         `table[summary="This table lists the scheduled meeting times and assigned instructors for this class.."] tbody`,
         sectionEntry
@@ -49,8 +50,6 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
         .text()
         .trim()
         .split('\n');
-
-      // console.log(scheduleEntries);
 
       // Parse block before schedule table
       const sectionInfo = $(`tr td`, sectionEntry)
@@ -74,23 +73,11 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
       const instructionalMethodRegex = /\s*(.*)\s*instructional method/i;
       const creditsRegex = /\s*(\d\.\d+)\s*credits/i;
       const yearRegex = /\d{4}/;
-      // console.log(sectionInfo);
-
-      // Sanitize sectionInfo[] of unwanted elements
-      // if(/Associated Term/i.test(sectionInfo[1]) === false){
-      //   sectionInfo.splice(0, 1, sectionInfo[0] + ' ' + sectionInfo[1]);
-      //   sectionInfo.splice(1, 1);
-      // }
-      // if(/Attributes/i.test(sectionInfo[4])){
-      //   sectionInfo.splice(4, 1);
-      // }
 
       section.additionalInfo = additionalInfoRegex.exec(sectionInfo)![1].trim();
-      // console.log(section.additionalInfo);
 
       // Parse the associated term start and finish from the string into an object
       // i.e. "Associated Term: First Term: Sep - Dec 2019" -> { start: '201909' , end: '201912' }
-
       const associatedTerm = associatedTermRegex.exec(sectionInfo)![1];
       const associatedStart = dayjs(associatedStartRegex.exec(associatedTerm)![1], 'MMM').format('MM');
       const associatedEnd = dayjs(associatedEndRegex.exec(associatedTerm)![1], 'MMM').format('MM');
@@ -99,7 +86,6 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
         start: year + associatedStart,
         end: year + associatedEnd
       };
-      // console.log(section.associatedTerm);
 
       // Parse the registration times from the string into an object
       // i.e. "Registration Dates: Jun 17, 2019 to Sep 20, 2019" -> { start: 'Jun 17, 2019', end: 'Sep 20, 2019' }
@@ -110,13 +96,11 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
         start: registrationStart,
         end: registrationEnd
       };
-      // console.log(section.registrationDates);
 
       // Parse the levels from the string and split them into an array
       // i.e. "Levels: Law, Undergraduate" -> [law, undergraduate]
       const levels = levelsRegex.exec(sectionInfo)![1].toLowerCase().trim();
       section.levels = levels.split(/,\s*/) as levelType[];
-      // console.log(section.levels);
 
       // Check if online campus or in-person campus
       // Might change this because in the HTML it's either: online or main campus (might be other campuses too)
@@ -127,17 +111,13 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
       else{
         section.campus = 'in-person';
       }
-      // console.log(section.campus);
 
       section.sectionType = sectionTypeRegex.exec(sectionInfo)![1].toLowerCase() as sectionType;
-      // console.log(section.sectionType);
 
       // Check if online or in-person instructional method
       section.instructionalMethod = instructionalMethodRegex.exec(sectionInfo)![1].toLowerCase().trim();
-      // console.log(section.instructionalMethod);
 
       section.credits = creditsRegex.exec(sectionInfo)![1];
-      // console.log(section.credits);
 
       // Parse schedule table
       // console.log(scheduleEntries);
@@ -170,11 +150,3 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
     throw new Error(`Failed to get sections: ${error}`);
   }
 };
-
-// async function test() {
-//   const f = await getSchedule('202009', 'CHEM', '101');
-//   const $ = cheerio.load(f);
-//   const parsed =  await classScheduleListingExtractor($);
-// }
-
-// test();
