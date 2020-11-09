@@ -1,7 +1,9 @@
+import { selectSeries } from 'async';
 import cheerio from 'cheerio';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { Section, Schedule, levelType, sectionType, deliveryMethodType } from '../../types';
+import { getSchedule } from '../../utils/tests/getSchedule';
 
 dayjs.extend(customParseFormat);
 
@@ -45,10 +47,10 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
         sectionEntry
       )
         .text()
-        .split('\n')
-        .filter(e => e.length)
-        .map(e => e.trim())
-        .filter(e => e != '');
+        .trim()
+        .split('\n');
+
+      // console.log(scheduleEntries);
 
       // Parse block before schedule table
       const sectionInfo = $(`tr td`, sectionEntry)
@@ -57,77 +59,96 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
           $(el).find('a').remove();
         })
         .text()
-        .split('\n')
-        .filter(e => e.length)
-        .map(e => e.trim())
-        .filter(e => e);
+        .trim();
+
+      // Declare RegEx patterns
+      const additionalInfoRegex = /(.*)Associated Term/s;
+      const associatedTermRegex = /Associated Term:\s*(.*)/i;
+      const associatedStartRegex = /(\w{3})\s*-/;
+      const associatedEndRegex = /-\s*(\w{3})/;
+      const registrationDatesRegex = /Registration Dates:\s*(.*)/i;
+      const registrationStartRegex = /(.+)\s*to/;
+      const registrationEndRegex = /to\s*(.+)/;
+      const levelsRegex = /Levels:\s*(.+)/i;
+      const sectionTypeRegex = /(lecture|lab|tutorial)\s*schedule\s*type/i;
+      const instructionalMethodRegex = /\s*(.*)\s*instructional method/i;
+      const creditsRegex = /\s*(\d\.\d+)\s*credits/i;
+      const yearRegex = /\d{4}/;
+      // console.log(sectionInfo);
 
       // Sanitize sectionInfo[] of unwanted elements
-      if(/Associated Term/i.test(sectionInfo[1]) === false){
-        sectionInfo.splice(0, 1, sectionInfo[0] + ' ' + sectionInfo[1]);
-        sectionInfo.splice(1, 1);
-      }
-      if(/Attributes/i.test(sectionInfo[4])){
-        sectionInfo.splice(4, 1);
-      }
+      // if(/Associated Term/i.test(sectionInfo[1]) === false){
+      //   sectionInfo.splice(0, 1, sectionInfo[0] + ' ' + sectionInfo[1]);
+      //   sectionInfo.splice(1, 1);
+      // }
+      // if(/Attributes/i.test(sectionInfo[4])){
+      //   sectionInfo.splice(4, 1);
+      // }
 
-      section.additionalInfo = sectionInfo[0];
+      section.additionalInfo = additionalInfoRegex.exec(sectionInfo)![1].trim();
+      // console.log(section.additionalInfo);
 
       // Parse the associated term start and finish from the string into an object
       // i.e. "Associated Term: First Term: Sep - Dec 2019" -> { start: '201909' , end: '201912' }
-      const associatedStartRegex = /(\w{3})\s*-/;
-      const associatedEndRegex = /-\s*(\w{3})/;
-      const yearRegex = /\d{4}/;
-      const associatedStart = dayjs(associatedStartRegex.exec(sectionInfo[1])![1], 'MMM').format('MM');
-      const associatedEnd = dayjs(associatedEndRegex.exec(sectionInfo[1],)![1], 'MMM').format('MM');
-      const year = yearRegex.exec(sectionInfo[1])![0];
+
+      const associatedTerm = associatedTermRegex.exec(sectionInfo)![1];
+      const associatedStart = dayjs(associatedStartRegex.exec(associatedTerm)![1], 'MMM').format('MM');
+      const associatedEnd = dayjs(associatedEndRegex.exec(associatedTerm)![1], 'MMM').format('MM');
+      const year = yearRegex.exec(associatedTerm)![0];
       section.associatedTerm = {
         start: year + associatedStart,
         end: year + associatedEnd
       };
+      // console.log(section.associatedTerm);
 
       // Parse the registration times from the string into an object
       // i.e. "Registration Dates: Jun 17, 2019 to Sep 20, 2019" -> { start: 'Jun 17, 2019', end: 'Sep 20, 2019' }
-      const registrationStartRegex = /:\s*(.+)\sto/;
-      const registrationEndRegex = /to\s*(.+)/;
-      const registrationStart = registrationStartRegex.exec(sectionInfo[2])![1];
-      const registrationEnd = registrationEndRegex.exec(sectionInfo[2])![1];
+      const registrationDates = registrationDatesRegex.exec(sectionInfo)![1];
+      const registrationStart = registrationStartRegex.exec(registrationDates)![1].trim();
+      const registrationEnd = registrationEndRegex.exec(registrationDates)![1].trim();
       section.registrationDates = {
         start: registrationStart,
         end: registrationEnd
       };
+      // console.log(section.registrationDates);
 
       // Parse the levels from the string and split them into an array
       // i.e. "Levels: Law, Undergraduate" -> [law, undergraduate]
-      const levelsRegex = /:\s*(.+)/;
-      const levels = levelsRegex.exec(sectionInfo[3])![1].toLowerCase();
+      const levels = levelsRegex.exec(sectionInfo)![1].toLowerCase().trim();
       section.levels = levels.split(/,\s*/) as levelType[];
+      // console.log(section.levels);
 
       // Check if online campus or in-person campus
       // Might change this because in the HTML it's either: online or main campus (might be other campuses too)
-      if(/online/i.test(sectionInfo[4]) === true){
+      // Problem may arise if classes are offered online & in-person, will look into
+      if(/online/i.test(sectionInfo) === true){
         section.campus = 'online';
       }
       else{
         section.campus = 'in-person';
       }
+      // console.log(section.campus);
 
-      section.sectionType = /(lecture|lab|tutorial)/i.exec(sectionInfo[5])![1].toLowerCase() as sectionType;
+      section.sectionType = sectionTypeRegex.exec(sectionInfo)![1].toLowerCase() as sectionType;
+      // console.log(section.sectionType);
 
       // Check if online or in-person instructional method
-      if(/online/i.test(sectionInfo[6]) === true){
-        section.instructionalMethod = 'online';
-      }
-      else{
-        section.instructionalMethod = 'in-person';
-      }
+      section.instructionalMethod = instructionalMethodRegex.exec(sectionInfo)![1].toLowerCase().trim();
+      // console.log(section.instructionalMethod);
 
-      section.credits = /(\d\.\d+)/.exec(sectionInfo[7])![1];
+      section.credits = creditsRegex.exec(sectionInfo)![1];
+      // console.log(section.credits);
 
       // Parse schedule table
+      // console.log(scheduleEntries);
       const scheduleData: Schedule[] = [];
       while (true) {
         scheduleEntries = scheduleEntries.slice(7);
+        if(scheduleEntries[0] == ''){
+          while(scheduleEntries[0].length == 0){
+            scheduleEntries = scheduleEntries.slice(1);
+          }
+        }
         if (scheduleEntries.length == 0) {
           break;
         }
@@ -142,7 +163,6 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
         });
       }
       section.schedule = scheduleData;
-
       sections.push(section);
     }
     return sections;
@@ -150,3 +170,11 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
     throw new Error(`Failed to get sections: ${error}`);
   }
 };
+
+// async function test() {
+//   const f = await getSchedule('202009', 'CHEM', '101');
+//   const $ = cheerio.load(f);
+//   const parsed =  await classScheduleListingExtractor($);
+// }
+
+// test();
