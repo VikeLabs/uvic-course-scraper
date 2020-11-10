@@ -69,7 +69,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
       const registrationStartRegex = /(.+)\s*to/;
       const registrationEndRegex = /to\s*(.+)/;
       const levelsRegex = /Levels:\s*(.+)/i;
-      const sectionTypeRegex = /(lecture|lab|tutorial)\s*schedule\s*type/i;
+      const sectionTypeRegex = /(lecture|lab|tutorial)(.*)?\s*schedule\s*type/i;
       const instructionalMethodRegex = /\s*(.*)\s*instructional method/i;
       const creditsRegex = /\s*(\d\.\d+)\s*credits/i;
       const yearRegex = /\d{4}/;
@@ -120,7 +120,6 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
       section.credits = creditsRegex.exec(sectionInfo)![1];
 
       // Parse schedule table
-      // console.log(scheduleEntries);
       const scheduleData: Schedule[] = [];
       while (true) {
         scheduleEntries = scheduleEntries.slice(7);
