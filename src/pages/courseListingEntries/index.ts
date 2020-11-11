@@ -186,11 +186,3 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
     throw new Error(`Failed to get sections: ${error}`);
   }
 };
-
-async function test() {
-  const f = await getSchedule('202101', 'ED-D', '405');
-  const $ = cheerio.load(f);
-  const parsed =  await classScheduleListingExtractor($);
-}
-
-test();
