@@ -1,7 +1,7 @@
 import { selectSeries } from 'async';
 import cheerio from 'cheerio';
 import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat'
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { Section, Schedule, levelType, sectionType, deliveryMethodType } from '../../types';
 import { getSchedule } from '../../utils/tests/getSchedule';
 
@@ -54,8 +54,12 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
       // Parse block before schedule table
       const sectionInfo = $(`tr td`, sectionEntry)
         .each((i, el) => {
-          $(el).find('table').remove();
-          $(el).find('a').remove();
+          $(el)
+            .find('table')
+            .remove();
+          $(el)
+            .find('a')
+            .remove();
         })
         .text()
         .trim();
@@ -74,57 +78,90 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
       const creditsRegex = /\s*(\d\.\d+)\s*credits/i;
       const yearRegex = /\d{4}/;
 
-      section.additionalInfo = additionalInfoRegex.exec(sectionInfo)![1].trim();
+      if (additionalInfoRegex.test(sectionInfo)) {
+        section.additionalInfo = additionalInfoRegex.exec(sectionInfo)![1].trim();
+      }
 
       // Parse the associated term start and finish from the string into an object
       // i.e. "Associated Term: First Term: Sep - Dec 2019" -> { start: '201909' , end: '201912' }
-      const associatedTerm = associatedTermRegex.exec(sectionInfo)![1];
-      const associatedStart = dayjs(associatedStartRegex.exec(associatedTerm)![1], 'MMM').format('MM');
-      const associatedEnd = dayjs(associatedEndRegex.exec(associatedTerm)![1], 'MMM').format('MM');
-      const year = yearRegex.exec(associatedTerm)![0];
-      section.associatedTerm = {
-        start: year + associatedStart,
-        end: year + associatedEnd
-      };
+      if (associatedTermRegex.test(sectionInfo)) {
+        const associatedTerm = associatedTermRegex.exec(sectionInfo)![1];
+        if (
+          associatedEndRegex.test(associatedTerm) &&
+          associatedStartRegex.test(associatedTerm) &&
+          yearRegex.test(associatedTerm)
+        ) {
+          const associatedStart = dayjs(associatedStartRegex.exec(associatedTerm)![1], 'MMM').format('MM');
+          const associatedEnd = dayjs(associatedEndRegex.exec(associatedTerm)![1], 'MMM').format('MM');
+          const year = yearRegex.exec(associatedTerm)![0];
+          section.associatedTerm = {
+            start: year + associatedStart,
+            end: year + associatedEnd,
+          };
+        }
+      }
+      console.log(section.associatedTerm);
 
       // Parse the registration times from the string into an object
       // i.e. "Registration Dates: Jun 17, 2019 to Sep 20, 2019" -> { start: 'Jun 17, 2019', end: 'Sep 20, 2019' }
-      const registrationDates = registrationDatesRegex.exec(sectionInfo)![1];
-      const registrationStart = registrationStartRegex.exec(registrationDates)![1].trim();
-      const registrationEnd = registrationEndRegex.exec(registrationDates)![1].trim();
-      section.registrationDates = {
-        start: registrationStart,
-        end: registrationEnd
-      };
+      if (registrationDatesRegex.test(sectionInfo)) {
+        const registrationDates = registrationDatesRegex.exec(sectionInfo)![1];
+        if (registrationStartRegex.test(registrationDates) && registrationEndRegex.test(registrationDates)) {
+          const registrationStart = registrationStartRegex.exec(registrationDates)![1].trim();
+          const registrationEnd = registrationEndRegex.exec(registrationDates)![1].trim();
+          section.registrationDates = {
+            start: registrationStart,
+            end: registrationEnd,
+          };
+        }
+      }
+      console.log(section.registrationDates);
 
       // Parse the levels from the string and split them into an array
       // i.e. "Levels: Law, Undergraduate" -> [law, undergraduate]
-      const levels = levelsRegex.exec(sectionInfo)![1].toLowerCase().trim();
-      section.levels = levels.split(/,\s*/) as levelType[];
+      if (levelsRegex.test(sectionInfo)) {
+        const levels = levelsRegex
+          .exec(sectionInfo)![1]
+          .toLowerCase()
+          .trim();
+        section.levels = levels.split(/,\s*/) as levelType[];
+      }
+      console.log(section.levels);
 
       // Check if online campus or in-person campus
       // Might change this because in the HTML it's either: online or main campus (might be other campuses too)
       // Problem may arise if classes are offered online & in-person, will look into
-      if(/online/i.test(sectionInfo) === true){
+      if (/online/i.test(sectionInfo)) {
         section.campus = 'online';
-      }
-      else{
+      } else {
         section.campus = 'in-person';
       }
+      console.log(section.campus);
 
-      section.sectionType = sectionTypeRegex.exec(sectionInfo)![1].toLowerCase() as sectionType;
+      if (sectionTypeRegex.test(sectionInfo)) {
+        section.sectionType = sectionTypeRegex.exec(sectionInfo)![1].toLowerCase() as sectionType;
+      }
+      console.log(section.sectionType);
 
       // Check if online or in-person instructional method
-      section.instructionalMethod = instructionalMethodRegex.exec(sectionInfo)![1].toLowerCase().trim();
+      if (instructionalMethodRegex.test(sectionInfo)) {
+        section.instructionalMethod = instructionalMethodRegex
+          .exec(sectionInfo)![1]
+          .toLowerCase()
+          .trim();
+      }
+      console.log(section.instructionalMethod);
 
-      section.credits = creditsRegex.exec(sectionInfo)![1];
+      if (creditsRegex.exec(sectionInfo)) {
+        section.credits = creditsRegex.exec(sectionInfo)![1];
+      }
 
       // Parse schedule table
       const scheduleData: Schedule[] = [];
       while (true) {
         scheduleEntries = scheduleEntries.slice(7);
-        if(scheduleEntries[0] == ''){
-          while(scheduleEntries[0].length == 0){
+        if (scheduleEntries[0] == '') {
+          while (scheduleEntries[0].length == 0) {
             scheduleEntries = scheduleEntries.slice(1);
           }
         }
@@ -149,3 +186,11 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
     throw new Error(`Failed to get sections: ${error}`);
   }
 };
+
+async function test() {
+  const f = await getSchedule('202101', 'ED-D', '405');
+  const $ = cheerio.load(f);
+  const parsed =  await classScheduleListingExtractor($);
+}
+
+test();
