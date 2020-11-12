@@ -4,7 +4,7 @@ import { Course } from './types.js';
 
 const course = courses as Course[];
 
-function getPreAndCoReqInfo(c: string) {
+export function getPreAndCoReqInfo(c: string) {
   for (let i = 0; i < course.length; i++) {
     if (c == course[i].__catalogCourseId) {
       const preAndCoReqInfo = course[i].preAndCorequisites;
@@ -21,21 +21,26 @@ const preAndCoReq = {
   },
 };
 //Specify the course name below to get the information from courses.json
-const $ = cheerio.load(getPreAndCoReqInfo('AHVS420'));
-$('[target="_blank"]').each((index, elem) => {
-  preAndCoReq.all.one.courses[index] = $(elem)
-    .parent()
-    .text();
-});
-$('[data-test="ruleView-B-result"]').each((index, elem) => {
-  preAndCoReq.all.standing[index] = $(elem)
-    .children()
-    .first()
-    .text();
-});
-$('[data-test="ruleView-A.2-result"]').each((index, elem) => {
-  preAndCoReq.all.one.units[index] = $(elem)
-    .children()
-    .first()
-    .text();
-});
+export function getPreAndCoReqData(c: string) {
+  const $ = cheerio.load(getPreAndCoReqInfo(c));
+
+  $('[target="_blank"]').each((index, elem) => {
+    preAndCoReq.all.one.courses[index] = $(elem)
+      .parent()
+      .text();
+  });
+  $('[data-test="ruleView-B-result"]').each((index, elem) => {
+    preAndCoReq.all.standing[index] = $(elem)
+      .children()
+      .first()
+      .text();
+  });
+  $('[data-test="ruleView-A.2-result"]').each((index, elem) => {
+    preAndCoReq.all.one.units[index] = $(elem)
+      .children()
+      .first()
+      .text();
+  });
+
+  return preAndCoReq;
+}
