@@ -39,7 +39,3 @@ $('[data-test="ruleView-A.2-result"]').each((index, elem) => {
     .first()
     .text();
 });
-// const regex = /complete\s*all\s*of\s*the\s*following/i;
-console.log(preAndCoReq.all.one.units);
-
-//FIRST 2 LETTERS CAPS THEN IT MUST BE A COURSE
