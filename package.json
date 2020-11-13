@@ -2,7 +2,7 @@
   "name": "scheduler-scraper",
   "version": "1.0.0",
   "description": "UVic Web Scrapper",
-  "main": "build/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "dump": "ts-node src/utils/cli.ts",
     "scrape": "ts-node-dev src/scraper.ts",
