@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "UVic Web Scrapper",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "dump": "ts-node src/utils/cli.ts",
     "scrape": "ts-node-dev src/scraper.ts",
@@ -42,5 +43,8 @@
     "ts-node-dev": "^1.0.0",
     "typescript": "^3.9.7",
     "yargs": "^16.1.0"
-  }
+  },
+  "files":[
+    "dist/**/*"
+  ]
 }
