@@ -8,7 +8,7 @@ const getFilePath = (term: string, crn: string) => {
   return path.join(appRoot.toString(), `src/static/${term}_${crn}.html`);
 };
 
-describe('Detailed Class Information', () => {
+describe.skip('Detailed Class Information', () => {
   it('parses ECE260 correctly', async () => {
     const $ = cheerio.load(fs.readFileSync(getFilePath('202009', '10953')));
     const parsed = await detailedClassInfoExtractor($);

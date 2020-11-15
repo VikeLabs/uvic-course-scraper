@@ -51,10 +51,10 @@ export const coursesUtil = async () => {
   console.log(`Getting course data took ${(finish - start) / 60000} minutes`);
   console.log(`${(finish - start) / courses.length} ms/course`);
 
-  fs.writeFileSync('src/static/courses.json', JSON.stringify(courses));
+  fs.writeFileSync('static/courses/courses.json', JSON.stringify(courses));
   // write addtional metadata.
   fs.writeFileSync(
-    'src/static/courses.metadata.json',
+    'static/courses/courses.metadata.json',
     JSON.stringify({
       path: COURSES_URL,
       courseDetailPath: COURSE_DETAIL_URL,

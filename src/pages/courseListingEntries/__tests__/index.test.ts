@@ -1,16 +1,13 @@
 import * as cheerio from 'cheerio';
-import fs from 'fs';
-import path from 'path';
 import { classScheduleListingExtractor } from '../index';
-import appRoot from 'app-root-path';
-
-const getFilePath = (term: string, course: string) => {
-  return path.join(appRoot.toString(), `src/static/${course}_${term}.html`);
-};
+import * as fs from 'fs';
+import { getSchedule, getScheduleBySubject, getScheduleByTerm } from '../../../utils/tests/getSchedule';
+import each from 'jest-each';
 
 describe('Class Schedule Listing Parser', () => {
   it('parses ECE260 correctly', async () => {
-    const $ = cheerio.load(fs.readFileSync(getFilePath('202009', 'ECE260')));
+    const f = await getSchedule('202009', 'ECE', '260');
+    const $ = cheerio.load(f);
     const parsed = await classScheduleListingExtractor($);
 
     expect(parsed[0].title).toBe('Continuous-Time Signals and Systems');
@@ -23,25 +20,80 @@ describe('Class Schedule Listing Parser', () => {
     expect(parsed[0].credits).toBe('1.500');
     expect(parsed[0].levels).toStrictEqual(['law', 'undergraduate']);
     expect(parsed[0].schedule[0].type).toBe('Every Week');
-    expect(parsed[0].schedule[0].instructors).toStrictEqual(['Michael David Adams (P)']);
+    expect(parsed[0].schedule[0].instructors).toStrictEqual(['Michael David  Adams (P)']);
   });
 });
 
 describe('Class Schedule Listing Parser', () => {
   it('parses CHEM101 correctly', async () => {
-    const $ = cheerio.load(fs.readFileSync(getFilePath('201909', 'CHEM101')));
+    const f = await getSchedule('202009', 'CHEM', '101');
+    const $ = cheerio.load(f);
     const parsed = await classScheduleListingExtractor($);
 
     expect(parsed[0].title).toBe('Fundamentals of Chemistry from Atoms to Materials');
-    expect(parsed[0].crn).toBe('10435');
-    expect(parsed[0].associatedTerm).toStrictEqual({ start: '201909', end: '201912' });
-    expect(parsed[0].registrationDates).toStrictEqual({ start: 'Jun 17, 2019', end: 'Sep 20, 2019' });
-    expect(parsed[0].campus).toBe('in-person');
-    expect(parsed[0].instructionalMethod).toBe('in-person');
+    expect(parsed[0].crn).toBe('10487');
+    expect(parsed[0].associatedTerm).toStrictEqual({ start: '202009', end: '202012' });
+    expect(parsed[0].registrationDates).toStrictEqual({ start: 'Jun 22, 2020', end: 'Sep 25, 2020' });
+    expect(parsed[0].campus).toBe('online');
+    expect(parsed[0].instructionalMethod).toBe('online');
     expect(parsed[0].sectionType).toBe('lecture');
     expect(parsed[0].credits).toBe('1.500');
     expect(parsed[0].levels).toStrictEqual(['law', 'undergraduate']);
     expect(parsed[0].schedule[0].type).toBe('Every Week');
-    expect(parsed[0].schedule[0].instructors).toStrictEqual(['Neil   Burford (P)', 'Cornelia   Bohne' , 'Genevieve Nicole  Boice' , 'J. Scott   McIndoe']);
+    expect(parsed[0].schedule[0].instructors).toStrictEqual([
+      'Genevieve Nicole  Boice (P)',
+      'Neil   Burford',
+      'J. Scott   McIndoe',
+      'Harmen   Zijlstra',
+    ]);
+  });
+});
+
+describe('Class Schedule Listing Parser (CRN) CSC', () => {
+  const paths = [...getScheduleBySubject('202009', 'CSC'), ...getScheduleBySubject('202101', 'CSC')];
+
+  // load the HTML file from the file system, in this case
+  each(paths).it('%s has the expected title ', async (name: string, p: string) => {
+    //   pass the HTML file to cheerio to interact with the DOM
+    const $ = cheerio.load(await fs.promises.readFile(p));
+    // expect all BAN1P pages to have 'Class Schedule Listing' in their title
+    const parsed = await classScheduleListingExtractor($);
+    parsed.forEach(e => {
+      expect(e.crn).toMatch(/\d{5}/);
+    });
+  });
+});
+
+describe('Class Schedule Listing Parser All', () => {
+  describe('202001 term', () => {
+    const paths = getScheduleByTerm('202009');
+    // load the HTML file from the file system, in this case
+    each(paths).it('%s parses correctly', async (name: string, p: string) => {
+      //   pass the HTML file to cheerio to interact with the DOM
+      const $ = cheerio.load(await fs.promises.readFile(p));
+      // expect all BAN1P pages to have 'Class Schedule Listing' in their title
+      const parsed = await classScheduleListingExtractor($);
+      parsed.forEach(e => {
+        expect(e.crn).toMatch(/\d{5}/);
+        expect(e.sectionCode).toMatch(/[A|B|T]\d+/);
+        expect(e.credits).toMatch(/\d\.\d{3}/);
+      });
+    });
+  });
+
+  describe('202101 term', () => {
+    const paths = getScheduleByTerm('202101');
+    // load the HTML file from the file system, in this case
+    each(paths).it('%s parses correctly', async (name: string, p: string) => {
+      //   pass the HTML file to cheerio to interact with the DOM
+      const $ = cheerio.load(await fs.promises.readFile(p));
+      // expect all BAN1P pages to have 'Class Schedule Listing' in their title
+      const parsed = await classScheduleListingExtractor($);
+      parsed.forEach(e => {
+        expect(e.crn).toMatch(/\d{5}/);
+        expect(e.sectionCode).toMatch(/[A|B|T]\d+/);
+        expect(e.credits).toMatch(/\d\.\d{3}/);
+      });
+    });
   });
 });
