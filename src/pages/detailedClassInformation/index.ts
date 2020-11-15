@@ -8,7 +8,7 @@ interface SectionDetails {
 
 interface requirements {
   level: levelType[];
-  fieldOfStudy: fieldType[];
+  fieldOfStudy: String[];
 }
 
 /**
@@ -23,12 +23,37 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
     .map(e => parseInt(e, 10))
     .filter(e => !Number.isNaN(e));
 
-  //TODO 
-  const requirements = $(`table[summary="This table is used to present the detailed class information."]>tbody>tr>td`)
+  const requirementsInfo = $(`table[summary="This table is used to present the detailed class information."]>tbody>tr>td`)
     .text()
     .split('\n')
     .filter(e => e.length);
-  const idx = requirements.findIndex(e => e === 'Restrictions:');
+
+  const idx = requirementsInfo.findIndex(e => e === 'Restrictions:');
+  const idxLevel = requirementsInfo.findIndex(e => e === requirementsInfo[idx + 1]);
+  const idxField = requirementsInfo.findIndex(e => e === 'Must be enrolled in one of the following Fields of Study (Major, Minor,  or Concentration):');
+  const idxEnd = requirementsInfo.findIndex(e => e === 'This course contains prerequisites please see the UVic Calendar for more information');
+
+  const tempLevel = requirementsInfo[idxLevel + 1].toLowerCase().trim();
+  var level: levelType = 'unknown';
+
+  if (tempLevel === 'undergraduate') {
+    var level: levelType = 'undergraduate';
+  }
+  else if (tempLevel === 'graduate') {
+    var level: levelType = 'graduate';
+  }
+  else if (tempLevel === 'law') {
+    var level: levelType = 'law';
+  }
+
+  var fields: String[] = [];
+  var i = idxField + 1;
+  var j = 0;
+  for (i; i < idxEnd; i++) {
+    fields[j] = requirementsInfo[i].trim();
+    j++;
+  }
+
   return {
     seats: {
       capacity: seatInfo[0],
@@ -40,10 +65,10 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
       actual: seatInfo[4],
       remaining: seatInfo[5],
     },
-    //currently hard coded
+
     requirements: {
-      level: ['undergraduate'],
-      fieldOfStudy: ['BME', 'ECE', 'SENG'],
+      level: [level],
+      fieldOfStudy: fields,
     }
   };
 };

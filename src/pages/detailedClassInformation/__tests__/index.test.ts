@@ -8,7 +8,7 @@ const getFilePath = (term: string, crn: string) => {
   return path.join(appRoot.toString(), `src/static/${term}_${crn}.html`);
 };
 
-describe.skip('Detailed Class Information', () => {
+describe('Detailed Class Information', () => {
   it('parses ECE260 correctly', async () => {
     const $ = cheerio.load(fs.readFileSync(getFilePath('202009', '10953')));
     const parsed = await detailedClassInfoExtractor($);
@@ -21,10 +21,8 @@ describe.skip('Detailed Class Information', () => {
     expect(parsed.waitlistSeats.actual).toBe(0);
     expect(parsed.waitlistSeats.remaining).toBe(50);
 
-    // this should be broken up to optional attributes.
-    // levels is can probably be removed as it's also information we have from the class listing.
-    // the field restrictions can probably be extracted cleaner.
+    //currently scraping data directly as UVic supplyies, may need to change how we want fieldOfStudy data is represented
     expect(parsed.requirements.level).toStrictEqual(['undergraduate']);
-    expect(parsed.requirements.fieldOfStudy).toStrictEqual(['BME', 'ECE', 'SENG']);
+    expect(parsed.requirements.fieldOfStudy).toStrictEqual(['EN: Biomedical Engineering', 'EN: Computer Engineering', 'EN: Electrical Engr', 'EN: Software Engineering BSENG']);
   });
 });

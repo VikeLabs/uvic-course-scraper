@@ -14,9 +14,11 @@ export interface Schedule {
   instructors: string[];
 }
 
-export type levelType = 'law' | 'undergraduate' | 'graduate';
+export type levelType = 'law' | 'undergraduate' | 'graduate' | 'unknown';
 
-//note that Electrical engineering and computer engineering is under ECE (electrical and computer engineering)
+//currently fieldType is not in use, 
+//currently scraping fields such as "['EN: Biomedical Engineering', 'EN: Computer Engineering', 'EN: Electrical Engr', 'EN: Software Engineering BSENG']"
+//if this gets implemented we may need to look at conflicts such as BSENG != SENG and ECE != Electrical Engr or Computer Engineering
 export type fieldType = 'ATWP' | 'AGEI' | 'ASL' | 'ANTH' | 'AE' | 'AHVS' |
   'ARTS' | 'ACAN' | 'ASTR' | 'BIOC' | 'BCMB' | 'BIOL' | 'BME' | 'CS' | 'CHEM' |
   'CYC' | 'CYCI' | 'CIVE' | 'COM' | 'CSC' | 'CW' | 'ED-P' | 'EDCI' | 'DHUM' |
