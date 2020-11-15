@@ -32,6 +32,8 @@ This will execute tests using Jest files with the extension `*.test*`.
 
 `npx jest --watch` will put Jest into watch mode, which will execute tests as files change.
 
+`npm run mytest` is a helper command that allows you to run only the test file you want to run. Replace the file path in package.json for "mytest" to the path of the test file you wish to test.
+
 # Developer Tools
 This repository contains a CLI to make development related tasks easier.
 
