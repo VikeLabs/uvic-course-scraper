@@ -3,38 +3,42 @@ import { getCurrTerm } from "./utils";
 import { classScheduleListingExtractor } from './pages/courseListingEntries/index';
 import { getSchedule } from './utils/tests/getSchedule';
 
-const course = (subject: string, course: string, term: string = getCurrTerm()) => {
-    return new Course(subject, course, term);
+const classListing = async (subject: string, course: string, term: string = getCurrTerm()) => {
+    return await new Listing(subject, course, term).createAsync();
 }
-class Course {
+
+const setSchedule = async (term: string, subject: string, course: string) => {
+    const f =  await getSchedule(term, subject, course);
+    const $ = cheerio.load(f);
+    const parsed = await classScheduleListingExtractor($);
+    return parsed;
+}
+class Listing {
     subject: string;
     course: string;
     term: string;
+    private data: any;
 
-    constructor(subject: string, course: string, term: string) {
+   constructor(subject: string, course: string, term: string) {
         this.subject = subject;
         this.course = course;
         this.term = term;
     }
 
-    async getCRN() {
-        const f =  await getSchedule(this.term, this.subject, this.course);
-        const $ = cheerio.load(f);
-        const parsed = await classScheduleListingExtractor($);
-        let toRet:  string[] = [];
-        parsed.forEach((element: { crn: string; }) => {
-            toRet.push(element.crn);
-        });
-
-        return toRet;
+    async createAsync() {
+        const tmp = new Listing(this.subject, this.course, this.term);
+        tmp.data = await setSchedule(this.term, this.subject, this.course);
+        return tmp;
     }
 
-    async getSections() {
-        const f =  await getSchedule(this.term, this.subject, this.course);
-        const $ = cheerio.load(f);
-        const parsed = await classScheduleListingExtractor($);
+    getData() {
+        return this.data;
+    }
+
+    // for testing functionality
+    getSections() {
         let toRet:  string[] = [];
-        parsed.forEach((element: { sectionCode: string; }) => {
+        this.data.forEach((element: { sectionCode: string; }) => {
             toRet.push(element.sectionCode);
         });
 
@@ -42,20 +46,18 @@ class Course {
     }
 }
 
-class Section extends Course {
-    section: string;
+// TODO: Implement a class for detailed class information
+// class Details {
+//     ...
+// }
 
-    constructor(subject: string, course: string, term: string, section: string){
-        super(subject, course, term);
-        this.section = section;
-    }
-}
-
-const myClass = course('CSC', '226', '202101');
+// TESTING
 const main = async () => {
-    console.log(await myClass.getSections());
+    const myClass =  await classListing('CSC', '226', '202101');
+    console.log(myClass.getSections());
+    console.log(myClass.getData());
 }
 
 main();
 
-export default course;
+export default classListing;
