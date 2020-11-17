@@ -3,8 +3,8 @@ import { getCurrTerm } from "./utils";
 import { classScheduleListingExtractor } from './pages/courseListingEntries/index';
 import { getSchedule } from './utils/tests/getSchedule';
 
-const classListing = async (subject: string, course: string, term: string = getCurrTerm()) => {
-    return await new Listing(subject, course, term).createAsync();
+const classSchedules = async (subject: string, course: string, term: string = getCurrTerm()) => {
+    return await new Schedules(subject, course, term).createAsync();
 }
 
 const setSchedule = async (term: string, subject: string, course: string) => {
@@ -13,7 +13,7 @@ const setSchedule = async (term: string, subject: string, course: string) => {
     const parsed = await classScheduleListingExtractor($);
     return parsed;
 }
-class Listing {
+class Schedules {
     subject: string;
     course: string;
     term: string;
@@ -26,12 +26,12 @@ class Listing {
     }
 
     async createAsync() {
-        const tmp = new Listing(this.subject, this.course, this.term);
+        const tmp = new Schedules(this.subject, this.course, this.term);
         tmp.data = await setSchedule(this.term, this.subject, this.course);
         return tmp;
     }
 
-    getData() {
+    getSchedules() {
         return this.data;
     }
 
@@ -53,11 +53,11 @@ class Listing {
 
 // TESTING
 const main = async () => {
-    const myClass =  await classListing('CSC', '226', '202101');
+    const myClass =  await classSchedules('CSC', '226', '202101');
     console.log(myClass.getSections());
-    console.log(myClass.getData());
+    console.log(myClass.getSchedules());
 }
 
 main();
 
-export default classListing;
+export default classSchedules;
