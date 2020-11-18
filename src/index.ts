@@ -13,6 +13,8 @@ const setSchedule = async (term: string, subject: string, course: string) => {
     const parsed = await classScheduleListingExtractor($);
     return parsed;
 }
+
+// function getSchedule
 class Schedules {
     subject: string;
     course: string;
@@ -35,12 +37,14 @@ class Schedules {
         return this.data;
     }
 
-    // for testing functionality
     getSections() {
-        let toRet:  string[] = [];
-        this.data.forEach((element: { sectionCode: string; }) => {
-            toRet.push(element.sectionCode);
-        });
+        const toRet = this.data.map((e: any) => e.sectionCode);
+
+        return toRet;
+    }
+
+    getCRN() {
+        const toRet = this.data.map((e: any) => e.crn);
 
         return toRet;
     }
@@ -51,13 +55,5 @@ class Schedules {
 //     ...
 // }
 
-// TESTING
-const main = async () => {
-    const myClass =  await classSchedules('CSC', '226', '202101');
-    console.log(myClass.getSections());
-    console.log(myClass.getSchedules());
-}
-
-main();
 
 export default classSchedules;
