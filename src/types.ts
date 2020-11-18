@@ -60,3 +60,10 @@ export interface Course {
   pid: string;
   offerings: Term[];
 }
+
+export interface PreAndCoReq {
+  oneCourse: string[];
+  allCourses: string[];
+  standing: string[];
+  other: string[];
+}

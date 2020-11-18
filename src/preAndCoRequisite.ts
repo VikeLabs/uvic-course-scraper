@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 import courses from '../static/courses/courses.json';
-import { Course } from './types.js';
+import { Course, PreAndCoReq } from './types.js';
 
 const course = courses as Course[];
 
@@ -14,15 +14,19 @@ export function getPreAndCoReqInfo(c: string) {
   }
   throw new Error(`No Course with the name "${c}" found`);
 }
-const preAndCoReq = {
-  completeAllOfTheFollowing: {
-    oneCourse: [''],
-    allCourses: [''],
-    standing: [''],
-    other: [''],
-  },
-  completeOne: { oneCourse: [''], allCourses: [''], standing: [''], other: [''] },
-};
+const completeAllOfTheFollowing = {
+  oneCourse: [''],
+  allCourses: [''],
+  standing: [''],
+  other: [''],
+} as PreAndCoReq;
+const completeOne = {
+  oneCourse: [''],
+  allCourses: [''],
+  standing: [''],
+  other: [''],
+} as PreAndCoReq;
+const preAndCoReq = { completeAllOfTheFollowing, completeOne };
 const data = [''];
 //Specify the course name below to get the information from courses.json
 export function getPreAndCoReqData(c: string) {
