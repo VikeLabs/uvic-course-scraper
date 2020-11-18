@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 enum term {
   '01',
@@ -51,12 +51,9 @@ export function getCurrentTerms(plusMinus: number): string[] {
   return terms.sort();
 }
 
-export function getCurrTerm(){
-  const year = dayjs()
-    .year()
-    .toString();
-  const currMonth = dayjs()
-    .month();
+export function getCurrTerm(date: dayjs.Dayjs = dayjs()) {
+  const year = date.year().toString();
+  const currMonth = date.month();
   let month = '';
 
   if (1 <= currMonth && currMonth < 5) {
