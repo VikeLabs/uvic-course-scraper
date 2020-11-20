@@ -1,4 +1,5 @@
 import cheerio from 'cheerio';
+import got from 'got';
 import { getCurrTerm } from './utils';
 import { classScheduleListingExtractor } from './pages/courseListingEntries/index';
 import { getSchedule } from './utils/tests/getSchedule';
@@ -9,11 +10,16 @@ const classSchedules = async (subject: string, course: string, term: string = ge
 };
 
 // TODO: Change this function to make request
-const parseSchedule = async (term: string, subject: string, course: string) => {
-  const f = await getSchedule(term, subject, course);
-  const $ = cheerio.load(f);
-  const parsed = await classScheduleListingExtractor($);
-  return parsed;
+const parseSchedules = async (term: string, subject: string, course: string) => {
+  const link = `https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse?term_in=${term}&subj_in=${subject}&crse_in=${course}&schd_in=`;
+  try {
+    const response = await got(link);
+    const $ = cheerio.load(response.body);
+    const parsed = await classScheduleListingExtractor($);
+    return parsed;
+  } catch (err) {
+    console.log(err.response.body);
+  }
 };
 
 // function getSchedule
@@ -31,7 +37,7 @@ class Schedules {
 
   async createAsync() {
     const tmp = new Schedules(this.subject, this.course, this.term);
-    tmp.data = await parseSchedule(this.term, this.subject, this.course);
+    tmp.data = await parseSchedules(this.term, this.subject, this.course);
     return tmp;
   }
 
