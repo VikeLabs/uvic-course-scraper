@@ -21,7 +21,6 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitlistSeats.actual).toBe(0);
     expect(parsed.waitlistSeats.remaining).toBe(50);
 
-    //currently scraping data directly as UVic supplyies, may need to change how we want fieldOfStudy data is represented
     expect(parsed.requirements.level).toStrictEqual(['undergraduate']);
     expect(parsed.requirements.fieldOfStudy).toStrictEqual(['EN: Biomedical Engineering', 'EN: Computer Engineering', 'EN: Electrical Engr', 'EN: Software Engineering BSENG']);
   });

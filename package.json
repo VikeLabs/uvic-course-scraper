@@ -7,7 +7,6 @@
     "dump": "ts-node src/utils/cli.ts",
     "scrape": "ts-node-dev src/scraper.ts",
     "test": "jest",
-    "mytest": "jest src/pages/detailedClassInformation/__tests__/index.test.ts",
     "lint": "eslint src/**/*.ts"
   },
   "author": "VikeLabs",

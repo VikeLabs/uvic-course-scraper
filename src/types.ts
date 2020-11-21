@@ -14,23 +14,7 @@ export interface Schedule {
   instructors: string[];
 }
 
-export type levelType = 'law' | 'undergraduate' | 'graduate' | 'unknown';
-
-//currently fieldType is not in use, 
-//currently scraping fields such as "['EN: Biomedical Engineering', 'EN: Computer Engineering', 'EN: Electrical Engr', 'EN: Software Engineering BSENG']"
-//if this gets implemented we may need to look at conflicts such as BSENG != SENG and ECE != Electrical Engr or Computer Engineering
-export type fieldType = 'ATWP' | 'AGEI' | 'ASL' | 'ANTH' | 'AE' | 'AHVS' |
-  'ARTS' | 'ACAN' | 'ASTR' | 'BIOC' | 'BCMB' | 'BIOL' | 'BME' | 'CS' | 'CHEM' |
-  'CYC' | 'CYCI' | 'CIVE' | 'COM' | 'CSC' | 'CW' | 'ED-P' | 'EDCI' | 'DHUM' |
-  'DSS' | 'EOS' | 'ECON' | 'EDUC' | 'ED-D' | 'ECE' | 'ENGR' | 'ENT' | 'ER' |
-  'ES' | 'EUS' | 'EPHE' | 'FA' | 'FRAN' | 'GNDR' | 'GEOG' | 'GMST' | 'GDS' |
-  'GREE' | 'GRS' | 'HLTH' | 'HINF' | 'HS' | 'HSTR' | 'HDCC' | 'HSD' | 'HUMA' |
-  'ICDG' | 'CYCB' | 'IED' | 'IGOV' | 'INGH' | 'IS' | 'ISP' | 'IB' | 'INTS' |
-  'ITAL' | 'LATI' | 'LAS' | 'LAW' | 'LING' | 'MRNE' | 'MATH' | 'MECH' | 'MEDS' |
-  'MEDI' | 'MICR' | 'MUS' | 'NURS' | 'PAAS' | 'PHIL' | 'PHYS' | 'POLI' | 'PORT' |
-  'PSYC' | 'ADMN' | 'RS' | 'SCIE' | 'SMGT' | 'SLST' | 'SJS' | 'SOSC' | 'SOCW' |
-  'SOCI' | 'SENG' | 'SPAN' | 'STAT' | 'TS' | 'THEA' | 'VIRS' | 'ART' | 'WRIT';
-
+export type levelType = 'law' | 'undergraduate' | 'graduate' | 'undefined';
 export type sectionType = 'lecture' | 'lab' | 'tutorial';
 export type deliveryMethodType = 'synchronous' | 'asynchronous' | 'mixed';
 

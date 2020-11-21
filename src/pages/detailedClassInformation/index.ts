@@ -1,4 +1,4 @@
-import { levelType, Seating, fieldType } from '../../types';
+import { levelType, Seating } from '../../types';
 
 interface SectionDetails {
   seats: Seating;
@@ -28,27 +28,27 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
     .split('\n')
     .filter(e => e.length);
 
-  const idx = requirementsInfo.findIndex(e => e === 'Restrictions:');
-  const idxLevel = requirementsInfo.findIndex(e => e === requirementsInfo[idx + 1]);
-  const idxField = requirementsInfo.findIndex(e => e === 'Must be enrolled in one of the following Fields of Study (Major, Minor,  or Concentration):');
-  const idxEnd = requirementsInfo.findIndex(e => e === 'This course contains prerequisites please see the UVic Calendar for more information');
+  const idx: number = requirementsInfo.findIndex(e => e === 'Restrictions:');
+  const idxLevel: number = requirementsInfo.findIndex(e => e === requirementsInfo[idx + 1]);
+  const idxField: number = requirementsInfo.findIndex(e => e === 'Must be enrolled in one of the following Fields of Study (Major, Minor,  or Concentration):');
+  const idxEnd: number = requirementsInfo.findIndex(e => e === 'This course contains prerequisites please see the UVic Calendar for more information');
 
-  const tempLevel = requirementsInfo[idxLevel + 1].toLowerCase().trim();
-  var level: levelType = 'unknown';
+  const numberOfLevels: number = idxField - (idxLevel + 1);
 
-  if (tempLevel === 'undergraduate') {
-    var level: levelType = 'undergraduate';
-  }
-  else if (tempLevel === 'graduate') {
-    var level: levelType = 'graduate';
-  }
-  else if (tempLevel === 'law') {
-    var level: levelType = 'law';
+  let level: levelType[] = ['undefined']
+  const level1 = requirementsInfo[idxLevel + 1].toLowerCase().trim() as levelType;
+  level[0] = level1
+
+  if (numberOfLevels > 1) {
+    for (let i = 1; i < numberOfLevels; i++) {
+      level.push(requirementsInfo[idxLevel + 1 + i].toLowerCase().trim() as levelType)
+    }
   }
 
-  var fields: String[] = [];
-  var i = idxField + 1;
-  var j = 0;
+  let fields: String[] = [];
+  let i = idxField + 1;
+  let j = 0;
+
   for (i; i < idxEnd; i++) {
     fields[j] = requirementsInfo[i].trim();
     j++;
@@ -67,7 +67,7 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
     },
 
     requirements: {
-      level: [level],
+      level: level as levelType[],
       fieldOfStudy: fields,
     }
   };
