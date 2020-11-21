@@ -35,9 +35,9 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
 
   const numberOfLevels: number = idxField - (idxLevel + 1);
 
-  let level: levelType[] = ['undefined']
+  let level: levelType[] = []
   const level1 = requirementsInfo[idxLevel + 1].toLowerCase().trim() as levelType;
-  level[0] = level1
+  level.push(level1);
 
   if (numberOfLevels > 1) {
     for (let i = 1; i < numberOfLevels; i++) {

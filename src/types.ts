@@ -14,9 +14,22 @@ export interface Schedule {
   instructors: string[];
 }
 
-export type levelType = 'law' | 'undergraduate' | 'graduate' | 'undefined';
+export type levelType = 'law' | 'undergraduate' | 'graduate';
 export type sectionType = 'lecture' | 'lab' | 'tutorial';
 export type deliveryMethodType = 'synchronous' | 'asynchronous' | 'mixed';
+
+//for future implementation
+export type fieldType = 'ATWP' | 'AGEI' | 'ASL' | 'ANTH' | 'AE' | 'AHVS' |
+  'ARTS' | 'ACAN' | 'ASTR' | 'BIOC' | 'BCMB' | 'BIOL' | 'BME' | 'CS' | 'CHEM' |
+  'CYC' | 'CYCI' | 'CIVE' | 'COM' | 'CSC' | 'CW' | 'ED-P' | 'EDCI' | 'DHUM' |
+  'DSS' | 'EOS' | 'ECON' | 'EDUC' | 'ED-D' | 'ECE' | 'ENGR' | 'ENT' | 'ER' |
+  'ES' | 'EUS' | 'EPHE' | 'FA' | 'FRAN' | 'GNDR' | 'GEOG' | 'GMST' | 'GDS' |
+  'GREE' | 'GRS' | 'HLTH' | 'HINF' | 'HS' | 'HSTR' | 'HDCC' | 'HSD' | 'HUMA' |
+  'ICDG' | 'CYCB' | 'IED' | 'IGOV' | 'INGH' | 'IS' | 'ISP' | 'IB' | 'INTS' |
+  'ITAL' | 'LATI' | 'LAS' | 'LAW' | 'LING' | 'MRNE' | 'MATH' | 'MECH' | 'MEDS' |
+  'MEDI' | 'MICR' | 'MUS' | 'NURS' | 'PAAS' | 'PHIL' | 'PHYS' | 'POLI' | 'PORT' |
+  'PSYC' | 'ADMN' | 'RS' | 'SCIE' | 'SMGT' | 'SLST' | 'SJS' | 'SOSC' | 'SOCW' |
+  'SOCI' | 'SENG' | 'SPAN' | 'STAT' | 'TS' | 'THEA' | 'VIRS' | 'ART' | 'WRIT';
 
 export interface Section {
   term: string;
