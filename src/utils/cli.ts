@@ -58,7 +58,7 @@ const handleSections = async (term: string) => {
         const url = detailedClassInformationUrl(term, crn);
         const response = await got(url);
         if (response.body.search(/No classes were found that meet your search criteria/) === -1) {
-          const dest = `static/schedule/${term}/sections`;
+          const dest = `static/sections/${term}`;
           if (!fs.existsSync(dest)) {
             fs.mkdirSync(dest, { recursive: true });
           }
