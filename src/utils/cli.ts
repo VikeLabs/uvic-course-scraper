@@ -47,8 +47,6 @@ const handleSections = async (term: string) => {
     })
   );
 
-  console.log(crns);
-
   const rate = 50;
 
   let queue: string[] = crns;
