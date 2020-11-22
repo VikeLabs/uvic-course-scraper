@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import appRoot from 'app-root-path';
-import globby from 'globby';
+import { glob } from 'glob';
 
 const getFilePath = (term: string, subject: string, code: string) => {
   return path.join(appRoot.toString(), `static/schedule/${term}/${subject}/${subject}_${code}.html`);
@@ -9,7 +9,7 @@ const getFilePath = (term: string, subject: string, code: string) => {
 
 export const getScheduleBySubject = (term: string, subject: string) => {
   const pattern = path.join(appRoot.toString(), `static/schedule/${term}/${subject}/*.html`);
-  const files = globby.sync(pattern);
+  const files = glob.sync(pattern);
   return files.map(p => [
     path
       .basename(p)
@@ -21,7 +21,7 @@ export const getScheduleBySubject = (term: string, subject: string) => {
 
 export const getScheduleByTerm = (term: string) => {
   const pattern = path.join(appRoot.toString(), `static/schedule/${term}/*/*.html`);
-  const files = globby.sync(pattern);
+  const files = glob.sync(pattern);
   return files.map(p => [
     path
       .basename(p)
