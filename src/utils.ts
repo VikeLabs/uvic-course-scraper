@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 enum term {
   '01',
   '05',
@@ -47,4 +49,20 @@ export function getCurrentTerms(plusMinus: number): string[] {
   terms.push(getTermString(currentYear, currentTerm, 0));
 
   return terms.sort();
+}
+
+export function getCurrTerm(date: dayjs.Dayjs = dayjs()) {
+  const year = date.year().toString();
+  const currMonth = date.month();
+  let month = '';
+
+  if (1 <= currMonth && currMonth < 5) {
+    month = '01';
+  } else if (5 <= currMonth && currMonth < 9) {
+    month = '05';
+  } else {
+    month = '09';
+  }
+
+  return year + month;
 }
