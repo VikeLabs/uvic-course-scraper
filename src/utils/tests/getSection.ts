@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import appRoot from 'app-root-path';
-import globby from 'globby';
+import glob from 'glob';
 
 const getFilePath = (term: string, crn: string) => {
   return path.join(appRoot.toString(), `static/schedule/${term}/sections/${crn}.html`);
@@ -9,7 +9,7 @@ const getFilePath = (term: string, crn: string) => {
 
 export const getSectionsByTerm = (term: string) => {
   const pattern = path.join(appRoot.toString(), `static/schedule/${term}/sections/*.html`);
-  const files = globby.sync(pattern);
+  const files = glob.sync(pattern);
   return files.map(p => [path.basename(p).replace('.html', ''), p]);
 };
 
