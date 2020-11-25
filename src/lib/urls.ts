@@ -64,3 +64,6 @@ export const courseListingTermUrl = (term: string): string => {
   /* eslint-enable @typescript-eslint/camelcase */
   return `${BASE_URL}/bwckctlg.p_disp_cat_term_date?${params}`;
 };
+
+// UVic Legacy Calendar
+const LEGACY_BASE_URL = (year: string, month: string) => `https://web.uvic.ca/calendar${year}-${month}/CDs/`;
