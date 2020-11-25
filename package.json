@@ -45,7 +45,7 @@
     "typescript": "^3.9.7",
     "yargs": "^16.1.0"
   },
-  "files":[
+  "files": [
     "dist/**/*"
   ]
 }
