@@ -51,7 +51,7 @@ export const Demo = async () => {
     const sections = await fetchSections(subject, code, term);
     return {
       sections: sections.map(v => ({ ...v, getSectionDetails: () => fetchSectionDetails(v.crn, term) })),
-      getCourseDetails: fetchCourseDetails(subject, code),
+      getCourseDetails: () => fetchCourseDetails(subject, code),
     };
   };
 
