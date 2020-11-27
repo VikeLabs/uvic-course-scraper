@@ -44,7 +44,7 @@ export const Demo = async () => {
 
   const fetchCourseDetails = async (subject: string, code: string) => {
     const pid = pidMap.get(subject + code);
-    return (got(COURSE_DETAIL_URL + pid).json() as unknown) as Course;
+    return (got(COURSE_DETAIL_URL + pid).json() as unknown) as KualiCourseItem;
   };
 
   const getSections = async (subject: string, code: string, term = getCurrentTerm()) => {
