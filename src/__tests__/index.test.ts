@@ -5,6 +5,7 @@ describe('client', () => {
     const client = await Demo();
     const courseDetails = await client.getCourseDetails('SENG', '265');
     console.log(courseDetails);
+    // console.log(await courseDetails)
     //   const sections = await courseDetails.getSections('202005');
     //   console.log(sections);
     //   sections.forEach(v => {
