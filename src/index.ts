@@ -20,7 +20,7 @@ const subjectCodeToPidMapper = (kuali: KualiCourseCatalog[]) => {
 // TODO: change name of this
 export const Demo = async () => {
   // upon initialization, we download the main Kuali courses JSON file.
-  const kuali = (await got(COURSES_URL).json()) as KualiCourseCatalog[];
+  const kuali = await got(COURSES_URL).json<KualiCourseCatalog[]>();
 
   // a map to map human readable subjectCode to a pid required for requests
   const pidMap = subjectCodeToPidMapper(kuali);
@@ -28,7 +28,7 @@ export const Demo = async () => {
   const getCourses = () => {
     return kuali.map(v => ({
       ...v,
-      getCourseDetails: () => (got(COURSE_DETAIL_URL + v.pid).json() as unknown) as KualiCourseItem,
+      getCourseDetails: () => got(COURSE_DETAIL_URL + v.pid).json<KualiCourseItem>(),
     }));
   };
 
@@ -47,7 +47,7 @@ export const Demo = async () => {
 
   const fetchCourseDetails = async (subject: string, code: string) => {
     const pid = pidMap.get(subject + code);
-    return (got(COURSE_DETAIL_URL + pid).json() as unknown) as KualiCourseItem;
+    return got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
   };
 
   const getSections = async (subject: string, code: string, term = getCurrentTerm()) => {
