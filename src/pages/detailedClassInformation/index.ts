@@ -1,7 +1,7 @@
 import { Seating } from '../../types';
 import { assertPageTitle } from "../../utils/common";
 
-interface SectionDetails {
+export interface SectionDetails {
   seats: Seating;
   waitlistSeats: Seating;
   requirements: string[];

@@ -46,7 +46,7 @@ export interface Section {
   addtionalNotes?: string;
 }
 
-interface Term {
+export interface Term {
   term: string;
   sections: Section[];
 }
