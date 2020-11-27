@@ -3,7 +3,7 @@ import got from 'got';
 import { classScheduleListingUrl, detailedClassInformationUrl } from './lib/urls';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
-import { Course, KualiCourseCatalog } from './types';
+import { Course, KualiCourseCatalog, KualiCourseItem } from './types';
 import { getCurrTerm as getCurrentTerm } from './utils';
 
 const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
@@ -26,7 +26,10 @@ export const Demo = async () => {
   const pidMap = subjectCodeToPidMapper(kuali);
 
   const getCourses = () => {
-    return kuali;
+    return kuali.map(v => ({
+      ...v,
+      getCourseDetails: () => (got(COURSE_DETAIL_URL + v.pid).json() as unknown) as KualiCourseItem,
+    }));
   };
 
   // don't directly return the "fetch" functions.
