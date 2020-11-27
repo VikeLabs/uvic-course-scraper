@@ -3,12 +3,16 @@ import got from 'got';
 import { classScheduleListingUrl, detailedClassInformationUrl } from './lib/urls';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
-import { Course, KualiCourseCatalog, KualiCourseItem } from './types';
+import { KualiCourseCatalog, KualiCourseItem } from './types';
 import { getCurrTerm as getCurrentTerm } from './utils';
 
 const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
 const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
 
+/**
+ * Generates a Map that maps a subject and code to a pid used internally within Kuali.
+ * @param kuali
+ */
 const subjectCodeToPidMapper = (kuali: KualiCourseCatalog[]) => {
   const dict: Map<string, string> = new Map();
   kuali.forEach(v => {
@@ -39,17 +43,37 @@ export const Demo = async () => {
     return classScheduleListingExtractor($);
   };
 
+  /**
+   * Fetches the section details for a given crn and term.
+   * To be used by functions defined interally only.
+   *
+   * @param crn ie. 12523
+   * @param term ie. 202009, 202101
+   */
   const fetchSectionDetails = async (crn: string, term: string) => {
     const res = await got(detailedClassInformationUrl(term, crn));
     const $ = cheerio.load(res.body);
     return detailedClassInfoExtractor($);
   };
 
+  /**
+   * Fetches the course details of a given class.
+   * To be used by functions defined interally only.
+   *
+   * @param subject ie. CSC, SENG, PHYS
+   * @param code ie. 100, 265, 115
+   */
   const fetchCourseDetails = async (subject: string, code: string) => {
     const pid = pidMap.get(subject + code);
     return got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
   };
 
+  /**
+   * Gets the sections for a given subject, code and term.
+   * @param subject ie. CSC, SENG, PHYS
+   * @param code ie. 100, 265, 215
+   * @param term ie. 202001, 202101
+   */
   const getSections = async (subject: string, code: string, term = getCurrentTerm()) => {
     const sections = await fetchSections(subject, code, term);
     return {
@@ -58,6 +82,11 @@ export const Demo = async () => {
     };
   };
 
+  /**
+   * Gets the section details for a given crn, code and term.
+   * @param crn ie. 12523
+   * @param term ie. 202001, 202101
+   */
   const getSectionDetails = async (crn: string, term: string) => {
     const sectionDetails = await fetchSectionDetails(crn, term);
     return {
@@ -65,6 +94,11 @@ export const Demo = async () => {
     };
   };
 
+  /**
+   * Gets the section details for a given crn, code and term.
+   * @param subject ie. CSC, SENG, PHYS
+   * @param code ie. 100, 265, 215
+   */
   const getCourseDetails = async (subject: string, code: string) => {
     const course = await fetchCourseDetails(subject, code);
     return {
