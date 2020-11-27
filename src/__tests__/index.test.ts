@@ -1,4 +1,4 @@
-import { Demo } from '.';
+import { Demo } from '..';
 
 describe('client', () => {
   it('works properly', async () => {
