@@ -66,7 +66,12 @@ export const Demo = async () => {
     const course = await fetchCourseDetails(subject, code);
     return {
       ...course,
-      getSections: (term = getCurrentTerm()) => fetchSections(subject, code, term),
+      getSections: async (term = getCurrentTerm()) => {
+        return (await fetchSections(subject, code, term)).map(v => ({
+          ...v,
+          getSectionDetails: () => fetchSectionDetails(v.crn, term),
+        }));
+      },
     };
   };
 
