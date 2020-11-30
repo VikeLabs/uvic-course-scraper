@@ -107,10 +107,10 @@ const getSections = async (course: Course, term: string) => {
 
       // Parse Title block e.g. "Algorithms and Data Structures I - 30184 - CSC 225 - A01"
       const title = $('a', sectionEntries[sectionIdx]);
-      section.description = title.text();
+      // section.description = title.text();
       const m = regex.exec(title.text());
       if (m) {
-        section.CRN = m[2];
+        // section.CRN = m[2];
         section.sectionCode = m[4];
       }
 
@@ -130,11 +130,11 @@ const getSections = async (course: Course, term: string) => {
         .filter(e => e.length)
         .map(e => e.trim());
       section.additionalInfo = sectionInfo[0];
-      section.associatedTerm = sectionInfo[1].split(/:(.+)/)[1];
-      section.registrationDates = sectionInfo[2].split(/:(.+)/)[1];
-      section.levels = sectionInfo[3].split(/:(.+)/)[1];
+      // section.associatedTerm = sectionInfo[1].split(/:(.+)/)[1];
+      // section.registrationDates = sectionInfo[2].split(/:(.+)/)[1];
+      // section.levels = sectionInfo[3].split(/:(.+)/)[1];
       section.location = sectionInfo[4];
-      section.sectionType = sectionInfo[5];
+      // section.sectionType = sectionInfo[5];
       section.instructionalMethod = sectionInfo[6];
       section.credits = sectionInfo[7];
 
@@ -159,7 +159,7 @@ const getSections = async (course: Course, term: string) => {
           where: scheduleEntries[3],
           dateRange: scheduleEntries[4],
           scheduleType: scheduleEntries[5],
-          instructors: scheduleEntries[6],
+          instructors: [scheduleEntries[6]],
         });
       }
       section.schedule = scheduleData;
