@@ -12,7 +12,7 @@ describe('page extractor: Course Listing Term', (): void => {
   it('should throw error when wrong page type is given', async () => {
     const $ = cheerio.load(await getSchedule('202009', 'CHEM', '101'));
 
-    await expect(async () => await extractCourseListingTerm($)).rejects.toThrowError('Wrong page type for parser');
+    await expect(async () => await extractCourseListingTerm($)).rejects.toThrowError('wrong page type for parser');
   });
 
   it('has page has the expected title', (): void => {

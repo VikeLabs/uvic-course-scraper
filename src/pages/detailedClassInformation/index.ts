@@ -1,5 +1,5 @@
 import { Seating } from '../../types';
-import {assertCorrectPageForParser} from "../../utils/common";
+import { assertPageTitle } from "../../utils/common";
 
 interface SectionDetails {
   seats: Seating;
@@ -11,7 +11,7 @@ interface SectionDetails {
  * Gets more details of the section. Most importantly, the section capacities
  */
 export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<SectionDetails> => {
-  assertCorrectPageForParser('Detailed Class Information', $);
+  assertPageTitle('Detailed Class Information', $);
 
   const seatElement = $(`table[summary="This layout table is used to present the seating numbers."]>tbody>tr`);
 

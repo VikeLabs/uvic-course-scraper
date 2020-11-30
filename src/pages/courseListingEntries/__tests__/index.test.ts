@@ -1,12 +1,10 @@
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import each from 'jest-each';
-import path from "path";
-import appRoot from "app-root-path";
 
 import { classScheduleListingExtractor } from '../index';
 import { getSchedule, getScheduleBySubject, getScheduleByTerm } from '../../../utils/tests/getSchedule';
-import {getDetailedClassInfoByTerm} from "../../../utils/tests/getDetailedClassInfo";
+import { getDetailedClassInfoByTerm } from "../../../utils/tests/getDetailedClassInfo";
 
 describe('Class Schedule Listing Parser', () => {
   it('should throw error when wrong page type is given', async () => {
@@ -14,7 +12,7 @@ describe('Class Schedule Listing Parser', () => {
 
     await expect(async () =>
         await classScheduleListingExtractor($))
-        .rejects.toThrowError('Wrong page type for parser');
+        .rejects.toThrowError('wrong page type for parser');
   })
 
   it('parses ECE260 correctly', async () => {

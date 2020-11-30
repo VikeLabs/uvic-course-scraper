@@ -1,8 +1,8 @@
 import * as cheerio from 'cheerio';
 
 import { detailedClassInfoExtractor } from '../index';
-import {getSchedule} from "../../../utils/tests/getSchedule";
-import {getDetailedClassInfoByTerm} from "../../../utils/tests/getDetailedClassInfo";
+import { getSchedule } from "../../../utils/tests/getSchedule";
+import { getDetailedClassInfoByTerm } from "../../../utils/tests/getDetailedClassInfo";
 
 describe('Detailed Class Information', () => {
   it('should throw error when wrong page type is given', async () => {
@@ -10,7 +10,7 @@ describe('Detailed Class Information', () => {
 
     await expect(async () =>
         await detailedClassInfoExtractor($))
-        .rejects.toThrowError('Wrong page type for parser');
+        .rejects.toThrowError('wrong page type for parser');
   })
 
   it.skip('parses ECE260 correctly', async () => {
