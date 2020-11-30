@@ -65,7 +65,10 @@ export const Demo = async () => {
    */
   const fetchCourseDetails = async (subject: string, code: string) => {
     const pid = pidMap.get(subject + code);
-    return got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
+    // TODO: we probably don't want to return the Kuali data as-is.
+    const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
+    // TODO: strip HTML tags from courseDetails.description
+    return courseDetails;
   };
 
   /**
