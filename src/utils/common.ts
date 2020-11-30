@@ -1,7 +1,7 @@
 import ProgressBar from 'progress';
 import { Course } from '../types';
 import async from 'async';
-import cheerio from "cheerio";
+import cheerio from 'cheerio';
 /**
  * This is a helper function to iterate through courses and apply a given function for each course.
  * This helper will retry failed function calls until the given function passes for all courses.
@@ -36,6 +36,7 @@ export const forEachHelper = async (courses: Course[], asyncfn: (course: Course)
   return;
 };
 
-export const assertCorrectPageForParser = (expectedPageTitle: String, $: cheerio.Root) => {
+export const assertCorrectPageForParser = (expectedPageTitle: string, $: cheerio.Root) => {
+  //prettier-ignore
   if (expectedPageTitle != $('title').first().text()) throw new Error('Wrong page type for parser');
 };
