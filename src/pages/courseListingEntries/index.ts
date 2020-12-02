@@ -1,9 +1,9 @@
-import { selectSeries } from 'async';
 import cheerio from 'cheerio';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { Section, Schedule, levelType, sectionType, deliveryMethodType } from '../../types';
-import { getSchedule } from '../../utils/tests/getSchedule';
+
+import { Section, Schedule, levelType, sectionType } from '../../types';
+import { assertPageTitle } from "../../utils/common";
 
 dayjs.extend(customParseFormat);
 
@@ -14,6 +14,8 @@ dayjs.extend(customParseFormat);
  * @param {string} term the term code
  */
 export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Section[]> => {
+  assertPageTitle('Class Schedule Listing', $);
+
   const regex = /(.+) - (\d+) - ([\w|-]{0,4} \w?\d+\w?) - ([A|B|T]\d+)/;
   const sections: Section[] = [];
   const sectionEntries = $(`table[summary="This layout table is used to present the sections found"]>tbody>tr`);

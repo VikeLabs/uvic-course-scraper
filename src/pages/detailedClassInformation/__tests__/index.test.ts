@@ -1,16 +1,20 @@
 import * as cheerio from 'cheerio';
-import fs from 'fs';
-import path from 'path';
+
 import { detailedClassInfoExtractor } from '../index';
-import appRoot from 'app-root-path';
+import { getSchedule } from "../../../utils/tests/getSchedule";
+import { getDetailedClassInfoByTerm } from "../../../utils/tests/getDetailedClassInfo";
 
-const getFilePath = (term: string, crn: string) => {
-  return path.join(appRoot.toString(), `src/static/${term}_${crn}.html`);
-};
+describe('Detailed Class Information', () => {
+  it('should throw error when wrong page type is given', async () => {
+    const $ = cheerio.load(await getSchedule('202009', 'CHEM', '101'));
 
-describe.skip('Detailed Class Information', () => {
-  it('parses ECE260 correctly', async () => {
-    const $ = cheerio.load(fs.readFileSync(getFilePath('202009', '10953')));
+    await expect(async () =>
+        await detailedClassInfoExtractor($))
+        .rejects.toThrowError('wrong page type for parser');
+  })
+
+  it.skip('parses ECE260 correctly', async () => {
+    const $ = cheerio.load(await getDetailedClassInfoByTerm('202009', '10953'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(130);
@@ -25,7 +29,7 @@ describe.skip('Detailed Class Information', () => {
     // levels is can probably be removed as it's also information we have from the class listing.
     // the field restrictions can probably be extracted cleaner.
     expect(parsed.requirements).toBe(`
-    Must be enrolled in one of the following Levels:     
+    Must be enrolled in one of the following Levels:
     Undergraduate
 Must be enrolled in one of the following Fields of Study (Major, Minor, or Concentration):
     EN: Biomedical Engineering
