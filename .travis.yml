@@ -1,9 +1,0 @@
-language: node_js
-node_js:
-  - '12'
-before_script:
-  - npm i
-script:
-  - npm run lint
-notifications:
-  slack: vikelabs:gp9kP9TNGW6pWJCiDHdyszaw
