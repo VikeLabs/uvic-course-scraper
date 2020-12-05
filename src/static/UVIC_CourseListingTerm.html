@@ -5,9 +5,18 @@
     <meta http-equiv="Pragma" name="Cache-Control" content="no-cache" />
     <meta http-equiv="Cache-Control" name="Cache-Control" content="no-cache" />
     <link rel="stylesheet" href="/css/web_defaultapp.css" type="text/css" />
-    <link rel="stylesheet" href="/css/web_defaultprint.css" type="text/css" media="print" />
+    <link
+      rel="stylesheet"
+      href="/css/web_defaultprint.css"
+      type="text/css"
+      media="print"
+    />
     <title>Course Listing Term</title>
-    <meta http-equiv="Content-Script-Type" name="Default_Script_Language" content="text/javascript" />
+    <meta
+      http-equiv="Content-Script-Type"
+      name="Default_Script_Language"
+      content="text/javascript"
+    />
     <script language="JavaScript" type="text/javascript">
       <!-- Hide JavaScript from older browsers
       window.onunload = function() {submitcount=0;}
@@ -37,7 +46,11 @@
       }
       //  End script hiding -->
     </script>
-    <script src="/js/uvic.pack.js" language="javascript1.4" type="text/javascript"></script>
+    <script
+      src="/js/uvic.pack.js"
+      language="javascript1.4"
+      type="text/javascript"
+    ></script>
   </head>
   <body>
     <div class="headerwrapperdiv">
@@ -54,7 +67,11 @@
         <h1>UVic</h1>
       </div>
       <div class="headerlinksdiv"></div>
-      <table class="plaintable" summary="This table displays Menu Items and Banner Search textbox." width="100%">
+      <table
+        class="plaintable"
+        summary="This table displays Menu Items and Banner Search textbox."
+        width="100%"
+      >
         <tr>
           <td class="pldefault">
             <div class="headerlinksdiv2">
@@ -77,14 +94,20 @@
                 >HELP</a
               >
               |
-              <a href="twbkwbis.P_Logout" accesskey="3" class="submenulinktext2">EXIT</a>
+              <a href="twbkwbis.P_Logout" accesskey="3" class="submenulinktext2"
+                >EXIT</a
+              >
             </span>
           </td>
         </tr>
       </table>
     </div>
     <div class="pagetitlediv">
-      <table class="plaintable" summary="This table displays title and static header displays." width="100%">
+      <table
+        class="plaintable"
+        summary="This table displays title and static header displays."
+        width="100%"
+      >
         <tr>
           <td class="pldefault">
             <h2>Course Listing Term</h2>
@@ -127,15 +150,21 @@
           <tr>
             <td class="indefault">
               <span class="infotext">
-                Please select a Course Listing term and choose Submit to proceed to the Course Search page.</span
+                Please select a Course Listing term and choose Submit to proceed
+                to the Course Search page.</span
               >
             </td>
           </tr>
         </table>
+
         <p></p>
       </div>
       <form action="/BAN1P/bwckctlg.p_disp_cat_term_date" method="post">
-        <input type="hidden" name="call_proc_in" value="bwckctlg.p_disp_dyn_ctlg" />
+        <input
+          type="hidden"
+          name="call_proc_in"
+          value="bwckctlg.p_disp_dyn_ctlg"
+        />
         <table
           class="dataentrytable"
           summary="This layout table is used for catalog term for the dynamic catalog."
@@ -146,7 +175,9 @@
           </caption>
           <tr>
             <td class="dedefault">
-              <label for="term_input_id"><span class="fieldlabeltextinvisible">Term</span></label>
+              <label for="term_input_id"
+                ><span class="fieldlabeltextinvisible">Term</span></label
+              >
               <select name="cat_term_in" size="1" id="term_input_id">
                 <option value="None">None</option>
                 <option value="202101">Second Term: Jan - Apr 2021</option>
@@ -227,6 +258,7 @@
           </td>
         </tr>
       </table>
+
       <a
         href="#top"
         onMouseover="window.status='Skip to top of page'; return true"

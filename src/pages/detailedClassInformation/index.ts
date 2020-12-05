@@ -1,5 +1,5 @@
 import { Seating } from '../../types';
-import { assertPageTitle } from "../../utils/common";
+import { assertPageTitle } from '../../utils/common';
 
 interface SectionDetails {
   seats: Seating;
@@ -10,17 +10,23 @@ interface SectionDetails {
 /**
  * Gets more details of the section. Most importantly, the section capacities
  */
-export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<SectionDetails> => {
+export const detailedClassInfoExtractor = async (
+  $: cheerio.Root
+): Promise<SectionDetails> => {
   assertPageTitle('Detailed Class Information', $);
 
-  const seatElement = $(`table[summary="This layout table is used to present the seating numbers."]>tbody>tr`);
+  const seatElement = $(
+    `table[summary="This layout table is used to present the seating numbers."]>tbody>tr`
+  );
 
   const seatInfo = seatElement
     .text()
     .split('\n')
     .map(e => parseInt(e, 10))
     .filter(e => !Number.isNaN(e));
-  const requirements = $(`table[summary="This table is used to present the detailed class information."]>tbody>tr>td`)
+  const requirements = $(
+    `table[summary="This table is used to present the detailed class information."]>tbody>tr>td`
+  )
     .text()
     .split('\n')
     .filter(e => e.length);

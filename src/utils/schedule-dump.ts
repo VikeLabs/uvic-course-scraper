@@ -17,12 +17,19 @@ export const scheduleUtil = async (term: string) => {
     async (course: Course) => {
       const url = classScheduleListingUrl(term, course.subject, course.code);
       const response = await got(url);
-      if (response.body.search(/No classes were found that meet your search criteria/) === -1) {
+      if (
+        response.body.search(
+          /No classes were found that meet your search criteria/
+        ) === -1
+      ) {
         const dest = `static/schedule/${term}/${course.subject}`;
         if (!fs.existsSync(dest)) {
           fs.mkdirSync(dest, { recursive: true });
         }
-        await fs.promises.writeFile(`${dest}/${course.subject}_${course.code}.html`, response.rawBody);
+        await fs.promises.writeFile(
+          `${dest}/${course.subject}_${course.code}.html`,
+          response.rawBody
+        );
       }
     },
     10

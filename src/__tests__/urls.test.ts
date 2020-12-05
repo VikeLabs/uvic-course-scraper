@@ -17,7 +17,9 @@ describe('classScheduleListingUrl', () => {
 describe('detailedClassInformationUrl', () => {
   it('builds the URL correctly', () => {
     const url = detailedClassInformationUrl('202009', '12407');
-    expect(url).toBe('https://www.uvic.ca/BAN1P/bwckschd.p_disp_detail_sched?term_in=202009&crn_in=12407');
+    expect(url).toBe(
+      'https://www.uvic.ca/BAN1P/bwckschd.p_disp_detail_sched?term_in=202009&crn_in=12407'
+    );
   });
 });
 

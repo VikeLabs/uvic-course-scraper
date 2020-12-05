@@ -51,13 +51,19 @@ const handleSections = async (term: string) => {
 
   let queue: string[] = crns;
   while (queue.length > 0) {
-    const bar = new ProgressBar(':bar :current/:total', { total: queue.length });
+    const bar = new ProgressBar(':bar :current/:total', {
+      total: queue.length,
+    });
     const failed: string[] = [];
     await async.forEachOfLimit(queue, rate, async (crn, key, callback) => {
       try {
         const url = detailedClassInformationUrl(term, crn);
         const response = await got(url);
-        if (response.body.search(/No classes were found that meet your search criteria/) === -1) {
+        if (
+          response.body.search(
+            /No classes were found that meet your search criteria/
+          ) === -1
+        ) {
           const dest = `static/sections/${term}`;
           if (!fs.existsSync(dest)) {
             fs.mkdirSync(dest, { recursive: true });

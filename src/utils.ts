@@ -24,7 +24,11 @@ function mod(n: number, m: number): number {
   return ((n % m) + m) % m;
 }
 
-function getTermString(currentYear: number, currentTerm: term, delta: number): string {
+function getTermString(
+  currentYear: number,
+  currentTerm: term,
+  delta: number
+): string {
   const termNumber = currentTerm.valueOf() + delta;
 
   currentYear += Math.floor(termNumber / 3);

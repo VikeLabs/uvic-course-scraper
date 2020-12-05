@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import { Section, Schedule, levelType, sectionType } from '../../types';
-import { assertPageTitle } from "../../utils/common";
+import { assertPageTitle } from '../../utils/common';
 
 dayjs.extend(customParseFormat);
 
@@ -13,13 +13,21 @@ dayjs.extend(customParseFormat);
  * @param {Course} course the course object to extend
  * @param {string} term the term code
  */
-export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Section[]> => {
+export const classScheduleListingExtractor = async (
+  $: cheerio.Root
+): Promise<Section[]> => {
   assertPageTitle('Class Schedule Listing', $);
 
   const regex = /(.+) - (\d+) - ([\w|-]{0,4} \w?\d+\w?) - ([A|B|T]\d+)/;
   const sections: Section[] = [];
-  const sectionEntries = $(`table[summary="This layout table is used to present the sections found"]>tbody>tr`);
-  for (let sectionIdx = 0; sectionIdx < sectionEntries.length; sectionIdx += 2) {
+  const sectionEntries = $(
+    `table[summary="This layout table is used to present the sections found"]>tbody>tr`
+  );
+  for (
+    let sectionIdx = 0;
+    sectionIdx < sectionEntries.length;
+    sectionIdx += 2
+  ) {
     const section = {} as Section;
 
     // Parse Title block e.g. "Algorithms and Data Structures I - 30184 - CSC 225 - A01"
@@ -89,8 +97,14 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
         associatedStartRegex.test(associatedTerm) &&
         yearRegex.test(associatedTerm)
       ) {
-        const associatedStart = dayjs(associatedStartRegex.exec(associatedTerm)![1], 'MMM').format('MM');
-        const associatedEnd = dayjs(associatedEndRegex.exec(associatedTerm)![1], 'MMM').format('MM');
+        const associatedStart = dayjs(
+          associatedStartRegex.exec(associatedTerm)![1],
+          'MMM'
+        ).format('MM');
+        const associatedEnd = dayjs(
+          associatedEndRegex.exec(associatedTerm)![1],
+          'MMM'
+        ).format('MM');
         const year = yearRegex.exec(associatedTerm)![0];
         section.associatedTerm = {
           start: year + associatedStart,
@@ -103,9 +117,16 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
     // i.e. "Registration Dates: Jun 17, 2019 to Sep 20, 2019" -> { start: 'Jun 17, 2019', end: 'Sep 20, 2019' }
     if (registrationDatesRegex.test(sectionInfo)) {
       const registrationDates = registrationDatesRegex.exec(sectionInfo)![1];
-      if (registrationStartRegex.test(registrationDates) && registrationEndRegex.test(registrationDates)) {
-        const registrationStart = registrationStartRegex.exec(registrationDates)![1].trim();
-        const registrationEnd = registrationEndRegex.exec(registrationDates)![1].trim();
+      if (
+        registrationStartRegex.test(registrationDates) &&
+        registrationEndRegex.test(registrationDates)
+      ) {
+        const registrationStart = registrationStartRegex
+          .exec(registrationDates)![1]
+          .trim();
+        const registrationEnd = registrationEndRegex
+          .exec(registrationDates)![1]
+          .trim();
         section.registrationDates = {
           start: registrationStart,
           end: registrationEnd,
@@ -133,7 +154,9 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
     }
 
     if (sectionTypeRegex.test(sectionInfo)) {
-      section.sectionType = sectionTypeRegex.exec(sectionInfo)![1].toLowerCase() as sectionType;
+      section.sectionType = sectionTypeRegex
+        .exec(sectionInfo)![1]
+        .toLowerCase() as sectionType;
     }
 
     // Check if online or in-person instructional method

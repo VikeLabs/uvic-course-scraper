@@ -4,8 +4,10 @@ import fs from 'fs';
 import { forEachHelper } from './common';
 import { Course } from '../types';
 
-const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
-const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
+const COURSES_URL =
+  'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
+const COURSE_DETAIL_URL =
+  'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
 
 /**
  * Downloads Course subject, code, pid for all courses

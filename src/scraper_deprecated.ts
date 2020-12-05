@@ -160,7 +160,9 @@ const main = async () => {
       readline.cursorTo(process.stdout, 20);
       process.stdout.write(`${department}  `);
       const courseCodes = await getCourseCodes(department);
-      const courses = await Promise.all(courseCodes.map(async code => await getOffered(department, code)));
+      const courses = await Promise.all(
+        courseCodes.map(async code => await getOffered(department, code))
+      );
       results.push(...courses.flat());
     } catch (error) {
       failed.push(department);

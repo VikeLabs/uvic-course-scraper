@@ -9,8 +9,10 @@ import { Course, Seating, Section, Schedule } from './types';
 import { getCurrentTerms } from './utils';
 const TERMS = getCurrentTerms(1);
 
-const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
-const COURSE_DETAIL_URLS = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
+const COURSES_URL =
+  'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
+const COURSE_DETAIL_URLS =
+  'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
 const DOMAIN_URL = 'https://www.uvic.ca';
 const SECTIONS_URL = 'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse';
 interface SectionDetails {
@@ -57,14 +59,18 @@ const getSectionDetails = async (endpoint: string): Promise<SectionDetails> => {
   // ex: https://www.uvic.ca/BAN1P/bwckschd.p_disp_detail_sched?term_in=202005&crn_in=30184
   const response = await got(DOMAIN_URL + endpoint);
   const $ = cheerio.load(response.body);
-  const seatElement = $(`table[summary="This layout table is used to present the seating numbers."]>tbody>tr`);
+  const seatElement = $(
+    `table[summary="This layout table is used to present the seating numbers."]>tbody>tr`
+  );
 
   const seatInfo = seatElement
     .text()
     .split('\n')
     .map(e => parseInt(e, 10))
     .filter(e => !Number.isNaN(e));
-  const requirements = $(`table[summary="This table is used to present the detailed class information."]>tbody>tr>td`)
+  const requirements = $(
+    `table[summary="This table is used to present the detailed class information."]>tbody>tr>td`
+  )
     .text()
     .split('\n')
     .filter(e => e.length);
@@ -101,8 +107,14 @@ const getSections = async (course: Course, term: string) => {
 
     const sections: Section[] = [];
 
-    const sectionEntries = $(`table[summary="This layout table is used to present the sections found"]>tbody>tr`);
-    for (let sectionIdx = 0; sectionIdx < sectionEntries.length; sectionIdx += 2) {
+    const sectionEntries = $(
+      `table[summary="This layout table is used to present the sections found"]>tbody>tr`
+    );
+    for (
+      let sectionIdx = 0;
+      sectionIdx < sectionEntries.length;
+      sectionIdx += 2
+    ) {
       const section = {} as Section;
 
       // Parse Title block e.g. "Algorithms and Data Structures I - 30184 - CSC 225 - A01"
@@ -115,7 +127,9 @@ const getSections = async (course: Course, term: string) => {
       }
 
       // Get more information from section details page. Uncommenting this would increase runtime by at least x2
-      const sectionDetailsEndpoint = $('a', sectionEntries[sectionIdx]).attr('href');
+      const sectionDetailsEndpoint = $('a', sectionEntries[sectionIdx]).attr(
+        'href'
+      );
       if (sectionDetailsEndpoint) {
         Object.assign(section, await getSectionDetails(sectionDetailsEndpoint));
       }
@@ -197,28 +211,40 @@ const getOfferings = async (course: Course) => {
  * @param asyncfn function to apply to each course
  * @param rateLimit limit the number of concurrently running functions
  */
-const forEachHelper = async (courses: Course[], asyncfn: (course: Course) => void, rateLimit: number) => {
+const forEachHelper = async (
+  courses: Course[],
+  asyncfn: (course: Course) => void,
+  rateLimit: number
+) => {
   let current: Course[] = courses;
   while (current.length > 0) {
     console.log(`Running \'${asyncfn.name}\' on ${current.length} courses`);
 
-    const bar = new ProgressBar(':bar :current/:total', { total: current.length });
-    const failedCourses: Course[] = [];
-    await async.forEachOfLimit(current, rateLimit, async (course, key, callback) => {
-      try {
-        await asyncfn(course);
-      } catch (e) {
-        bar.interrupt(`Failed ${course.catalogCourseId} ${key}: ${e}`);
-        failedCourses.push(course);
-      } finally {
-        bar.tick();
-        callback();
-        return;
-      }
+    const bar = new ProgressBar(':bar :current/:total', {
+      total: current.length,
     });
+    const failedCourses: Course[] = [];
+    await async.forEachOfLimit(
+      current,
+      rateLimit,
+      async (course, key, callback) => {
+        try {
+          await asyncfn(course);
+        } catch (e) {
+          bar.interrupt(`Failed ${course.catalogCourseId} ${key}: ${e}`);
+          failedCourses.push(course);
+        } finally {
+          bar.tick();
+          callback();
+          return;
+        }
+      }
+    );
 
     if (failedCourses.length > 0) {
-      console.log(`Failed to get data on ${failedCourses.length} courses, retring`);
+      console.log(
+        `Failed to get data on ${failedCourses.length} courses, retring`
+      );
     }
     current = failedCourses;
   }
