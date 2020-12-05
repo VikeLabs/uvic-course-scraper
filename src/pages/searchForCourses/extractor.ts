@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 
-import { assertPageTitle } from "../../utils/common";
+import { assertPageTitle } from '../../utils/common';
 
 export type TermValue = { term: string; text: string };
 

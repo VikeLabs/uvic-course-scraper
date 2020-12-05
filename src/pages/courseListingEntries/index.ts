@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import { Section, Schedule, levelType, sectionType } from '../../types';
-import { assertPageTitle } from "../../utils/common";
+import { assertPageTitle } from '../../utils/common';
 
 dayjs.extend(customParseFormat);
 
