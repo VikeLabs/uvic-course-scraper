@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import { levelType, Seating } from '../../types';
+=======
+import { Seating } from '../../types';
+import { assertPageTitle } from "../../utils/common";
+>>>>>>> master
 
 interface SectionDetails {
   seats: Seating;
@@ -15,6 +20,8 @@ interface requirements {
  * Gets more details of the section. Most importantly, the section capacities
  */
 export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<SectionDetails> => {
+  assertPageTitle('Detailed Class Information', $);
+
   const seatElement = $(`table[summary="This layout table is used to present the seating numbers."]>tbody>tr`);
 
   const seatInfo = seatElement
