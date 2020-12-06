@@ -21,6 +21,40 @@ const subjectCodeToPidMapper = (kuali: KualiCourseCatalog[]) => {
   return dict;
 };
 
+const fetchSections = async (subject: string, code: string, term = getCurrentTerm()) => {
+  const res = await got(classScheduleListingUrl(term, subject, code));
+  const $ = cheerio.load(res.body);
+  return classScheduleListingExtractor($);
+};
+
+/**
+ * Fetches the section details for a given crn and term.
+ * To be used by functions defined interally only.
+ *
+ * @param crn ie. 12523
+ * @param term ie. 202009, 202101
+ */
+const fetchSectionDetails = async (crn: string, term: string) => {
+  const res = await got(detailedClassInformationUrl(term, crn));
+  const $ = cheerio.load(res.body);
+  return detailedClassInfoExtractor($);
+};
+
+/**
+ * Fetches the course details of a given class.
+ * To be used by functions defined interally only.
+ *
+ * @param subject ie. CSC, SENG, PHYS
+ * @param code ie. 100, 265, 115
+ */
+const fetchCourseDetails = (pidMap: Map<string, string>) => async (subject: string, code: string) => {
+  const pid = pidMap.get(subject + code);
+  // TODO: we probably don't want to return the Kuali data as-is.
+  const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
+  // TODO: strip HTML tags from courseDetails.description
+  return courseDetails;
+};
+
 // TODO: change name of this
 export const Demo = async () => {
   // upon initialization, we download the main Kuali courses JSON file.
@@ -36,41 +70,6 @@ export const Demo = async () => {
     }));
   };
 
-  // don't directly return the "fetch" functions.
-  const fetchSections = async (subject: string, code: string, term = getCurrentTerm()) => {
-    const res = await got(classScheduleListingUrl(term, subject, code));
-    const $ = cheerio.load(res.body);
-    return classScheduleListingExtractor($);
-  };
-
-  /**
-   * Fetches the section details for a given crn and term.
-   * To be used by functions defined interally only.
-   *
-   * @param crn ie. 12523
-   * @param term ie. 202009, 202101
-   */
-  const fetchSectionDetails = async (crn: string, term: string) => {
-    const res = await got(detailedClassInformationUrl(term, crn));
-    const $ = cheerio.load(res.body);
-    return detailedClassInfoExtractor($);
-  };
-
-  /**
-   * Fetches the course details of a given class.
-   * To be used by functions defined interally only.
-   *
-   * @param subject ie. CSC, SENG, PHYS
-   * @param code ie. 100, 265, 115
-   */
-  const fetchCourseDetails = async (subject: string, code: string) => {
-    const pid = pidMap.get(subject + code);
-    // TODO: we probably don't want to return the Kuali data as-is.
-    const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
-    // TODO: strip HTML tags from courseDetails.description
-    return courseDetails;
-  };
-
   /**
    * Gets the sections for a given subject, code and term.
    * @param subject ie. CSC, SENG, PHYS
@@ -81,7 +80,7 @@ export const Demo = async () => {
     const sections = await fetchSections(subject, code, term);
     return {
       sections: sections.map(v => ({ ...v, getSectionDetails: () => fetchSectionDetails(v.crn, term) })),
-      getCourseDetails: () => fetchCourseDetails(subject, code),
+      getCourseDetails: () => fetchCourseDetails(pidMap)(subject, code),
     };
   };
 
@@ -103,7 +102,7 @@ export const Demo = async () => {
    * @param code ie. 100, 265, 215
    */
   const getCourseDetails = async (subject: string, code: string) => {
-    const course = await fetchCourseDetails(subject, code);
+    const course = await fetchCourseDetails(pidMap)(subject, code);
     return {
       ...course,
       getSections: async (term = getCurrentTerm()) => {
