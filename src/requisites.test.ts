@@ -5,14 +5,15 @@ import * as cheerio from 'cheerio';
 
 const coursesData = courses as Course[];
 const getPreAndCoReqInfo = (courseCode: string): string => {
-  for (let i = 0; i < coursesData.length; i++) {
-    if (courseCode === coursesData[i].__catalogCourseId) {
-      const preAndCoReqInfo = coursesData[i].preAndCorequisites;
-      if (preAndCoReqInfo === undefined) throw new Error('Pre and Co-Requisites are undefined');
-      return (preAndCoReqInfo as string).replace(/<span>(\d+)<\/span>/g, '$1');
-    }
+  const course = coursesData.filter(c => c.__catalogCourseId === courseCode);
+  if (course.length !== 1) {
+    throw new Error(`No Course with the name "${courseCode}" found`);
   }
-  throw new Error(`No Course with the name "${courseCode}" found`);
+
+  if (course[0].preAndCorequisites === undefined) {
+    throw new Error(`Pre and Co-requisites are undefined for "${courseCode}"`);
+  }
+  return course[0].preAndCorequisites;
 };
 
 describe('parseCoAndPrerequisites', () => {
