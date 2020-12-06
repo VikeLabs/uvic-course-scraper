@@ -187,7 +187,7 @@ describe('parseCoAndPrerequisites', () => {
       const data = coursesData[i].preAndCorequisites;
       if (data) {
         const $ = cheerio.load(data);
-        l.push(parseCoAndPrerequisites($).trim());
+        // l.push(parseCoAndPrerequisites($).trim());
       }
     }
     // fs.writeFileSync('prereqs.json', JSON.stringify(l));
