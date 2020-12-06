@@ -21,7 +21,7 @@ describe('parseCoAndPrerequisites', () => {
     it('works for COM220', () => {
       const data = getPreAndCoReqInfo('COM220');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           all: ['_MIN_YEAR_3'],
@@ -34,7 +34,7 @@ describe('parseCoAndPrerequisites', () => {
     it('works for ECON180', () => {
       const data = getPreAndCoReqInfo('ECON180');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           all: ['MATH101', { 1: ['_ADMISSION_BENG', '_ADMISSION_BSENG'] }],
@@ -43,11 +43,11 @@ describe('parseCoAndPrerequisites', () => {
     });
   });
 
-  describe('MATH', () => {
+  describe.only('MATH', () => {
     it('works for MATH120', () => {
       const data = getPreAndCoReqInfo('MATH120');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           1: [{ 1: ['BC_PRECALC_11', 'BC_MATH_11'] }, '_DEPARTMENT_PERMISSION'],
@@ -58,7 +58,7 @@ describe('parseCoAndPrerequisites', () => {
     it('works for MATH100', () => {
       const data = getPreAndCoReqInfo('MATH100');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           1: [
@@ -74,7 +74,7 @@ describe('parseCoAndPrerequisites', () => {
     it('works for ECE260', () => {
       const data = getPreAndCoReqInfo('ECE260');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           all: ['MATH101', { 1: [['MATH110'], { all: ['MATH211'], concurrent: true }] }],
@@ -85,7 +85,7 @@ describe('parseCoAndPrerequisites', () => {
     it('works for ECE250', () => {
       const data = getPreAndCoReqInfo('ECE250');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           all: ['MATH101', { 1: ['PHYS111', 'PHYS125', 'PHYS130'] }],
@@ -96,7 +96,7 @@ describe('parseCoAndPrerequisites', () => {
     it('works for ECE360', () => {
       const data = getPreAndCoReqInfo('ECE360');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           1: ['ECE260', 'ELEC260'],
@@ -107,7 +107,7 @@ describe('parseCoAndPrerequisites', () => {
     it('works for ECE355', () => {
       const data = getPreAndCoReqInfo('ECE355');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           1: [
@@ -123,7 +123,7 @@ describe('parseCoAndPrerequisites', () => {
     it('works for CSC225', () => {
       const data = getPreAndCoReqInfo('CSC225');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           all: [{ 1: ['CSC115', 'CSC116'] }, ['MATH122']],
@@ -136,7 +136,7 @@ describe('parseCoAndPrerequisites', () => {
     it('works for SENG440', () => {
       const data = getPreAndCoReqInfo('SENG440');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           1: ['CENG355', 'CSC355', 'ECE355'],
@@ -147,7 +147,7 @@ describe('parseCoAndPrerequisites', () => {
     it('works for SENG475', () => {
       const data = getPreAndCoReqInfo('SENG475');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           1: ['SENG265', 'CENG255', 'CSC230', 'CSC349A', 'ECE255', '_DEPARTMENT_PERMISSION'],
@@ -160,10 +160,23 @@ describe('parseCoAndPrerequisites', () => {
     it('works for PAAS451', () => {
       const data = getPreAndCoReqInfo('PAAS451');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           1: [['_MIN_YEAR_3_STANDING', '_AWR'], '_DEPARTMENT_PERMISSION'],
+        },
+      });
+    });
+  });
+
+  describe('MECH', () => {
+    it('works for MECH430', () => {
+      const data = getPreAndCoReqInfo('MECH430');
+      const $ = cheerio.load(data);
+      const { reqs } = parseCoAndPrerequisites($);
+      expect(reqs).toStrictEqual({
+        complete: {
+          1: [],
         },
       });
     });
@@ -173,7 +186,7 @@ describe('parseCoAndPrerequisites', () => {
     it('works for ASTR255', () => {
       const data = getPreAndCoReqInfo('ASTR255');
       const $ = cheerio.load(data);
-      const reqs = parseCoAndPrerequisites($);
+      const { reqs } = parseCoAndPrerequisites($);
       expect(reqs).toStrictEqual({
         complete: {
           1: [['ASTR250', 'PHYS215', 'PHYS216'], { all: ['ASTR250', 'PHYS215', 'PHYS216'], concurrent: true }],
