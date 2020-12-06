@@ -9,18 +9,12 @@ describe('Detailed Class Information', () => {
     const $ = cheerio.load(await getSchedule('202009', 'CHEM', '101'));
 
     await expect(async () =>
-        await detailedClassInfoExtractor($))
-        .rejects.toThrowError('wrong page type for parser');
+      await detailedClassInfoExtractor($))
+      .rejects.toThrowError('wrong page type for parser');
   })
 
-<<<<<<< HEAD
-describe('Detailed Class Information', () => {
-  it('parses ECE260 correctly', async () => {
-    const $ = cheerio.load(fs.readFileSync(getFilePath('202009', '10953')));
-=======
   it.skip('parses ECE260 correctly', async () => {
     const $ = cheerio.load(await getDetailedClassInfoByTerm('202009', '10953'));
->>>>>>> master
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(130);
@@ -31,22 +25,7 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitlistSeats.actual).toBe(0);
     expect(parsed.waitlistSeats.remaining).toBe(50);
 
-<<<<<<< HEAD
     expect(parsed.requirements.level).toStrictEqual(['undergraduate']);
     expect(parsed.requirements.fieldOfStudy).toStrictEqual(['EN: Biomedical Engineering', 'EN: Computer Engineering', 'EN: Electrical Engr', 'EN: Software Engineering BSENG']);
-=======
-    // this should be broken up to optional attributes.
-    // levels is can probably be removed as it's also information we have from the class listing.
-    // the field restrictions can probably be extracted cleaner.
-    expect(parsed.requirements).toBe(`
-    Must be enrolled in one of the following Levels:
-    Undergraduate
-Must be enrolled in one of the following Fields of Study (Major, Minor, or Concentration):
-    EN: Biomedical Engineering
-    EN: Computer Engineering
-    EN: Electrical Engr
-    EN: Software Engineering BSENG
-`);
->>>>>>> master
   });
 });

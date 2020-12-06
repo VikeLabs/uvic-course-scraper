@@ -1,9 +1,5 @@
-<<<<<<< HEAD
-import { levelType, Seating } from '../../types';
-=======
-import { Seating } from '../../types';
+import { Seating, levelType } from '../../types';
 import { assertPageTitle } from "../../utils/common";
->>>>>>> master
 
 interface SectionDetails {
   seats: Seating;
