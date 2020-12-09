@@ -1,7 +1,8 @@
 import * as cheerio from 'cheerio';
 import fs from 'fs';
 import each from 'jest-each';
-import { getSchedule, getScheduleFilePathsBySubject } from '../utils/tests/getSchedule';
+
+import { getSchedule, getScheduleFilePathsBySubject } from '../../common/pathBuilders';
 
 test('example test', () => {
   // this test is pretty useless but shows the basic structure of a Jest test.

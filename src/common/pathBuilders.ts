@@ -7,6 +7,10 @@ const getFilePath = (term: string, subject: string, code: string): string => {
   return path.join(appRoot.toString(), `static/schedule/${term}/${subject}/${subject}_${code}.html`);
 };
 
+export const getDetailedClassInfoByTerm = (term: string, crn: string) => {
+  return fs.promises.readFile(path.join(appRoot.toString(), `static/sections/${term}/${crn}.html`));
+};
+
 export const getScheduleFilePathsBySubject = (term: string, subject: string): string[] => {
   return glob.sync(path.join(appRoot.toString(), `static/schedule/${term}/${subject}/*.html`));
 };

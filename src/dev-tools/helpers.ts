@@ -1,6 +1,5 @@
 import ProgressBar from 'progress';
 import async from 'async';
-import cheerio from 'cheerio';
 
 import { Course } from '../types';
 
@@ -12,7 +11,7 @@ import { Course } from '../types';
  * @param asyncfn function to apply to each course
  * @param rateLimit limit the number of concurrently running functions
  */
-export const forEachHelper = async (courses: Course[], asyncfn: (course: Course) => void, rateLimit: number) => {
+export const forEachCourseHelper = async (courses: Course[], asyncfn: (course: Course) => void, rateLimit: number) => {
   const bar = new ProgressBar(':bar :current/:total', { total: courses.length });
   await async.forEachOfLimit(courses, rateLimit, async (course, key, callback) => {
     try {
@@ -28,12 +27,18 @@ export const forEachHelper = async (courses: Course[], asyncfn: (course: Course)
   });
 };
 
-export const assertPageTitle = (expectedPageTitle: string, $: cheerio.Root) => {
-  const actualPageTitle: string = $('title')
-    .first()
-    .text();
-
-  if (expectedPageTitle != actualPageTitle) {
-    throw new Error(`wrong page type for parser\n\nExpected: ${expectedPageTitle}\nReceived: ${actualPageTitle}`);
-  }
+export const forEachCRNHelper = async (crns: string[], asyncfn: (crn: string) => void, rateLimit: number) => {
+  const bar = new ProgressBar(':bar :current/:total', { total: crns.length });
+  await async.forEachOfLimit(crns, rateLimit, async (crn, key, callback) => {
+    try {
+      await asyncfn(crn);
+    } catch (error) {
+      console.error(error);
+      bar.interrupt(`failed on course crn: ${crn} at iteration ${key}\n`);
+    } finally {
+      bar.tick();
+      callback();
+      return;
+    }
+  });
 };

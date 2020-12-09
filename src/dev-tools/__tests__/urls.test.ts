@@ -3,7 +3,7 @@ import {
   courseListingsEntriesUrl,
   detailedClassInformationUrl,
   courseListingTermUrl,
-} from '../lib/urls';
+} from '../urls';
 
 describe('classScheduleListingUrl', () => {
   it('builds the URL correctly', () => {

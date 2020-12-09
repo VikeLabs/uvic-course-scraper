@@ -3,8 +3,12 @@ import * as fs from 'fs';
 import each from 'jest-each';
 
 import { classScheduleListingExtractor } from '../index';
-import { getSchedule, getScheduleFilePathsBySubject, getScheduleFilePathsByTerm } from '../../../utils/tests/getSchedule';
-import { getDetailedClassInfoByTerm } from "../../../utils/tests/getDetailedClassInfo";
+import {
+  getSchedule,
+  getScheduleFilePathsBySubject,
+  getScheduleFilePathsByTerm,
+  getDetailedClassInfoByTerm,
+} from '../../../common/pathBuilders';
 
 describe('Class Schedule Listing Parser', () => {
   it('should throw error when wrong page type is given', async () => {
@@ -92,9 +96,9 @@ describe('Class Schedule Listing Parser All', () => {
   describe('202101 term', () => {
     const paths = getScheduleFilePathsByTerm('202101');
     // load the HTML file from the file system, in this case
-    each(paths).it('%s parses correctly', async (name: string, p: string) => {
+    each(paths).it('%s parses correctly', async (path: string) => {
       //   pass the HTML file to cheerio to interact with the DOM
-      const $ = cheerio.load(await fs.promises.readFile(p));
+      const $ = cheerio.load(await fs.promises.readFile(path));
       // expect all BAN1P pages to have 'Class Schedule Listing' in their title
       const parsed = await classScheduleListingExtractor($);
       parsed.forEach(e => {

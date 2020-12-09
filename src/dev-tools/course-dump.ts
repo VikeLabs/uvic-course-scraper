@@ -1,14 +1,13 @@
 import got from 'got';
 import { performance } from 'perf_hooks';
 import fs from 'fs';
-import { forEachHelper } from './common';
+import { forEachCourseHelper } from './helpers';
 import { Course } from '../types';
 
 const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
 const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
 
 const writeCoursesToFS = (courses: Course[]) => {
-
   fs.writeFileSync('static/courses/courses.json', JSON.stringify(courses));
 
   const coursesMetadata = JSON.stringify({
@@ -17,20 +16,19 @@ const writeCoursesToFS = (courses: Course[]) => {
     // TODO this may contain links that don't work. should remove them
     pids: courses.map((course: Course) => course.pid),
     datetime: Date.now(),
-  })
+  });
 
   fs.writeFileSync('static/courses/courses.metadata.json', coursesMetadata);
-}
+};
 
 /**
  * Downloads all courses. Saves this to courses.json and courses.metadata.json.
  */
 export const coursesUtil = async () => {
-
   const courseMapper = async (course: Course) => {
-      // ex: https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/r1xcyOamN
-      Object.assign(course, await got(COURSE_DETAIL_URL + course.pid).json());
-  }
+    // ex: https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/r1xcyOamN
+    Object.assign(course, await got(COURSE_DETAIL_URL + course.pid).json());
+  };
 
   // Start timer
   const start = performance.now();
@@ -46,7 +44,7 @@ export const coursesUtil = async () => {
   }
 
   console.log('Downloading details for each course');
-  await forEachHelper(courses, courseMapper, 35);
+  await forEachCourseHelper(courses, courseMapper, 35);
 
   // Stop timer
   const finish = performance.now();

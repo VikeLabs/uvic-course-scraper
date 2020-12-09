@@ -1,8 +1,7 @@
 import * as cheerio from 'cheerio';
 
 import { detailedClassInfoExtractor } from '../index';
-import { getSchedule } from '../../../utils/tests/getSchedule';
-import { getDetailedClassInfoByTerm } from '../../../utils/tests/getDetailedClassInfo';
+import { getSchedule, getDetailedClassInfoByTerm } from '../../../common/pathBuilders';
 
 describe('Detailed Class Information', () => {
   it('should throw error when wrong page type is given', async () => {

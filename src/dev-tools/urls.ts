@@ -66,4 +66,4 @@ export const courseListingTermUrl = (term: string): string => {
 };
 
 // UVic Legacy Calendar
-const LEGACY_BASE_URL = (year: string, month: string) => `https://web.uvic.ca/calendar${year}-${month}/CDs/`;
+// const LEGACY_BASE_URL = (year: string, month: string) => `https://web.uvic.ca/calendar${year}-${month}/CDs/`;

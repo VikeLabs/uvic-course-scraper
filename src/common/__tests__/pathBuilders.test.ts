@@ -1,4 +1,4 @@
-import { getScheduleFilePathsBySubject } from '../getSchedule';
+import { getScheduleFilePathsBySubject } from '../pathBuilders';
 
 describe.only('getScheduleBySubject', () => {
   it('works correctly', async () => {

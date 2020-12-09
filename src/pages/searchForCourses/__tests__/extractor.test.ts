@@ -1,10 +1,10 @@
+import appRoot from 'app-root-path';
 import * as cheerio from 'cheerio';
 import fs from 'fs';
 import path from 'path';
 
-import { extractSubjects } from '../pages/searchForCourses/extractor';
-import { getSchedule } from '../utils/tests/getSchedule';
-import appRoot from 'app-root-path';
+import { extractSubjects } from '../extractor';
+import { getSchedule } from '../../../common/pathBuilders';
 
 // title: Search for Courses
 // https://www.uvic.ca/BAN1P/bwckctlg.p_disp_cat_term_date
