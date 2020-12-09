@@ -6,6 +6,7 @@ Feel free to make changes to this code and use it when working on tasks to exper
 
 import got from 'got';
 import cheerio from 'cheerio';
+import Element = cheerio.Element;
 
 console.log('Starting scraping...');
 
@@ -27,7 +28,7 @@ console.log('Starting scraping...');
   const tableRows = table.find('tr');
 
   // Since there are multiple table rows in tableRows, we can iterate through them all
-  tableRows.each((i: number, el: any) => {
+  tableRows.each((i: number, el: Element) => {
     const info = $(el)
       .text() // get the text attributes of what we found
       .split('\n') // split the text into an array, splitting at any new line

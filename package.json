@@ -6,7 +6,6 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "dump": "ts-node src/dev-tools/cli.ts",
-    "scrape": "ts-node-dev src/scraper.ts",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
     "build": "tsc"
