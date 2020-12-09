@@ -1,5 +1,5 @@
 import { Seating } from '../../types';
-import { assertPageTitle } from "../../utils/common";
+import { assertPageTitle } from '../../utils/common';
 
 interface SectionDetails {
   seats: Seating;

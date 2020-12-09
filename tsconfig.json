@@ -63,9 +63,11 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
   },
   "include": [
-    "src/index.ts"
+    "src/**/*"
   ],
   "exclude": [
+    "src/utils/tests/*",
+    "src/pages/legacyCalendar/*",
     "node_modules",
     "**/__tests__/*",
     "static"
