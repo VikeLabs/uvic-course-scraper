@@ -1,32 +1,35 @@
-import got from 'got';
 import * as fs from 'fs';
+import got from 'got';
 import { performance } from 'perf_hooks';
-import courses from '../../static/courses/courses.json';
+
+import coursesJSON from '../../static/courses/courses.json';
 import { Course } from '../types';
 import { forEachHelper } from './common';
 import { classScheduleListingUrl } from '../lib/urls';
 
 export const scheduleUtil = async (term: string) => {
-  console.log('dump:schedule - starting...\n');
+  const writeCourseScheduleToFS = async (course: Course) => {
+    const url = classScheduleListingUrl(term, course.subject, course.code);
+    const res = await got(url);
+    if (res.body.search(/No classes were found that meet your search criteria/) === -1) {
+      const destDir = `static/schedule/${term}/${course.subject}`;
+      const destFilePath = `${destDir}/${course.subject}_${course.code}.html`;
+
+      // Not all courses in courses.json are found in the class schedule listing as courses.json
+      // is retrieved from the Kuali API and course schedule listing from BAN1P.
+      if (!fs.existsSync(destDir)) {
+          fs.mkdirSync(destDir, { recursive: true });
+      }
+
+      await fs.promises.writeFile(destFilePath, res.rawBody);
+    }
+  }
+
+  console.log('Starting schedule dump\n');
   const start = performance.now();
 
-  const c = courses as Course[];
-
-  await forEachHelper(
-    c,
-    async (course: Course) => {
-      const url = classScheduleListingUrl(term, course.subject, course.code);
-      const response = await got(url);
-      if (response.body.search(/No classes were found that meet your search criteria/) === -1) {
-        const dest = `static/schedule/${term}/${course.subject}`;
-        if (!fs.existsSync(dest)) {
-          fs.mkdirSync(dest, { recursive: true });
-        }
-        await fs.promises.writeFile(`${dest}/${course.subject}_${course.code}.html`, response.rawBody);
-      }
-    },
-    10
-  );
+  const courses = coursesJSON as Course[];
+  await forEachHelper(courses, writeCourseScheduleToFS, 10);
 
   const finish = performance.now();
   console.log(`Getting course data took ${(finish - start) / 60000} minutes`);

@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
 import fs from 'fs';
 import each from 'jest-each';
-import { getSchedule, getScheduleBySubject } from '../utils/tests/getSchedule';
+import { getSchedule, getScheduleFilePathsBySubject } from '../utils/tests/getSchedule';
 
 test('example test', () => {
   // this test is pretty useless but shows the basic structure of a Jest test.
@@ -27,12 +27,12 @@ describe('a example test using Jest and Cheerio', () => {
 });
 
 describe('a example test using Jest and Cheerio with parameters', (): void => {
-  const paths = getScheduleBySubject('202009', 'CSC');
+  const paths: string[] = getScheduleFilePathsBySubject('202009', 'CSC');
 
   // load the HTML file from the file system, in this case
-  each(paths).it.concurrent('%s has the expected title ', async (name: string, p: string) => {
+  each(paths).it.concurrent('%s has the expected title ', async (path: string) => {
     //   pass the HTML file to cheerio to interact with the DOM
-    const $ = cheerio.load(await fs.promises.readFile(p));
+    const $ = cheerio.load(await fs.promises.readFile(path));
     // expect all BAN1P pages to have 'Class Schedule Listing' in their title
     expect(
       $('title')

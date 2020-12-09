@@ -3,6 +3,8 @@ import async from 'async';
 import cheerio from 'cheerio';
 
 import { Course } from '../types';
+
+// TODO: Move this stuff to more suitable place maybe or just change file structure
 /**
  * This is a helper function to iterate through courses and apply a given function for each course.
  * This helper will retry failed function calls until the given function passes for all courses.
@@ -12,29 +14,19 @@ import { Course } from '../types';
  * @param rateLimit limit the number of concurrently running functions
  */
 export const forEachHelper = async (courses: Course[], asyncfn: (course: Course) => void, rateLimit: number) => {
-  let current: Course[] = courses;
-  while (current.length > 0) {
-    const bar = new ProgressBar(':bar :current/:total', { total: current.length });
-    const failedCourses: Course[] = [];
-    await async.forEachOfLimit(current, rateLimit, async (course, key, callback) => {
-      try {
-        await asyncfn(course);
-      } catch (e) {
-        bar.interrupt(`Failed ${course.catalogCourseId} ${key}: ${e}`);
-        failedCourses.push(course);
-      } finally {
-        bar.tick();
-        callback();
-        return;
-      }
-    });
-
-    if (failedCourses.length > 0) {
-      console.log(`Failed to get data on ${failedCourses.length} courses, retring`);
+  const bar = new ProgressBar(':bar :current/:total', { total: courses.length });
+  await async.forEachOfLimit(courses, rateLimit, async (course, key, callback) => {
+    try {
+      await asyncfn(course);
+    } catch (error) {
+      console.error(error);
+      bar.interrupt(`failed on course pid: ${course.pid} at iteration ${key}\n`);
+    } finally {
+      bar.tick();
+      callback();
+      return;
     }
-    current = failedCourses;
-  }
-  return;
+  });
 };
 
 export const assertPageTitle = (expectedPageTitle: string, $: cheerio.Root) => {

@@ -1,9 +1,9 @@
-import { getScheduleBySubject } from '../getSchedule';
+import { getScheduleFilePathsBySubject } from '../getSchedule';
 
 describe.only('getScheduleBySubject', () => {
   it('works correctly', async () => {
     // pick a subject with not many classes
-    const schedules = getScheduleBySubject('202009', 'ADMN');
-    expect(schedules.length).toBe(9);
+    const paths: string[] = getScheduleFilePathsBySubject('202009', 'ADMN');
+    expect(paths.length).toBe(9);
   });
 });
