@@ -4,7 +4,6 @@ import cheerio from 'cheerio';
 
 import { Course } from '../types';
 
-// TODO: Move this stuff to more suitable place maybe or just change file structure
 /**
  * This is a helper function to iterate through courses and apply a given function for each course.
  * This helper will retry failed function calls until the given function passes for all courses.

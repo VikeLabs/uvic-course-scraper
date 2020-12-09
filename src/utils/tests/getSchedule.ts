@@ -7,12 +7,10 @@ const getFilePath = (term: string, subject: string, code: string): string => {
   return path.join(appRoot.toString(), `static/schedule/${term}/${subject}/${subject}_${code}.html`);
 };
 
-// TODO: MOVE THIS
 export const getScheduleFilePathsBySubject = (term: string, subject: string): string[] => {
   return glob.sync(path.join(appRoot.toString(), `static/schedule/${term}/${subject}/*.html`));
 };
 
-// TODO: MOVE THIS
 export const getScheduleFilePathsByTerm = (term: string): string[] => {
   return glob.sync(path.join(appRoot.toString(), `static/schedule/${term}/*/*.html`));
 };

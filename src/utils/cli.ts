@@ -11,7 +11,6 @@ import { coursesUtil } from './kuali-dump';
 import { scheduleUtil } from './schedule-dump';
 import { detailedClassInformationUrl } from '../lib/urls';
 
-// TODO: don't need term for courses
 const argv = yargs(process.argv.slice(2)).options({
   term: { type: 'string', demandOption: true, description: 'term eg. 202009' },
   type: {
@@ -49,11 +48,10 @@ const handleClass = async (term: string, crn: string) => {
   await fs.promises.writeFile(`tmp/${term}_${crn}.html`, response.rawBody);
 };
 
-// TODO: Add sections to readme
 const handleSections = async (term: string) => {
   const parseCRNsFromClassScheduleListing = async (path: string): Promise<void> => {
     const $ = cheerio.load(await fs.promises.readFile(path));
-    const parsed = await classScheduleListingExtractor($); // TODO: this coupling isn't great
+    const parsed = await classScheduleListingExtractor($);
     CRNs.push(...parsed.map(section => section.crn));
   }
 
@@ -71,7 +69,7 @@ const handleSections = async (term: string) => {
     }
   }
 
-  const paths: string[] = getScheduleFilePathsByTerm(term); // TODO: change where these urls are made...
+  const paths: string[] = getScheduleFilePathsByTerm(term);
 
   const CRNs: string[] = [];
   await Promise.all(paths.map(async path => await parseCRNsFromClassScheduleListing(path)));
@@ -80,6 +78,11 @@ const handleSections = async (term: string) => {
 };
 
 const main = async () => {
+  if (argv.type !== 'courses' && !argv.term) {
+    console.error('require term flag');
+    return
+  }
+
   switch (argv.type) {
     case 'courses':
       await coursesUtil();
