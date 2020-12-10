@@ -65,7 +65,7 @@ describe('Class Schedule Listing Parser (CRN) CSC', () => {
   const namePathPairs = [...getSchedulePathsBySubject('202009', 'CSC'), ...getSchedulePathsBySubject('202101', 'CSC')];
 
   each(namePathPairs).it('%s has the expected title ', async (name:string, path: string) => {
-    await assertTitleIsClassScheduleListing(path);
+    await assertFields(path);
   });
 });
 
@@ -74,7 +74,7 @@ describe('Class Schedule Listing Parser All', () => {
     const namePathPairs: string[][] = getSchedulePathsByTerm('202009');
 
     each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
-      await assertTitleIsClassScheduleListing(path);
+      await assertFields(path);
     });
   });
 });
@@ -83,15 +83,14 @@ describe('202101 term', () => {
   const namePathPairs: string[][] = getSchedulePathsByTerm('202101');
 
   each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
-    await assertTitleIsClassScheduleListing(path);
+    await assertFields(path);
   });
 });
 
-const assertTitleIsClassScheduleListing = async (path: string) => {
+const assertFields = async (path: string) => {
   const $ = cheerio.load(await fs.promises.readFile(path));
   const parsed = await classScheduleListingExtractor($);
 
-  // expect all BAN1P pages to have 'Class Schedule Listing' in their title
   parsed.forEach(e => {
     expect(e.crn).toMatch(/\d{5}/);
     expect(e.sectionCode).toMatch(/[A|B|T]\d+/);
