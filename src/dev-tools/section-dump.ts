@@ -10,7 +10,7 @@ import { forEachHelper } from './utils';
 export const sectionsUtil = async (term: string) => {
   const CRNs: string[] = [];
   const namePathPairs: string[][] = getSchedulePathsByTerm(term);
-  const paths = namePathPairs[1];
+  const paths: string[] = namePathPairs.map((namePathPair => namePathPair[1]));
 
   const parseCRNsFromClassScheduleListing = async (path: string): Promise<void> => {
     const $ = cheerio.load(await fs.promises.readFile(path));
