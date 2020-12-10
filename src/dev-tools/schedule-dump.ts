@@ -4,7 +4,7 @@ import { performance } from 'perf_hooks';
 
 import coursesJSON from '../../static/courses/courses.json';
 import { Course } from '../types';
-import { forEachCourseHelper } from './helpers';
+import { forEachHelper } from './utils';
 import { classScheduleListingUrl } from './urls';
 
 export const scheduleUtil = async (term: string) => {
@@ -29,7 +29,7 @@ export const scheduleUtil = async (term: string) => {
   const start = performance.now();
 
   const courses = coursesJSON as Course[];
-  await forEachCourseHelper(courses, writeCourseScheduleToFS, 10);
+  await forEachHelper(courses, writeCourseScheduleToFS, 10);
 
   const finish = performance.now();
   console.log(`Getting course data took ${(finish - start) / 60000} minutes`);

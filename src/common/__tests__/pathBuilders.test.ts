@@ -1,9 +1,9 @@
-import { getScheduleFilePathsBySubject } from '../pathBuilders';
+import { getSchedulePathsBySubject } from '../pathBuilders';
 
-describe.only('getScheduleBySubject', () => {
+describe('getScheduleBySubject', () => {
   it('works correctly', async () => {
     // pick a subject with not many classes
-    const paths: string[] = getScheduleFilePathsBySubject('202009', 'ADMN');
-    expect(paths.length).toBe(9);
+    const namePathPairs: string[][] = getSchedulePathsBySubject('202009', 'ADMN');
+    expect(namePathPairs.length).toBe(9);
   });
 });

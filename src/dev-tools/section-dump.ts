@@ -1,14 +1,16 @@
 import cheerio from 'cheerio';
 import fs from 'fs';
+import got from 'got';
+
 import { classScheduleListingExtractor } from '../pages/courseListingEntries';
 import { detailedClassInformationUrl } from './urls';
-import got from 'got';
-import { getScheduleFilePathsByTerm } from '../common/pathBuilders';
-import { forEachCRNHelper } from './helpers';
+import { getSchedulePathsByTerm } from '../common/pathBuilders';
+import { forEachHelper } from './utils';
 
 export const sectionsUtil = async (term: string) => {
   const CRNs: string[] = [];
-  const paths: string[] = getScheduleFilePathsByTerm(term);
+  const namePathPairs: string[][] = getSchedulePathsByTerm(term);
+  const paths = namePathPairs[1];
 
   const parseCRNsFromClassScheduleListing = async (path: string): Promise<void> => {
     const $ = cheerio.load(await fs.promises.readFile(path));
@@ -32,5 +34,5 @@ export const sectionsUtil = async (term: string) => {
 
   await Promise.all(paths.map(async path => await parseCRNsFromClassScheduleListing(path)));
 
-  await forEachCRNHelper(CRNs, writeCourseSectionsToFS, 50);
+  await forEachHelper(CRNs, writeCourseSectionsToFS, 50);
 };

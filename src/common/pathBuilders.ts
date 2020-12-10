@@ -3,22 +3,34 @@ import path from 'path';
 import appRoot from 'app-root-path';
 import { glob } from 'glob';
 
-const getFilePath = (term: string, subject: string, code: string): string => {
-  return path.join(appRoot.toString(), `static/schedule/${term}/${subject}/${subject}_${code}.html`);
+export const getSchedulePathsByTerm = (term: string): string[][] => {
+  const paths = glob.sync(path.join(appRoot.toString(), `static/schedule/${term}/*/*.html`));
+  return paths.map(thisPath => [
+    path
+      .basename(thisPath)
+      .replace('_', ' ')
+      .replace('.html', ''),
+    thisPath,
+  ]);
 };
 
-export const getDetailedClassInfoByTerm = (term: string, crn: string) => {
+export const getSchedulePathsBySubject = (term: string, subject: string): string[][] => {
+  const paths = glob.sync(path.join(appRoot.toString(), `static/schedule/${term}/${subject}/*.html`));
+  return paths.map(thisPath => [
+    path
+      .basename(thisPath)
+      .replace('_', ' ')
+      .replace('.html', ''),
+    thisPath,
+  ]);
+};
+
+export const getScheduleFileByCourse = async (term: string, subject: string, code: string) => {
+  return fs.promises.readFile(
+    path.join(appRoot.toString(), `static/schedule/${term}/${subject}/${subject}_${code}.html`)
+  );
+};
+
+export const getSectionFileByCRN = (term: string, crn: string) => {
   return fs.promises.readFile(path.join(appRoot.toString(), `static/sections/${term}/${crn}.html`));
-};
-
-export const getScheduleFilePathsBySubject = (term: string, subject: string): string[] => {
-  return glob.sync(path.join(appRoot.toString(), `static/schedule/${term}/${subject}/*.html`));
-};
-
-export const getScheduleFilePathsByTerm = (term: string): string[] => {
-  return glob.sync(path.join(appRoot.toString(), `static/schedule/${term}/*/*.html`));
-};
-
-export const getSchedule = async (term: string, subject: string, code: string) => {
-  return fs.promises.readFile(getFilePath(term, subject, code));
 };

@@ -4,21 +4,21 @@ import each from 'jest-each';
 
 import { classScheduleListingExtractor } from '../index';
 import {
-  getSchedule,
-  getScheduleFilePathsBySubject,
-  getScheduleFilePathsByTerm,
-  getDetailedClassInfoByTerm,
+  getScheduleFileByCourse,
+  getSchedulePathsBySubject,
+  getSchedulePathsByTerm,
+  getSectionFileByCRN,
 } from '../../../common/pathBuilders';
 
 describe('Class Schedule Listing Parser', () => {
   it('should throw error when wrong page type is given', async () => {
-    const $ = cheerio.load(await getDetailedClassInfoByTerm('202009', '10953'));
+    const $ = cheerio.load(await getSectionFileByCRN('202009', '10953'));
 
     await expect(async () => await classScheduleListingExtractor($)).rejects.toThrowError('wrong page type for parser');
   });
 
   it('parses ECE260 correctly', async () => {
-    const f = await getSchedule('202009', 'ECE', '260');
+    const f = await getScheduleFileByCourse('202009', 'ECE', '260');
     const $ = cheerio.load(f);
     const parsed = await classScheduleListingExtractor($);
 
@@ -38,7 +38,7 @@ describe('Class Schedule Listing Parser', () => {
 
 describe('Class Schedule Listing Parser', () => {
   it('parses CHEM101 correctly', async () => {
-    const f = await getSchedule('202009', 'CHEM', '101');
+    const f = await getScheduleFileByCourse('202009', 'CHEM', '101');
     const $ = cheerio.load(f);
     const parsed = await classScheduleListingExtractor($);
 
@@ -62,50 +62,39 @@ describe('Class Schedule Listing Parser', () => {
 });
 
 describe('Class Schedule Listing Parser (CRN) CSC', () => {
-  const paths = [...getScheduleFilePathsBySubject('202009', 'CSC'), ...getScheduleFilePathsBySubject('202101', 'CSC')];
+  const namePathPairs = [...getSchedulePathsBySubject('202009', 'CSC'), ...getSchedulePathsBySubject('202101', 'CSC')];
 
-  // load the HTML file from the file system, in this case
-  each(paths).it('%s has the expected title ', async (path: string) => {
-    //   pass the HTML file to cheerio to interact with the DOM
-    const $ = cheerio.load(await fs.promises.readFile(path));
-    // expect all BAN1P pages to have 'Class Schedule Listing' in their title
-    const parsed = await classScheduleListingExtractor($);
-    parsed.forEach(e => {
-      expect(e.crn).toMatch(/\d{5}/);
-    });
+  each(namePathPairs).it('%s has the expected title ', async (name:string, path: string) => {
+    await assertTitleIsClassScheduleListing(path);
   });
 });
 
 describe('Class Schedule Listing Parser All', () => {
   describe('202001 term', () => {
-    const paths: string[] = getScheduleFilePathsByTerm('202009');
-    // load the HTML file from the file system, in this case
-    each(paths).it('%s parses correctly', async (path: string) => {
-      //   pass the HTML file to cheerio to interact with the DOM
-      const $ = cheerio.load(await fs.promises.readFile(path));
-      // expect all BAN1P pages to have 'Class Schedule Listing' in their title
-      const parsed = await classScheduleListingExtractor($);
-      parsed.forEach(e => {
-        expect(e.crn).toMatch(/\d{5}/);
-        expect(e.sectionCode).toMatch(/[A|B|T]\d+/);
-        expect(e.credits).toMatch(/\d\.\d{3}/);
-      });
-    });
-  });
+    const namePathPairs: string[][] = getSchedulePathsByTerm('202009');
 
-  describe('202101 term', () => {
-    const paths = getScheduleFilePathsByTerm('202101');
-    // load the HTML file from the file system, in this case
-    each(paths).it('%s parses correctly', async (path: string) => {
-      //   pass the HTML file to cheerio to interact with the DOM
-      const $ = cheerio.load(await fs.promises.readFile(path));
-      // expect all BAN1P pages to have 'Class Schedule Listing' in their title
-      const parsed = await classScheduleListingExtractor($);
-      parsed.forEach(e => {
-        expect(e.crn).toMatch(/\d{5}/);
-        expect(e.sectionCode).toMatch(/[A|B|T]\d+/);
-        expect(e.credits).toMatch(/\d\.\d{3}/);
-      });
+    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+      await assertTitleIsClassScheduleListing(path);
     });
   });
 });
+
+describe('202101 term', () => {
+  const namePathPairs: string[][] = getSchedulePathsByTerm('202101');
+
+  each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    await assertTitleIsClassScheduleListing(path);
+  });
+});
+
+const assertTitleIsClassScheduleListing = async (path: string) => {
+  const $ = cheerio.load(await fs.promises.readFile(path));
+  const parsed = await classScheduleListingExtractor($);
+
+  // expect all BAN1P pages to have 'Class Schedule Listing' in their title
+  parsed.forEach(e => {
+    expect(e.crn).toMatch(/\d{5}/);
+    expect(e.sectionCode).toMatch(/[A|B|T]\d+/);
+    expect(e.credits).toMatch(/\d\.\d{3}/);
+  });
+}

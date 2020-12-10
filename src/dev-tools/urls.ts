@@ -1,4 +1,5 @@
 import * as qs from 'querystring';
+
 const BASE_URL = 'https://www.uvic.ca/BAN1P';
 
 // URL builders for known pages on UVic BAN1P.

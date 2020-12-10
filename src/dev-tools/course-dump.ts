@@ -1,7 +1,8 @@
 import got from 'got';
 import { performance } from 'perf_hooks';
 import fs from 'fs';
-import { forEachCourseHelper } from './helpers';
+
+import { forEachHelper } from './utils';
 import { Course } from '../types';
 
 const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
@@ -44,7 +45,7 @@ export const coursesUtil = async () => {
   }
 
   console.log('Downloading details for each course');
-  await forEachCourseHelper(courses, courseMapper, 35);
+  await forEachHelper(courses, courseMapper, 35);
 
   // Stop timer
   const finish = performance.now();
