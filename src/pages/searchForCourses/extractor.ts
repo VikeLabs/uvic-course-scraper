@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 
-import { assertPageTitle } from '../../utils/common';
+import { assertPageTitle } from '../../common/assertions';
 
 export type TermValue = { term: string; text: string };
 
@@ -9,7 +9,7 @@ export const extractSubjects = ($: cheerio.Root): TermValue[] => {
   assertPageTitle('Search for Courses', $);
 
   const termElements = $('select > option');
-  let terms: TermValue[] = [];
+  const terms: TermValue[] = [];
   for (let i = 0; i < termElements.length; i++) {
     const t = $(termElements[i]);
     terms.push({ term: t.attr('value') || '', text: t.text() || '' });

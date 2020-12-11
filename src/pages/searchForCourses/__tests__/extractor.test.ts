@@ -1,10 +1,10 @@
+import appRoot from 'app-root-path';
 import * as cheerio from 'cheerio';
 import fs from 'fs';
 import path from 'path';
 
-import { extractSubjects } from '../pages/searchForCourses/extractor';
-import { getSchedule } from '../utils/tests/getSchedule';
-import appRoot from 'app-root-path';
+import { extractSubjects } from '../extractor';
+import { getScheduleFileByCourse } from '../../../common/pathBuilders';
 
 // title: Search for Courses
 // https://www.uvic.ca/BAN1P/bwckctlg.p_disp_cat_term_date
@@ -18,7 +18,7 @@ const getFilePath = (file: string) => {
 
 describe('page extractor: Search for Courses', (): void => {
   it('should throw error when wrong page type is given', async () => {
-    const $ = cheerio.load(await getSchedule('202009', 'CHEM', '101'));
+    const $ = cheerio.load(await getScheduleFileByCourse('202009', 'CHEM', '101'));
 
     await expect(async () => await extractSubjects($)).rejects.toThrowError('wrong page type for parser');
   });

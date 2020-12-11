@@ -1,4 +1,5 @@
 import * as qs from 'querystring';
+
 const BASE_URL = 'https://www.uvic.ca/BAN1P';
 
 // URL builders for known pages on UVic BAN1P.
@@ -66,4 +67,4 @@ export const courseListingTermUrl = (term: string): string => {
 };
 
 // UVic Legacy Calendar
-const LEGACY_BASE_URL = (year: string, month: string) => `https://web.uvic.ca/calendar${year}-${month}/CDs/`;
+// const LEGACY_BASE_URL = (year: string, month: string) => `https://web.uvic.ca/calendar${year}-${month}/CDs/`;
