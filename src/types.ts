@@ -14,7 +14,7 @@ export interface Schedule {
   instructors: string[];
 }
 
-export type levelType = 'law' | 'undergraduate' | 'graduate';
+export type levelType = 'law' | 'undergraduate' | 'graduate' | 'undefined';
 export type sectionType = 'lecture' | 'lab' | 'tutorial';
 export type deliveryMethodType = 'synchronous' | 'asynchronous' | 'mixed';
 

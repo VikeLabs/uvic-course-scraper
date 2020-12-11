@@ -13,7 +13,7 @@ describe('Detailed Class Information', () => {
       .rejects.toThrowError('wrong page type for parser');
   })
 
-  it.skip('parses ECE260 correctly', async () => {
+  it('parses ECE260 correctly - case with level and field requirements', async () => {
     const $ = cheerio.load(await getDetailedClassInfoByTerm('202009', '10953'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -27,5 +27,37 @@ describe('Detailed Class Information', () => {
 
     expect(parsed.requirements.level).toStrictEqual(['undergraduate']);
     expect(parsed.requirements.fieldOfStudy).toStrictEqual(['EN: Biomedical Engineering', 'EN: Computer Engineering', 'EN: Electrical Engr', 'EN: Software Engineering BSENG']);
+  });
+
+  it('parses CSC355 correctly - case with no field requirements', async () => {
+    const $ = cheerio.load(await getDetailedClassInfoByTerm('202009', '10801'));
+    const parsed = await detailedClassInfoExtractor($);
+
+    expect(parsed.seats.capacity).toBe(32);
+    expect(parsed.seats.actual).toBe(17);
+    expect(parsed.seats.remaining).toBe(15);
+
+    expect(parsed.waitlistSeats.capacity).toBe(10);
+    expect(parsed.waitlistSeats.actual).toBe(0);
+    expect(parsed.waitlistSeats.remaining).toBe(10);
+
+    expect(parsed.requirements.level).toStrictEqual(['undergraduate']);
+    expect(parsed.requirements.fieldOfStudy).toStrictEqual(['undefined']);
+  });
+
+  it('parses LAW309 correctly - case with law restriction and no field requirements', async () => {
+    const $ = cheerio.load(await getDetailedClassInfoByTerm('202009', '13082'));
+    const parsed = await detailedClassInfoExtractor($);
+
+    expect(parsed.seats.capacity).toBe(50);
+    expect(parsed.seats.actual).toBe(50);
+    expect(parsed.seats.remaining).toBe(0);
+
+    expect(parsed.waitlistSeats.capacity).toBe(100);
+    expect(parsed.waitlistSeats.actual).toBe(0);
+    expect(parsed.waitlistSeats.remaining).toBe(100);
+
+    expect(parsed.requirements.level).toStrictEqual(['law']);
+    expect(parsed.requirements.fieldOfStudy).toStrictEqual(['undefined']);
   });
 });
