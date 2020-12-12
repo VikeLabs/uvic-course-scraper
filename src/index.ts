@@ -121,3 +121,64 @@ export const Demo = async () => {
     getCourseDetails,
   };
 };
+
+export class Course {
+  course: KualiCourseCatalog;
+  details?: KualiCourseItem;
+
+  private pid: string;
+
+  constructor(pid: string, course: KualiCourseCatalog) {
+    this.pid = pid;
+    this.course = course;
+  }
+
+  async init() {
+    this.details = await got(COURSE_DETAIL_URL + this.pid).json<KualiCourseItem>();
+    return this;
+  }
+
+  private invariant() {
+    if (this.details === undefined) {
+      new Error(`Client not initialized! Please run init()`);
+    }
+  }
+}
+
+export class Section {
+  private section: Section;
+}
+
+export class Client {
+  private kuali?: KualiCourseCatalog[];
+  private pidMap?: Map<string, string>;
+
+  async init() {
+    this.kuali = await got(COURSES_URL).json<KualiCourseCatalog[]>();
+    this.pidMap = subjectCodeToPidMapper(this.kuali);
+    return this;
+  }
+
+  public getCourses(details = false) {
+    this.invariant();
+    if (details) {
+      return this.kuali.map(c => new Course(this.pidMap.get(c.__catalogCourseId + c.subjectCode.name), c).init());
+    } else {
+      return this.kuali.map(c => new Course(this.pidMap.get(c.__catalogCourseId + c.subjectCode.name), c));
+    }
+  }
+
+  public async getSections(subject: string, code: string, term = getCurrentTerm()) {
+    const res = await got(classScheduleListingUrl(term, subject, code));
+    const $ = cheerio.load(res.body);
+    const sections = await classScheduleListingExtractor($);
+
+    return sections.map(() => new Section());
+  }
+
+  private invariant() {
+    if (this.kuali === undefined || this.pidMap === undefined) {
+      new Error(`Client not initialized! Please run init()`);
+    }
+  }
+}
