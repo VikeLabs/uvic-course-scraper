@@ -48,7 +48,7 @@ npm run dump -- --term 202009 --type schedules
 ```
 
 - Dumps the schedule details for all `202009` term classes.
-- This schdule details corresponds to the `Class Schedule Listing` page view on BAN1P.
+- This schedule details corresponds to the `Class Schedule Listing` page view on BAN1P.
 - This command can only be run after dumping courses data.
 
 ```
@@ -56,6 +56,13 @@ npm run dump -- --term 202009 --type class --crn 10953
 ```
 
 - Dumps the HTML of a "Detailed Class Information" page for a given term and CRN.
+
+```
+npm run dump -- --term 202009 --type sections
+```
+
+- Dumps the section details for all `202009` term classes by crn.
+- This command can only be run after dumping schedules data.
 
 # Target Pages
 

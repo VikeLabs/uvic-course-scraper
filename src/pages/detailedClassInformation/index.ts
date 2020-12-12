@@ -1,5 +1,5 @@
-import { Seating, levelType } from '../../types';
-import { assertPageTitle } from "../../utils/common";
+import { Seating } from '../../types';
+import { assertPageTitle } from '../../common/assertions';
 
 interface SectionDetails {
   seats: Seating;
@@ -9,7 +9,7 @@ interface SectionDetails {
 
 interface requirements {
   level: levelType[];
-  fieldOfStudy: String[];
+  fieldOfStudy: string[];
 }
 
 /**
@@ -26,7 +26,9 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
     .map(e => parseInt(e, 10))
     .filter(e => !Number.isNaN(e));
 
-  const requirementsInfo = $(`table[summary="This table is used to present the detailed class information."]>tbody>tr>td`)
+  const requirementsInfo = $(
+    `table[summary="This table is used to present the detailed class information."]>tbody>tr>td`
+  )
     .text()
     .split('\n')
     .map(Function.prototype.call, String.prototype.trim)
@@ -34,15 +36,19 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
 
   const idx: number = requirementsInfo.findIndex(e => e === 'Restrictions:');
   const idxLevel: number = requirementsInfo.findIndex(e => e === requirementsInfo[idx + 1]);
-  const idxField: number = requirementsInfo.findIndex(e => e === 'Must be enrolled in one of the following Fields of Study (Major, Minor,  or Concentration):');
-  const idxEnd: number = requirementsInfo.findIndex(e => e === 'This course contains prerequisites please see the UVic Calendar for more information');
+  const idxField: number = requirementsInfo.findIndex(
+    e => e === 'Must be enrolled in one of the following Fields of Study (Major, Minor,  or Concentration):'
+  );
+  const idxEnd: number = requirementsInfo.findIndex(
+    e => e === 'This course contains prerequisites please see the UVic Calendar for more information'
+  );
   const numberOfLevels: number = idxField - (idxLevel + 1);
 
   // If restrictions cant be found returns undefined for level and fields
   if (idx == -1) {
-    console.log('idx == -1')
-    let level: levelType[] = ['undefined']
-    let fields: String[] = ['undefined']
+    console.log('idx == -1');
+    const level: levelType[] = ['undefined'];
+    const fields: string[] = ['undefined'];
     return {
       seats: {
         capacity: seatInfo[0],
@@ -58,25 +64,24 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
       requirements: {
         level: level,
         fieldOfStudy: fields,
-      }
+      },
     };
   }
 
-
-  let level: levelType[] = []
+  const level: levelType[] = [];
   const level1 = requirementsInfo[idxLevel + 1].toLowerCase().trim() as levelType;
   level.push(level1);
 
   if (numberOfLevels > 1) {
     for (let i = 1; i < numberOfLevels; i++) {
-      level.push(requirementsInfo[idxLevel + 1 + i].toLowerCase().trim() as levelType)
+      level.push(requirementsInfo[idxLevel + 1 + i].toLowerCase().trim() as levelType);
     }
   }
 
   // If fields or the end cannot be found returns undefined for fields
   if (idxField == -1 || idxEnd == -1) {
-    console.log('idxField: ' + idxField + ' idxEnd: ' + idxEnd)
-    let fields: String[] = ['undefined']
+    console.log('idxField: ' + idxField + ' idxEnd: ' + idxEnd);
+    const fields: string[] = ['undefined'];
     return {
       seats: {
         capacity: seatInfo[0],
@@ -92,11 +97,11 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
       requirements: {
         level: level,
         fieldOfStudy: fields,
-      }
+      },
     };
   }
 
-  let fields: String[] = [];
+  const fields: string[] = [];
   let i = idxField + 1;
   let j = 0;
 
@@ -120,6 +125,6 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
     requirements: {
       level: level as levelType[],
       fieldOfStudy: fields,
-    }
+    },
   };
 };

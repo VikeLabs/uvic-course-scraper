@@ -1,20 +1,17 @@
 import * as cheerio from 'cheerio';
 
 import { detailedClassInfoExtractor } from '../index';
-import { getSchedule } from "../../../utils/tests/getSchedule";
-import { getDetailedClassInfoByTerm } from "../../../utils/tests/getDetailedClassInfo";
+import { getScheduleFileByCourse, getSectionFileByCRN } from '../../../common/pathBuilders';
 
 describe('Detailed Class Information', () => {
   it('should throw error when wrong page type is given', async () => {
-    const $ = cheerio.load(await getSchedule('202009', 'CHEM', '101'));
+    const $ = cheerio.load(await getScheduleFileByCourse('202009', 'CHEM', '101'));
 
-    await expect(async () =>
-      await detailedClassInfoExtractor($))
-      .rejects.toThrowError('wrong page type for parser');
-  })
+    await expect(async () => await detailedClassInfoExtractor($)).rejects.toThrowError('wrong page type for parser');
+  });
 
-  it('parses ECE260 correctly - case with level and field requirements', async () => {
-    const $ = cheerio.load(await getDetailedClassInfoByTerm('202009', '10953'));
+  it.skip('parses ECE260 correctly', async () => {
+    const $ = cheerio.load(await getSectionFileByCRN('202009', '10953'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(130);
@@ -26,7 +23,12 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitlistSeats.remaining).toBe(50);
 
     expect(parsed.requirements.level).toStrictEqual(['undergraduate']);
-    expect(parsed.requirements.fieldOfStudy).toStrictEqual(['EN: Biomedical Engineering', 'EN: Computer Engineering', 'EN: Electrical Engr', 'EN: Software Engineering BSENG']);
+    expect(parsed.requirements.fieldOfStudy).toStrictEqual([
+      'EN: Biomedical Engineering',
+      'EN: Computer Engineering',
+      'EN: Electrical Engr',
+      'EN: Software Engineering BSENG',
+    ]);
   });
 
   it('parses CSC355 correctly - case with no field requirements', async () => {
