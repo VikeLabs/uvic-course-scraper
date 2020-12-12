@@ -2,7 +2,7 @@ import cheerio from 'cheerio';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
-import { Section, Schedule, levelType, sectionType } from '../../types';
+import { Section, Schedule, LevelType, SectionType } from '../../types';
 import { assertPageTitle } from '../../common/assertions';
 
 dayjs.extend(customParseFormat);
@@ -120,7 +120,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
         .exec(sectionInfo)![1]
         .toLowerCase()
         .trim();
-      section.levels = levels.split(/,\s*/) as levelType[];
+      section.levels = levels.split(/,\s*/) as LevelType[];
     }
 
     // Check if online campus or in-person campus
@@ -133,7 +133,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
     }
 
     if (sectionTypeRegex.test(sectionInfo)) {
-      section.sectionType = sectionTypeRegex.exec(sectionInfo)![1].toLowerCase() as sectionType;
+      section.sectionType = sectionTypeRegex.exec(sectionInfo)![1].toLowerCase() as SectionType;
     }
 
     // Check if online or in-person instructional method
