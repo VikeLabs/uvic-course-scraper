@@ -1,10 +1,10 @@
 import cheerio from 'cheerio';
 import fs from 'fs';
 import got from 'got';
+import { detailedClassInformationUrl } from '../common/urls';
 
 import { classScheduleListingExtractor } from '../pages/courseListingEntries';
-import { detailedClassInformationUrl } from './urls';
-import { getSchedulePathsByTerm } from '../common/pathBuilders';
+import { getSchedulePathsByTerm } from './pathBuilders';
 import { forEachHelper } from './utils';
 
 export const sectionsUtil = async (term: string) => {

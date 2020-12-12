@@ -2,9 +2,9 @@ import appRoot from 'app-root-path';
 import * as cheerio from 'cheerio';
 import fs from 'fs';
 import path from 'path';
+import { getScheduleFileByCourse } from '../../../dev-tools/pathBuilders';
 
 import { extractSubjects } from '../extractor';
-import { getScheduleFileByCourse } from '../../../common/pathBuilders';
 
 // title: Search for Courses
 // https://www.uvic.ca/BAN1P/bwckctlg.p_disp_cat_term_date

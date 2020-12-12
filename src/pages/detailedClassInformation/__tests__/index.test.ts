@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
+import { getScheduleFileByCourse, getSectionFileByCRN } from '../../../dev-tools/pathBuilders';
 
 import { detailedClassInfoExtractor } from '../index';
-import { getScheduleFileByCourse, getSectionFileByCRN } from '../../../common/pathBuilders';
 
 describe('Detailed Class Information', () => {
   it('should throw error when wrong page type is given', async () => {

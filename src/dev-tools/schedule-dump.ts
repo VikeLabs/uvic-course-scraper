@@ -3,9 +3,9 @@ import got from 'got';
 import { performance } from 'perf_hooks';
 
 import coursesJSON from '../../static/courses/courses.json';
+import { classScheduleListingUrl } from '../common/urls';
 import { Course } from '../types';
 import { forEachHelper } from './utils';
-import { classScheduleListingUrl } from './urls';
 
 export const scheduleUtil = async (term: string) => {
   const writeCourseScheduleToFS = async (course: Course) => {
