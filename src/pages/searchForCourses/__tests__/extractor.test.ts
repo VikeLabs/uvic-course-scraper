@@ -1,9 +1,10 @@
-import appRoot from 'app-root-path';
-import * as cheerio from 'cheerio';
 import fs from 'fs';
 import path from 'path';
-import { getScheduleFileByCourse } from '../../../dev-tools/pathBuilders';
 
+import appRoot from 'app-root-path';
+import * as cheerio from 'cheerio';
+
+import { getScheduleFileByCourse } from '../../../dev-tools/pathBuilders';
 import { extractSubjects } from '../extractor';
 
 // title: Search for Courses

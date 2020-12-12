@@ -1,6 +1,8 @@
-import * as cheerio from 'cheerio';
 import fs from 'fs';
+
+import * as cheerio from 'cheerio';
 import each from 'jest-each';
+
 import { assertPageTitle } from '../../common/assertions';
 import { getScheduleFileByCourse, getSchedulePathsBySubject } from '../../dev-tools/pathBuilders';
 

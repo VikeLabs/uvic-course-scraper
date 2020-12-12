@@ -1,14 +1,15 @@
-import * as cheerio from 'cheerio';
 import * as fs from 'fs';
+
+import * as cheerio from 'cheerio';
 import each from 'jest-each';
 
-import { classScheduleListingExtractor } from '../index';
 import {
   getScheduleFileByCourse,
   getSchedulePathsBySubject,
   getSchedulePathsByTerm,
   getSectionFileByCRN,
 } from '../../../dev-tools/pathBuilders';
+import { classScheduleListingExtractor } from '../index';
 
 describe('Class Schedule Listing Parser', () => {
   it('should throw error when wrong page type is given', async () => {
