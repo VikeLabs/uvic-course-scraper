@@ -10,13 +10,13 @@ describe('Detailed Class Information', () => {
     await expect(async () => await detailedClassInfoExtractor($)).rejects.toThrowError('wrong page type for parser');
   });
 
-  it.skip('parses ECE260 correctly', async () => {
+  it('parses ECE260 correctly', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '10953'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(130);
-    expect(parsed.seats.actual).toBe(107);
-    expect(parsed.seats.remaining).toBe(23);
+    expect(parsed.seats.actual).toBe(99);
+    expect(parsed.seats.remaining).toBe(31);
 
     expect(parsed.waitlistSeats.capacity).toBe(50);
     expect(parsed.waitlistSeats.actual).toBe(0);
