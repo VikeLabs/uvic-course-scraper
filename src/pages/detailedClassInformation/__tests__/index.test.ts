@@ -1,20 +1,17 @@
 import * as cheerio from 'cheerio';
 
 import { detailedClassInfoExtractor } from '../index';
-import { getSchedule } from "../../../utils/tests/getSchedule";
-import { getDetailedClassInfoByTerm } from "../../../utils/tests/getDetailedClassInfo";
+import { getScheduleFileByCourse, getSectionFileByCRN } from '../../../common/pathBuilders';
 
 describe('Detailed Class Information', () => {
   it('should throw error when wrong page type is given', async () => {
-    const $ = cheerio.load(await getSchedule('202009', 'CHEM', '101'));
+    const $ = cheerio.load(await getScheduleFileByCourse('202009', 'CHEM', '101'));
 
-    await expect(async () =>
-        await detailedClassInfoExtractor($))
-        .rejects.toThrowError('wrong page type for parser');
-  })
+    await expect(async () => await detailedClassInfoExtractor($)).rejects.toThrowError('wrong page type for parser');
+  });
 
   it.skip('parses ECE260 correctly', async () => {
-    const $ = cheerio.load(await getDetailedClassInfoByTerm('202009', '10953'));
+    const $ = cheerio.load(await getSectionFileByCRN('202009', '10953'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(130);
