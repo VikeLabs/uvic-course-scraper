@@ -1,9 +1,11 @@
-import got from 'got';
-import { performance } from 'perf_hooks';
 import fs from 'fs';
+import { performance } from 'perf_hooks';
+
+import got from 'got';
+
+import { Course } from '../types';
 
 import { forEachHelper } from './utils';
-import { Course } from '../types';
 
 const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
 const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';

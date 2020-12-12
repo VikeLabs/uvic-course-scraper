@@ -1,9 +1,11 @@
-import cheerio from 'cheerio';
 import fs from 'fs';
-import got from 'got';
-import { detailedClassInformationUrl } from '../common/urls';
 
+import cheerio from 'cheerio';
+import got from 'got';
+
+import { detailedClassInformationUrl } from '../common/urls';
 import { classScheduleListingExtractor } from '../pages/courseListingEntries';
+
 import { getSchedulePathsByTerm } from './pathBuilders';
 import { forEachHelper } from './utils';
 

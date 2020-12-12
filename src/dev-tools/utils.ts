@@ -1,5 +1,5 @@
-import ProgressBar from 'progress';
 import async from 'async';
+import ProgressBar from 'progress';
 
 export const forEachHelper = async <T>(items: T[], asyncfn: (item: T) => void, rateLimit: number) => {
   const bar = new ProgressBar(':bar :current/:total', { total: items.length });

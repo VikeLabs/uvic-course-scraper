@@ -1,10 +1,12 @@
 import * as fs from 'fs';
-import got from 'got';
 import { performance } from 'perf_hooks';
+
+import got from 'got';
 
 import coursesJSON from '../../static/courses/courses.json';
 import { classScheduleListingUrl } from '../common/urls';
 import { Course } from '../types';
+
 import { forEachHelper } from './utils';
 
 export const scheduleUtil = async (term: string) => {

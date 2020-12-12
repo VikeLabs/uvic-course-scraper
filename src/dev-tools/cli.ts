@@ -1,6 +1,8 @@
 import fs from 'fs';
+
 import got from 'got';
 import yargs from 'yargs/yargs';
+
 import { detailedClassInformationUrl } from '../common/urls';
 
 import { coursesUtil } from './course-dump';
