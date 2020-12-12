@@ -9,6 +9,31 @@ Scheduler Scraper is a Node.js library that parses information from [University 
 
 As a developer, you would use this to parse HTML and JSON from Kuali and BAN1P which would be retrieved by any method like fetch etc.
 
+# Install
+
+```
+npm install @vikelabs/scheduler-scraper
+```
+
+# Usage
+
+**WIP**: Prototype design, subject to change.
+
+```ts
+// initialize a scraper client
+const client = await Demo();
+
+// example: get the course details for CSC 111
+const course = await client.getCourseDetails('CSC', '111');
+
+// example: get the sections for CSC 111 for September 2020 semester
+// through course, which defaults to current semester automatically.
+const sections0 = await course.getSections();
+
+// through client instance
+const sections1 = await client.getSections('CSC', '111');
+```
+
 # Development
 
 0. Get [VS Code](https://code.visualstudio.com/) set up.
