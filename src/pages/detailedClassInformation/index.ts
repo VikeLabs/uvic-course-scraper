@@ -1,13 +1,13 @@
-import { Seating } from '../../types';
+import { levelType, Seating } from '../../types';
 import { assertPageTitle } from '../../common/assertions';
 
 interface SectionDetails {
   seats: Seating;
   waitlistSeats: Seating;
-  requirements: requirements;
+  requirements: Requirements;
 }
 
-interface requirements {
+interface Requirements {
   level: levelType[];
   fieldOfStudy: string[];
 }
