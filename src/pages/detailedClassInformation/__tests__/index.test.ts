@@ -44,7 +44,7 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitlistSeats.remaining).toBe(10);
 
     expect(parsed.requirements.level).toStrictEqual(['undergraduate']);
-    expect(parsed.requirements.fieldOfStudy).toStrictEqual(['undefined']);
+    expect(parsed.requirements.fieldOfStudy).toBeUndefined();
   });
 
   it('parses LAW309 correctly - case with law restriction and no field requirements', async () => {
@@ -60,6 +60,6 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitlistSeats.remaining).toBe(100);
 
     expect(parsed.requirements.level).toStrictEqual(['law']);
-    expect(parsed.requirements.fieldOfStudy).toStrictEqual(['undefined']);
+    expect(parsed.requirements.fieldOfStudy).toBeUndefined();
   });
 });

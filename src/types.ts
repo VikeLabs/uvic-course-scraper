@@ -14,22 +14,112 @@ export interface Schedule {
   instructors: string[];
 }
 
-export type levelType = 'law' | 'undergraduate' | 'graduate' | 'undefined';
-export type sectionType = 'lecture' | 'lab' | 'tutorial';
-export type deliveryMethodType = 'synchronous' | 'asynchronous' | 'mixed';
+export type LevelType = 'law' | 'undergraduate' | 'graduate';
+export type SectionType = 'lecture' | 'lab' | 'tutorial';
+export type DeliveryMethodType = 'synchronous' | 'asynchronous' | 'mixed';
 
-//for future implementation
-export type fieldType = 'ATWP' | 'AGEI' | 'ASL' | 'ANTH' | 'AE' | 'AHVS' |
-  'ARTS' | 'ACAN' | 'ASTR' | 'BIOC' | 'BCMB' | 'BIOL' | 'BME' | 'CS' | 'CHEM' |
-  'CYC' | 'CYCI' | 'CIVE' | 'COM' | 'CSC' | 'CW' | 'ED-P' | 'EDCI' | 'DHUM' |
-  'DSS' | 'EOS' | 'ECON' | 'EDUC' | 'ED-D' | 'ECE' | 'ENGR' | 'ENT' | 'ER' |
-  'ES' | 'EUS' | 'EPHE' | 'FA' | 'FRAN' | 'GNDR' | 'GEOG' | 'GMST' | 'GDS' |
-  'GREE' | 'GRS' | 'HLTH' | 'HINF' | 'HS' | 'HSTR' | 'HDCC' | 'HSD' | 'HUMA' |
-  'ICDG' | 'CYCB' | 'IED' | 'IGOV' | 'INGH' | 'IS' | 'ISP' | 'IB' | 'INTS' |
-  'ITAL' | 'LATI' | 'LAS' | 'LAW' | 'LING' | 'MRNE' | 'MATH' | 'MECH' | 'MEDS' |
-  'MEDI' | 'MICR' | 'MUS' | 'NURS' | 'PAAS' | 'PHIL' | 'PHYS' | 'POLI' | 'PORT' |
-  'PSYC' | 'ADMN' | 'RS' | 'SCIE' | 'SMGT' | 'SLST' | 'SJS' | 'SOSC' | 'SOCW' |
-  'SOCI' | 'SENG' | 'SPAN' | 'STAT' | 'TS' | 'THEA' | 'VIRS' | 'ART' | 'WRIT';
+// TODO: move where we can define widely useful static constants.
+const subjects: string[] = [
+  'ATWP',
+  'AGEI',
+  'ASL',
+  'ANTH',
+  'AE',
+  'AHVS',
+  'ARTS',
+  'ACAN',
+  'ASTR',
+  'BIOC',
+  'BCMB',
+  'BIOL',
+  'BME',
+  'CS',
+  'CHEM',
+  'CYC',
+  'CYCI',
+  'CIVE',
+  'COM',
+  'CSC',
+  'CW',
+  'ED-P',
+  'EDCI',
+  'DHUM',
+  'DSS',
+  'EOS',
+  'ECON',
+  'EDUC',
+  'ED-D',
+  'ECE',
+  'ENGR',
+  'ENT',
+  'ER',
+  'ES',
+  'EUS',
+  'EPHE',
+  'FA',
+  'FRAN',
+  'GNDR',
+  'GEOG',
+  'GMST',
+  'GDS',
+  'GREE',
+  'GRS',
+  'HLTH',
+  'HINF',
+  'HS',
+  'HSTR',
+  'HDCC',
+  'HSD',
+  'HUMA',
+  'ICDG',
+  'CYCB',
+  'IED',
+  'IGOV',
+  'INGH',
+  'IS',
+  'ISP',
+  'IB',
+  'INTS',
+  'ITAL',
+  'LATI',
+  'LAS',
+  'LAW',
+  'LING',
+  'MRNE',
+  'MATH',
+  'MECH',
+  'MEDS',
+  'MEDI',
+  'MICR',
+  'MUS',
+  'NURS',
+  'PAAS',
+  'PHIL',
+  'PHYS',
+  'POLI',
+  'PORT',
+  'PSYC',
+  'ADMN',
+  'RS',
+  'SCIE',
+  'SMGT',
+  'SLST',
+  'SJS',
+  'SOSC',
+  'SOCW',
+  'SOCI',
+  'SENG',
+  'SPAN',
+  'STAT',
+  'TS',
+  'THEA',
+  'VIRS',
+  'ART',
+  'WRIT',
+];
+
+// we take an string[] and use it like an enum to define our type.
+export type Subject = typeof subjects[number];
 
 export interface Section {
   term: string;
@@ -42,8 +132,8 @@ export interface Section {
   requirements: string[];
   additionalInfo: string;
   location: string;
-  sectionType: sectionType;
-  deliveryMethod: deliveryMethodType;
+  sectionType: SectionType;
+  deliveryMethod: DeliveryMethodType;
   instructionalMethod: string;
   campus: 'online' | 'in-person';
   credits: string;
@@ -55,7 +145,7 @@ export interface Section {
     start: string;
     end: string;
   };
-  levels: levelType[];
+  levels?: LevelType[];
   addtionalNotes?: string;
 }
 

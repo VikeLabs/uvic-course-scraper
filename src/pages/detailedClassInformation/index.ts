@@ -1,4 +1,4 @@
-import { levelType, Seating } from '../../types';
+import { LevelType, Seating } from '../../types';
 import { assertPageTitle } from '../../common/assertions';
 
 interface SectionDetails {
@@ -8,7 +8,7 @@ interface SectionDetails {
 }
 
 interface Requirements {
-  level: levelType[];
+  level: LevelType[];
   fieldOfStudy: string[];
 }
 
@@ -47,7 +47,7 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
   // If restrictions cant be found returns undefined for level and fields
   if (idx == -1) {
     console.log('idx == -1');
-    const level: levelType[] = ['undefined'];
+    const level: LevelType[] = ['undefined'];
     const fields: string[] = ['undefined'];
     return {
       seats: {
@@ -68,13 +68,13 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
     };
   }
 
-  const level: levelType[] = [];
-  const level1 = requirementsInfo[idxLevel + 1].toLowerCase().trim() as levelType;
+  const level: LevelType[] = [];
+  const level1 = requirementsInfo[idxLevel + 1].toLowerCase().trim() as LevelType;
   level.push(level1);
 
   if (numberOfLevels > 1) {
     for (let i = 1; i < numberOfLevels; i++) {
-      level.push(requirementsInfo[idxLevel + 1 + i].toLowerCase().trim() as levelType);
+      level.push(requirementsInfo[idxLevel + 1 + i].toLowerCase().trim() as LevelType);
     }
   }
 
@@ -123,7 +123,7 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
     },
 
     requirements: {
-      level: level as levelType[],
+      level: level as LevelType[],
       fieldOfStudy: fields,
     },
   };
