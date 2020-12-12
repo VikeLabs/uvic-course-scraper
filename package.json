@@ -8,7 +8,7 @@
     "dump": "ts-node src/dev-tools/cli.ts",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "build": "tsc"
   },
   "author": "VikeLabs",
