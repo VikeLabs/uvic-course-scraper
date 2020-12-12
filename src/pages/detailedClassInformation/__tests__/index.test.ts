@@ -32,7 +32,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses CSC355 correctly - case with no field requirements', async () => {
-    const $ = cheerio.load(await getDetailedClassInfoByTerm('202009', '10801'));
+    const $ = cheerio.load(await getSectionFileByCRN('202009', '10801'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(32);
@@ -48,7 +48,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses LAW309 correctly - case with law restriction and no field requirements', async () => {
-    const $ = cheerio.load(await getDetailedClassInfoByTerm('202009', '13082'));
+    const $ = cheerio.load(await getSectionFileByCRN('202009', '13082'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(50);
