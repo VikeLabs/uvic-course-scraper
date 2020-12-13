@@ -5,9 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dump": "ts-node src/dev-tools/cli.ts",
+    "dump": "ts-node src/dev/cli.ts",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "build": "tsc"
   },
   "author": "VikeLabs",
@@ -34,6 +35,7 @@
     "app-root-path": "^3.0.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-prettier": "^3.1.4",
     "glob": "^7.1.6",

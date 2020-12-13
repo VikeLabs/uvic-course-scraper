@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+
 import appRoot from 'app-root-path';
 import { glob } from 'glob';
 

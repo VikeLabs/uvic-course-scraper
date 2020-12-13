@@ -1,11 +1,13 @@
 import fs from 'fs';
+
 import got from 'got';
 import yargs from 'yargs/yargs';
+
+import { detailedClassInformationUrl } from '../common/urls';
 
 import { coursesUtil } from './course-dump';
 import { scheduleUtil } from './schedule-dump';
 import { sectionsUtil } from './section-dump';
-import { detailedClassInformationUrl } from './urls';
 
 const argv = yargs(process.argv.slice(2)).options({
   term: { type: 'string', demandOption: true, description: 'term eg. 202009' },

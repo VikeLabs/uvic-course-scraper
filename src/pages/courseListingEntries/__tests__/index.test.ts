@@ -1,14 +1,15 @@
-import * as cheerio from 'cheerio';
 import * as fs from 'fs';
+
+import * as cheerio from 'cheerio';
 import each from 'jest-each';
 
-import { classScheduleListingExtractor } from '../index';
 import {
   getScheduleFileByCourse,
   getSchedulePathsBySubject,
   getSchedulePathsByTerm,
   getSectionFileByCRN,
-} from '../../../common/pathBuilders';
+} from '../../../dev/path-builders';
+import { classScheduleListingExtractor } from '../index';
 
 describe('Class Schedule Listing Parser', () => {
   it('should throw error when wrong page type is given', async () => {
@@ -70,12 +71,12 @@ const assertFields = async (path: string) => {
     expect(e.sectionCode).toMatch(/[A|B|T]\d+/);
     expect(e.credits).toMatch(/\d\.\d{3}/);
   });
-}
+};
 
 describe('Class Schedule Listing Parser (CRN) CSC', () => {
   const namePathPairs = [...getSchedulePathsBySubject('202009', 'CSC'), ...getSchedulePathsBySubject('202101', 'CSC')];
 
-  each(namePathPairs).it('%s has the expected title ', async (name:string, path: string) => {
+  each(namePathPairs).it('%s has the expected title ', async (name: string, path: string) => {
     await assertFields(path);
   });
 });
