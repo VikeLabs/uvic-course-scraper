@@ -4,7 +4,7 @@ import * as cheerio from 'cheerio';
 import each from 'jest-each';
 
 import { assertPageTitle } from '../../common/assertions';
-import { getScheduleFileByCourse, getSchedulePathsBySubject } from '../../dev-tools/pathBuilders';
+import { getScheduleFileByCourse, getSchedulePathsBySubject } from '../../dev-tools/path-builders';
 
 test('example test', () => {
   // this test is pretty useless but shows the basic structure of a Jest test.

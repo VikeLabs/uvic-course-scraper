@@ -4,7 +4,7 @@ import path from 'path';
 import appRoot from 'app-root-path';
 import * as cheerio from 'cheerio';
 
-import { getScheduleFileByCourse } from '../../../dev-tools/pathBuilders';
+import { getScheduleFileByCourse } from '../../../dev-tools/path-builders';
 import { extractCourseListingTerm } from '../extractor';
 
 // title: Course Listing Term
