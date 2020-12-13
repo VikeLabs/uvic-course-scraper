@@ -67,7 +67,7 @@ export const Demo = async () => {
   const getCourses = () => {
     return kuali.map(v => ({
       ...v,
-      getCourseDetails: () => got(COURSE_DETAIL_URL + v.pid).json<KualiCourseItem>(),
+      getDetails: () => got(COURSE_DETAIL_URL + v.pid).json<KualiCourseItem>(),
     }));
   };
 
