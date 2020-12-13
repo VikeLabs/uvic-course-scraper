@@ -2,8 +2,8 @@ import cheerio from 'cheerio';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
-import { Section, Schedule, levelType, sectionType } from '../../types';
 import { assertPageTitle } from '../../common/assertions';
+import { Section, Schedule, levelType, sectionType } from '../../types';
 
 dayjs.extend(customParseFormat);
 

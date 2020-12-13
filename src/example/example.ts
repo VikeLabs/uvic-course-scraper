@@ -4,8 +4,9 @@ Specifically focuses on how data from the sites we're hitting in this project is
 Feel free to make changes to this code and use it when working on tasks to experiment with ideas!
 */
 
-import got from 'got';
 import cheerio from 'cheerio';
+import got from 'got';
+
 import Element = cheerio.Element;
 
 console.log('Starting scraping...');
