@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "dump": "ts-node src/dev-tools/cli.ts",
+    "dump": "ts-node src/dev/cli.ts",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",

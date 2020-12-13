@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 
-import { getScheduleFileByCourse, getSectionFileByCRN } from '../../../dev-tools/path-builders';
+import { getScheduleFileByCourse, getSectionFileByCRN } from '../../../dev/path-builders';
 import { detailedClassInfoExtractor } from '../index';
 
 describe('Detailed Class Information', () => {
