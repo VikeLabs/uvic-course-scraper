@@ -1,0 +1,652 @@
+  console.log
+    undefined
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Art History and Visual Studies
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    History in Art
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Interdisciplinary
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Must be enrolled in one of the following Classifications:
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Year 4
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Year 5
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Visual Arts
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    VA & Computer Scie
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Visual Arts: VAFH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Visual Arts: VAFM
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Year 3
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Bioc & Chem: BCSC
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Biochemistry
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Biochemistry: BCSH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Biochemistry: BCSM
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Micr & Chem: MCSC
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Microbiology
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Microbiology: MBSH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Microbiology: MBSM
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics & Biochemistry: PBSC
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    EN: Biomedical Engineering
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Chemistry: CHSH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    EN: Civil Engineering
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Non-Specialized
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    International Business: IB
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Computer Sc & Statistics: CVSC
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Computer Sc & Statistics: CVSD
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Computer Scie & Hinf
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Computer Science & Math: CTSC
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Computer Science & Math: CTSD
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Computer Science: CMSH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Computer Science: CMSM
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    EN: Computer Science (CMSC)
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    EN: Computer Science (COSC)
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Geog/C Sc Geomatics: GCSC
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Music & Computer Sc
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics & Computer Sc: PCSC
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics & Computer Sc: PCSD
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Psychology & Computer Sc: PXSC
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Health Info Sc
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    EN: Engineering
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    EN: Software Engineering BSENG
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Child & Youth Care
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    May not be enrolled as the following Classifications:
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Year 1
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Year 2
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Unclassified
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    EN: Computer Engineering
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    EN: Electrical Engr
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    EN: Mechanical Engr
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Economics
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Economics: ECAH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Economics: ECAM
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Economics: ECSH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Economics: ECSM
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Financial Math & Econ: FESC
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Co-op Kinesiology
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    ED: Physical Education
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Kinesiology: KNSH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Kinesiology: KNSM
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physical and Health Education
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Recreation & Hlth Educ: RHAH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Recreation & Hlth Educ: RHAM
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Restrtn Natrl Systems
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Indigenous Lang Proficiency
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Indigenous Lang Revitalization
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Indigenous Language Revital
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    EN: Electrical & Computer Eng
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Composition & Theory
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Comprehensive
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    History and Literature
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    M E Secondary Choral
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    M E Secondary Instr
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Music (MUS)
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Musical Arts
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Musicology
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Performance
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Continuing Nursing
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Astronomy
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Astronomy: ASSH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics & Astronomy
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics & Astronomy: PASD
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics & Biochemistry: PBSD
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics & Earth Sciences: PESD
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics & Math
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics & Math: PMSD
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics & Ocean Sciences: POSD
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics: PHSH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Software Systems Option
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Child Welfare
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    First Nat Child Welfare
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    First Nations
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Indigenous Child Welfare
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Indigenous Social Work
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Social Work
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Social Work Distance
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Theatre
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Theatre: THFM
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Writing
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Writing: WRAM
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Writing: WRFM
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Applied Linguistics
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Applied Linguistics: APAH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Linguistics
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Linguistics: LIAH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Linguistics: LISH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Political Science
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Political Science: POAH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Aboriginal Lang Revt: ABLR
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Local Government Mgt
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Performance Mgt
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Pub.Policy & Gov'nce
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Public Administration - Online
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Public Administration: ADMN
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Public Sector Mgmnt
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Vol. &  Nonprft Sec.Mg
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Biology
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Biology/Psychology: BPSD
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Biology: BISH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Chemistry (Medical Sc): MSSH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Service Management: SVM
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Service Management: SVMU
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Education
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Physics & Ocean Sciences: OASD
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Prof Writ Jour Publ
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Professional Writing
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    Post-Diploma Nursing-Distance
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+  console.log
+    English: ENAH
+
+      at src/pages/detailedClassInformation/helper.test.ts:34:21
+
+
+

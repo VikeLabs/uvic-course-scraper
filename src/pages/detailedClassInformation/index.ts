@@ -40,7 +40,7 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
 
   // If restrictions cant be found returns undefined for level and fields
   if (idx == -1) {
-    console.log('idx == -1')
+    //console.log('idx == -1')
     let level: levelType[] = ['undefined']
     let fields: String[] = ['undefined']
     return {
@@ -75,7 +75,7 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
 
   // If fields or the end cannot be found returns undefined for fields
   if (idxField == -1 || idxEnd == -1) {
-    console.log('idxField: ' + idxField + ' idxEnd: ' + idxEnd)
+    //console.log('idxField: ' + idxField + ' idxEnd: ' + idxEnd)
     let fields: String[] = ['undefined']
     return {
       seats: {
