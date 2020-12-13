@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio';
 import got from 'got';
-import { classScheduleListingUrl, detailedClassInformationUrl } from './dev-tools/urls';
+
+import { classScheduleListingUrl, detailedClassInformationUrl } from './common/urls';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
 import { KualiCourseCatalog, KualiCourseItem } from './types';
