@@ -1,10 +1,10 @@
 import { assertPageTitle } from '../../common/assertions';
-import { CourseSectionDetails } from '../../types';
+import { ClassScheduleDetails } from '../../types';
 
 /**
  * Get more details for a section. Most importantly, the section capacities
  */
-export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<CourseSectionDetails> => {
+export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<ClassScheduleDetails> => {
   assertPageTitle('Detailed Class Information', $);
 
   const seatElement = $(`table[summary="This layout table is used to present the seating numbers."]>tbody>tr`);

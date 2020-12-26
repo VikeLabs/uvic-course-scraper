@@ -35,7 +35,7 @@ export interface MeetingTimes {
   instructors: string[];
 }
 
-export interface CourseSection {
+export interface ClassSchedule {
   crn: string;
   sectionCode: string;
   additionalNotes?: string;
@@ -61,7 +61,7 @@ interface Seating {
   remaining: number;
 }
 
-export interface CourseSectionDetails {
+export interface ClassScheduleDetails {
   seats: Seating;
   waitListSeats: Seating;
   requirements: string[];

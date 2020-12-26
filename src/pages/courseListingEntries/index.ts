@@ -3,18 +3,18 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import { assertPageTitle } from '../../common/assertions';
-import { CourseSection, MeetingTimes, levelType, sectionType } from '../../types';
+import { ClassSchedule, MeetingTimes, levelType, sectionType } from '../../types';
 
 dayjs.extend(customParseFormat);
 
-export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<CourseSection[]> => {
+export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<ClassSchedule[]> => {
   assertPageTitle('Class Schedule Listing', $);
 
   const regex = /(.+) - (\d+) - ([\w|-]{0,4} \w?\d+\w?) - ([A|B|T]\d+)/;
-  const classSchedules: CourseSection[] = [];
+  const classSchedules: ClassSchedule[] = [];
   const sectionEntries = $(`table[summary="This layout table is used to present the sections found"]>tbody>tr`);
   for (let sectionIdx = 0; sectionIdx < sectionEntries.length; sectionIdx += 2) {
-    const classSchedule = {} as CourseSection;
+    const classSchedule = {} as ClassSchedule;
 
     // Parse Title block e.g. "Algorithms and Data Structures I - 30184 - CSC 225 - A01"
     const title = $('a', sectionEntries[sectionIdx]);
@@ -59,7 +59,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Co
     const registrationEndRegex = /to\s*(.+)/;
     const yearRegex = /\d{4}/;
     const levelsRegex = /Levels:\s*(.+)/i;
-    const campusRegex = /online/i; // TODO: probably want to change this to get actual value
+    const campusRegex = /online/i;
     const sectionTypeRegex = /(.*)\s+schedule\s*type/i;
     const instructionalMethodRegex = /\s*(.*)\s*instructional method/i;
     const creditsRegex = /\s*(\d\.\d+)\s*credits/i;
