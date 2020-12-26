@@ -1,10 +1,31 @@
-export interface Seating {
-  capacity: number;
-  actual: number;
-  remaining: number;
+export interface CourseJSON {
+  [key: string]: any
+  catalogCourseId: string
+  subject: string;
+  code: string;
+  pid: string;
 }
 
-export interface Schedule {
+export interface Course {
+  catalogCourseId: string;
+  subject: string;
+  code: string;
+  pid: string;
+  title: string;
+}
+
+export interface DetailedCourse extends Course {
+  description: string;
+  supplementalNotes: string;
+  credits: string; // TODO: should be float
+  crossListedCourses: Course[],
+  hoursCatalogText: string;
+}
+
+export type levelType = 'law' | 'undergraduate' | 'graduate';
+export type sectionType = 'lecture' | 'lab' | 'tutorial';
+
+export interface MeetingTimes {
   type: string;
   time: string;
   days: string;
@@ -14,26 +35,10 @@ export interface Schedule {
   instructors: string[];
 }
 
-export type levelType = 'law' | 'undergraduate' | 'graduate';
-export type sectionType = 'lecture' | 'lab' | 'tutorial';
-export type deliveryMethodType = 'synchronous' | 'asynchronous' | 'mixed';
-
-export interface Section {
-  term: string;
-  title: string;
+export interface CourseSection {
   crn: string;
   sectionCode: string;
-  waitlistSeats: Seating;
-  seats: Seating;
-  schedule: Schedule[];
-  requirements: string[];
-  additionalInfo: string;
-  location: string;
-  sectionType: sectionType;
-  deliveryMethod: deliveryMethodType;
-  instructionalMethod: string;
-  campus: 'online' | 'in-person';
-  credits: string;
+  additionalNotes?: string;
   associatedTerm: {
     start: string;
     end: string;
@@ -43,20 +48,21 @@ export interface Section {
     end: string;
   };
   levels: levelType[];
-  addtionalNotes?: string;
+  campus: 'online' | 'in-person';
+  sectionType: sectionType;
+  instructionalMethod: string;
+  credits: string;
+  meetingTimes: MeetingTimes[];
 }
 
-interface Term {
-  term: string;
-  sections: Section[];
+interface Seating {
+  capacity: number;
+  actual: number;
+  remaining: number;
 }
 
-export interface Course {
-  [key: string]: string | Term[] | any;
-  courseCatalogId: string;
-  code: string;
-  subject: string;
-  title: string;
-  pid: string;
-  offerings: Term[];
+export interface CourseSectionDetails {
+  seats: Seating;
+  waitListSeats: Seating;
+  requirements: string[];
 }

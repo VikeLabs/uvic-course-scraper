@@ -3,39 +3,26 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
 import { assertPageTitle } from '../../common/assertions';
-import { Section, Schedule, levelType, sectionType } from '../../types';
+import { CourseSection, MeetingTimes, levelType, sectionType } from '../../types';
 
 dayjs.extend(customParseFormat);
 
-/**
- * Extends course object with section info for term.
- *
- * @param {Course} course the course object to extend
- * @param {string} term the term code
- */
-export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Section[]> => {
+export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<CourseSection[]> => {
   assertPageTitle('Class Schedule Listing', $);
 
   const regex = /(.+) - (\d+) - ([\w|-]{0,4} \w?\d+\w?) - ([A|B|T]\d+)/;
-  const sections: Section[] = [];
+  const classSchedules: CourseSection[] = [];
   const sectionEntries = $(`table[summary="This layout table is used to present the sections found"]>tbody>tr`);
   for (let sectionIdx = 0; sectionIdx < sectionEntries.length; sectionIdx += 2) {
-    const section = {} as Section;
+    const classSchedule = {} as CourseSection;
 
     // Parse Title block e.g. "Algorithms and Data Structures I - 30184 - CSC 225 - A01"
     const title = $('a', sectionEntries[sectionIdx]);
-    section.title = /(.*)\s-\s*\d{5}/.exec(title.text())![1];
     const m = regex.exec(title.text());
     if (m) {
-      section.crn = m[2];
-      section.sectionCode = m[4];
+      classSchedule.crn = m[2];
+      classSchedule.sectionCode = m[4];
     }
-
-    // Get more information from section details page. Uncommenting this would increase runtime by at least x2
-    // const sectionDetailsEndpoint = $('a', sectionEntries[sectionIdx]).attr('href');
-    // if (sectionDetailsEndpoint) {
-    //   Object.assign(section, await getSectionDetails(sectionDetailsEndpoint));
-    // }
 
     // Section info is divided into 2 table rows, here we get the second one
     const sectionEntry = sectionEntries[sectionIdx + 1];
@@ -63,21 +50,22 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
       .trim();
 
     // Declare RegEx patterns
-    const additionalInfoRegex = /(.*)Associated Term/s;
+    const additionalNotesRegex = /(.*)Associated Term/s;
     const associatedTermRegex = /Associated Term:\s*(.*)/i;
     const associatedStartRegex = /(\w{3})\s*-/;
     const associatedEndRegex = /-\s*(\w{3})/;
     const registrationDatesRegex = /Registration Dates:\s*(.*)/i;
     const registrationStartRegex = /(.+)\s*to/;
     const registrationEndRegex = /to\s*(.+)/;
+    const yearRegex = /\d{4}/;
     const levelsRegex = /Levels:\s*(.+)/i;
+    const campusRegex = /online/i; // TODO: probably want to change this to get actual value
     const sectionTypeRegex = /(.*)\s+schedule\s*type/i;
     const instructionalMethodRegex = /\s*(.*)\s*instructional method/i;
     const creditsRegex = /\s*(\d\.\d+)\s*credits/i;
-    const yearRegex = /\d{4}/;
 
-    if (additionalInfoRegex.test(sectionInfo)) {
-      section.additionalInfo = additionalInfoRegex.exec(sectionInfo)![1].trim();
+    if (additionalNotesRegex.test(sectionInfo)) {
+      classSchedule.additionalNotes = additionalNotesRegex.exec(sectionInfo)![1].trim();
     }
 
     // Parse the associated term start and finish from the string into an object
@@ -92,7 +80,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
         const associatedStart = dayjs(associatedStartRegex.exec(associatedTerm)![1], 'MMM').format('MM');
         const associatedEnd = dayjs(associatedEndRegex.exec(associatedTerm)![1], 'MMM').format('MM');
         const year = yearRegex.exec(associatedTerm)![0];
-        section.associatedTerm = {
+        classSchedule.associatedTerm = {
           start: year + associatedStart,
           end: year + associatedEnd,
         };
@@ -106,7 +94,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
       if (registrationStartRegex.test(registrationDates) && registrationEndRegex.test(registrationDates)) {
         const registrationStart = registrationStartRegex.exec(registrationDates)![1].trim();
         const registrationEnd = registrationEndRegex.exec(registrationDates)![1].trim();
-        section.registrationDates = {
+        classSchedule.registrationDates = {
           start: registrationStart,
           end: registrationEnd,
         };
@@ -120,36 +108,35 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
         .exec(sectionInfo)![1]
         .toLowerCase()
         .trim();
-      section.levels = levels.split(/,\s*/) as levelType[];
+      classSchedule.levels = levels.split(/,\s*/) as levelType[];
     }
 
     // Check if online campus or in-person campus
-    // Might change this because in the HTML it's either: online or main campus (might be other campuses too)
-    // TODO: Problem may arise if classes are offered online & in-person (i.e. lecture online, lab in person)
-    if (/online/i.test(sectionInfo)) {
-      section.campus = 'online';
+    if (campusRegex.test(sectionInfo)) {
+      classSchedule.campus = 'online';
     } else {
-      section.campus = 'in-person';
+      classSchedule.campus = 'in-person';
     }
 
     if (sectionTypeRegex.test(sectionInfo)) {
-      section.sectionType = sectionTypeRegex.exec(sectionInfo)![1].toLowerCase() as sectionType;
+      classSchedule.sectionType = sectionTypeRegex.exec(sectionInfo)![1].toLowerCase() as sectionType;
     }
 
     // Check if online or in-person instructional method
     if (instructionalMethodRegex.test(sectionInfo)) {
-      section.instructionalMethod = instructionalMethodRegex
+      classSchedule.instructionalMethod = instructionalMethodRegex
         .exec(sectionInfo)![1]
         .toLowerCase()
         .trim();
     }
 
+    // TODO: parse this into int
     if (creditsRegex.exec(sectionInfo)) {
-      section.credits = creditsRegex.exec(sectionInfo)![1];
+      classSchedule.credits = creditsRegex.exec(sectionInfo)![1];
     }
 
     // Parse schedule table
-    const scheduleData: Schedule[] = [];
+    const meetingTimes: MeetingTimes[] = [];
     while (true) {
       scheduleEntries = scheduleEntries.slice(7);
       if (scheduleEntries[0] == '') {
@@ -160,7 +147,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
       if (scheduleEntries.length == 0) {
         break;
       }
-      scheduleData.push({
+      meetingTimes.push({
         type: scheduleEntries[0],
         time: scheduleEntries[1],
         days: scheduleEntries[2],
@@ -170,8 +157,8 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Se
         instructors: scheduleEntries[6].split(/\s*,\s*/),
       });
     }
-    section.schedule = scheduleData;
-    sections.push(section);
+    classSchedule.meetingTimes = meetingTimes;
+    classSchedules.push(classSchedule);
   }
-  return sections;
+  return classSchedules;
 };

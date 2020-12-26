@@ -1,16 +1,10 @@
 import { assertPageTitle } from '../../common/assertions';
-import { Seating } from '../../types';
-
-interface SectionDetails {
-  seats: Seating;
-  waitlistSeats: Seating;
-  requirements: string[];
-}
+import { CourseSectionDetails } from '../../types';
 
 /**
- * Gets more details of the section. Most importantly, the section capacities
+ * Get more details for a section. Most importantly, the section capacities
  */
-export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<SectionDetails> => {
+export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<CourseSectionDetails> => {
   assertPageTitle('Detailed Class Information', $);
 
   const seatElement = $(`table[summary="This layout table is used to present the seating numbers."]>tbody>tr`);
@@ -31,7 +25,7 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Secti
       actual: seatInfo[1],
       remaining: seatInfo[2],
     },
-    waitlistSeats: {
+    waitListSeats: {
       capacity: seatInfo[3],
       actual: seatInfo[4],
       remaining: seatInfo[5],
