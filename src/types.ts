@@ -1,25 +1,40 @@
-export interface CourseJSON {
-  [key: string]: any
-  catalogCourseId: string
-  subject: string;
-  code: string;
-  pid: string;
-}
-
-export interface Course {
-  catalogCourseId: string;
-  subject: string;
-  code: string;
-  pid: string;
-  title: string;
-}
-
-export interface DetailedCourse extends Course {
+export interface SubjectCode {
+  name: string;
   description: string;
-  supplementalNotes: string;
-  credits: string; // TODO: should be float
-  crossListedCourses: Course[],
-  hoursCatalogText: string;
+  id: string;
+  linkedGroup: string;
+}
+
+export interface KualiCourseCatalog {
+  __catalogCourseId: string;
+  __passedCatalogQuery: boolean;
+  dateStart: string;
+  pid: string;
+  id: string;
+  title: string;
+  subjectCode: SubjectCode;
+  catalogActivationDate: string;
+  _score: number;
+}
+
+export interface KualiCourseItem extends KualiCourseCatalog {
+  description: string;
+  supplementalNotes?: string;
+  proForma: string;
+  credits: {
+    credits: {
+      min: string;
+      max: string;
+    };
+    value: string;
+    chosen: string;
+  };
+  crossListedCourses?: {
+    __catalogCourseId: string;
+    pid: string;
+    title: string;
+  }[];
+  hoursCatalogText?: string;
 }
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
