@@ -15,7 +15,7 @@ As a developer, you would use this to parse HTML and JSON from Kuali and BAN1P w
 $ npm install package-name
 ```
 
-### Intialization
+### Initialization
 ```js
 // Demo is a temp name
 import Demo from package-name
