@@ -28,9 +28,9 @@ The following table provides descriptions of the methods available on the object
 | Method | Description |
 |--------|-------------|
 |``getAllCourses()``|Returns array of ``KualiCourseCatalog`` objects containing all courses active in the Kuali catalog|
-|``getCourseDetails(subject: string, code: number)``|Returns a ``KualiCourseItem`` object with details for the course|
-|``getCourseSections(subject: string, code: number)``|Returns array of ``CourseSection`` objects with details for each section of the course|
-|``getSeats(crn: string)``|Returns a ``DetailedClassInformation`` object with the `seats` and `waitListSeats` for the course|
+|``getCourseDetails(subject: string, code: string)``|Returns a ``KualiCourseItem`` object with details for the course|
+|``getCourseSections(subject: string, code: string)``|Returns array of ``CourseSection`` objects with details for each section of the course|
+|``getSeats(crn: number)``|Returns a ``DetailedClassInformation`` object with the `seats` and `waitListSeats` for the course|
 
 
 ```js
