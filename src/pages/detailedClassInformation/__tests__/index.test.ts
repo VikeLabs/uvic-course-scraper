@@ -15,12 +15,12 @@ describe('Detailed Class Information', () => {
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(130);
-    expect(parsed.seats.actual).toBe(107);
-    expect(parsed.seats.remaining).toBe(23);
+    expect(parsed.seats.actual).toBe(99);
+    expect(parsed.seats.remaining).toBe(31);
 
-    expect(parsed.waitlistSeats.capacity).toBe(50);
-    expect(parsed.waitlistSeats.actual).toBe(0);
-    expect(parsed.waitlistSeats.remaining).toBe(50);
+    expect(parsed.waitListSeats.capacity).toBe(50);
+    expect(parsed.waitListSeats.actual).toBe(0);
+    expect(parsed.waitListSeats.remaining).toBe(50);
 
     // this should be broken up to optional attributes.
     // levels is can probably be removed as it's also information we have from the class listing.
