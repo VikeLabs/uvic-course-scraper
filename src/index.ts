@@ -56,27 +56,6 @@ const fetchCourseDetails = (pidMap: Map<string, string>) => async (subject: stri
   return courseDetails;
 };
 
-// export class UvicCourseScraper {
-//   getAllCourses = async (): Promise<KualiCourseCatalog[]> => {
-//     const kuali = await got(COURSES_URL).json<KualiCourseCatalog[]>();
-
-//     // a map to map human readable subjectCode to a pid required for requests
-//     const pidMap = subjectCodeToPidMapper(kuali);
-
-//     return kuali.map(v => ({
-//       ...v,
-//       getDetails: () => got(COURSE_DETAIL_URL + v.pid).json<KualiCourseItem>(),
-//     }));
-//   };
-// }
-
-// const client = new UvicCourseScraper();
-// const main = async () => {
-//   const courses = await client.getCourses();
-//   console.log(courses);
-// }
-// main();
-// // TODO: change name of this
 export const UvicCourseScraper = async () => {
   // upon initialization, we download the main Kuali courses JSON file.
   const kuali = await got(COURSES_URL).json<KualiCourseCatalog[]>();
@@ -84,6 +63,10 @@ export const UvicCourseScraper = async () => {
   // a map to map human readable subjectCode to a pid required for requests
   const pidMap = subjectCodeToPidMapper(kuali);
 
+  /**
+   * Gets a complete list of all courses and their data in the Kuali catalog.
+   * @return {KualiCourseCatalog[]}
+   */
   const getAllCourses = () => {
     return kuali.map(v => ({
       ...v,
