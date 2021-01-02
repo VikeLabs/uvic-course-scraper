@@ -1,5 +1,5 @@
 import { assertPageTitle } from '../../common/assertions';
-import { DetailedClassInformation } from '../../types';
+import { DetailedClassInformation, levelType } from '../../types';
 
 /**
  * Get more details for a section. Most importantly, the section capacities
@@ -35,14 +35,13 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Detai
 
   // If restrictions cant be found returns undefined for level and fields
   if (idx == -1) {
-    // console.log('idx == -1');
     return {
       seats: {
         capacity: seatInfo[0],
         actual: seatInfo[1],
         remaining: seatInfo[2],
       },
-      waitlistSeats: {
+      waitListSeats: {
         capacity: seatInfo[3],
         actual: seatInfo[4],
         remaining: seatInfo[5],
@@ -50,26 +49,25 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Detai
     };
   }
 
-  const level: LevelType[] = [];
-  const level1 = requirementsInfo[idxLevel + 1].toLowerCase().trim() as LevelType;
+  const level: levelType[] = [];
+  const level1 = requirementsInfo[idxLevel + 1].toLowerCase().trim() as levelType;
   level.push(level1);
 
   if (numberOfLevels > 1) {
     for (let i = 1; i < numberOfLevels; i++) {
-      level.push(requirementsInfo[idxLevel + 1 + i].toLowerCase().trim() as LevelType);
+      level.push(requirementsInfo[idxLevel + 1 + i].toLowerCase().trim() as levelType);
     }
   }
 
   // If fields or the end cannot be found returns undefined for fields
   if (idxField == -1 || idxEnd == -1) {
-    console.log('idxField: ' + idxField + ' idxEnd: ' + idxEnd);
     return {
       seats: {
         capacity: seatInfo[0],
         actual: seatInfo[1],
         remaining: seatInfo[2],
       },
-      waitlistSeats: {
+      waitListSeats: {
         capacity: seatInfo[3],
         actual: seatInfo[4],
         remaining: seatInfo[5],
@@ -103,7 +101,7 @@ export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<Detai
     },
 
     requirements: {
-      level: level as LevelType[],
+      level: level as levelType[],
       fieldOfStudy: fields,
     },
   };

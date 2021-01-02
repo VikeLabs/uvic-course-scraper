@@ -76,10 +76,15 @@ interface Seating {
   remaining: number;
 }
 
+interface Requirements {
+  level: levelType[];
+  fieldOfStudy?: string[];
+}
+
 export interface DetailedClassInformation {
   seats: Seating;
   waitListSeats: Seating;
-  requirements: string[];
+  requirements?: Requirements;
 }
 
 export type CourseSection = ClassScheduleListing & DetailedClassInformation;
