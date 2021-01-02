@@ -56,130 +56,147 @@ const fetchCourseDetails = (pidMap: Map<string, string>) => async (subject: stri
   return courseDetails;
 };
 
-// TODO: change name of this
-export const Demo = async () => {
+// export class UvicCourseScraper {
+//   getAllCourses = async (): Promise<KualiCourseCatalog[]> => {
+//     const kuali = await got(COURSES_URL).json<KualiCourseCatalog[]>();
+
+//     // a map to map human readable subjectCode to a pid required for requests
+//     const pidMap = subjectCodeToPidMapper(kuali);
+
+//     return kuali.map(v => ({
+//       ...v,
+//       getDetails: () => got(COURSE_DETAIL_URL + v.pid).json<KualiCourseItem>(),
+//     }));
+//   };
+// }
+
+// const client = new UvicCourseScraper();
+// const main = async () => {
+//   const courses = await client.getCourses();
+//   console.log(courses);
+// }
+// main();
+// // TODO: change name of this
+export const UvicCourseScraper = async () => {
   // upon initialization, we download the main Kuali courses JSON file.
   const kuali = await got(COURSES_URL).json<KualiCourseCatalog[]>();
 
   // a map to map human readable subjectCode to a pid required for requests
   const pidMap = subjectCodeToPidMapper(kuali);
 
-  const getCourses = () => {
+  const getAllCourses = () => {
     return kuali.map(v => ({
       ...v,
       getDetails: () => got(COURSE_DETAIL_URL + v.pid).json<KualiCourseItem>(),
     }));
   };
 
-  /**
-   * Gets the sections for a given subject, code and term.
-   * @param subject ie. CSC, SENG, PHYS
-   * @param code ie. 100, 265, 215
-   * @param term ie. 202001, 202101
-   */
-  const getSections = async (subject: string, code: string, term = getCurrentTerm()) => {
-    const sections = await fetchSections(subject, code, term);
-    return {
-      sections: sections.map(v => ({ ...v, getSectionDetails: () => fetchSectionDetails(v.crn, term) })),
-      getCourseDetails: () => fetchCourseDetails(pidMap)(subject, code),
-    };
-  };
+  // /**
+  //  * Gets the sections for a given subject, code and term.
+  //  * @param subject ie. CSC, SENG, PHYS
+  //  * @param code ie. 100, 265, 215
+  //  * @param term ie. 202001, 202101
+  //  */
+  // const getSections = async (subject: string, code: string, term = getCurrentTerm()) => {
+  //   const sections = await fetchSections(subject, code, term);
+  //   return {
+  //     sections: sections.map(v => ({ ...v, getSectionDetails: () => fetchSectionDetails(v.crn, term) })),
+  //     getCourseDetails: () => fetchCourseDetails(pidMap)(subject, code),
+  //   };
+  // };
 
-  /**
-   * Gets the section details for a given crn, code and term.
-   * @param crn ie. 12523
-   * @param term ie. 202001, 202101
-   */
-  const getSectionDetails = async (crn: string, term: string) => {
-    const sectionDetails = await fetchSectionDetails(crn, term);
-    return {
-      ...sectionDetails,
-    };
-  };
+  // /**
+  //  * Gets the section details for a given crn, code and term.
+  //  * @param crn ie. 12523
+  //  * @param term ie. 202001, 202101
+  //  */
+  // const getSectionDetails = async (crn: string, term: string) => {
+  //   const sectionDetails = await fetchSectionDetails(crn, term);
+  //   return {
+  //     ...sectionDetails,
+  //   };
+  // };
 
-  /**
-   * Gets the section details for a given crn, code and term.
-   * @param subject ie. CSC, SENG, PHYS
-   * @param code ie. 100, 265, 215
-   */
-  const getCourseDetails = async (subject: string, code: string) => {
-    const course = await fetchCourseDetails(pidMap)(subject, code);
-    return {
-      ...course,
-      getSections: async (term = getCurrentTerm()) => {
-        return (await fetchSections(subject, code, term)).map(v => ({
-          ...v,
-          getSectionDetails: () => fetchSectionDetails(v.crn, term),
-        }));
-      },
-    };
-  };
+  // /**
+  //  * Gets the section details for a given crn, code and term.
+  //  * @param subject ie. CSC, SENG, PHYS
+  //  * @param code ie. 100, 265, 215
+  //  */
+  // const getCourseDetails = async (subject: string, code: string) => {
+  //   const course = await fetchCourseDetails(pidMap)(subject, code);
+  //   return {
+  //     ...course,
+  //     getSections: async (term = getCurrentTerm()) => {
+  //       return (await fetchSections(subject, code, term)).map(v => ({
+  //         ...v,
+  //         getSectionDetails: () => fetchSectionDetails(v.crn, term),
+  //       }));
+  //     },
+  //   };
+  // };
 
   return {
-    getSections,
-    getSectionDetails,
-    getCourses,
-    getCourseDetails,
+    getAllCourses,
   };
 };
 
-export class Course {
-  course: KualiCourseCatalog;
-  details?: KualiCourseItem;
+// export class Course {
+//   course: KualiCourseCatalog;
+//   details?: KualiCourseItem;
 
-  private pid: string;
+//   private pid: string;
 
-  constructor(pid: string, course: KualiCourseCatalog) {
-    this.pid = pid;
-    this.course = course;
-  }
+//   constructor(pid: string, course: KualiCourseCatalog) {
+//     this.pid = pid;
+//     this.course = course;
+//   }
 
-  async init() {
-    this.details = await got(COURSE_DETAIL_URL + this.pid).json<KualiCourseItem>();
-    return this;
-  }
+//   async init() {
+//     this.details = await got(COURSE_DETAIL_URL + this.pid).json<KualiCourseItem>();
+//     return this;
+//   }
 
-  private invariant() {
-    if (this.details === undefined) {
-      new Error(`Client not initialized! Please run init()`);
-    }
-  }
-}
+//   private invariant() {
+//     if (this.details === undefined) {
+//       new Error(`Client not initialized! Please run init()`);
+//     }
+//   }
+// }
 
-export class Section {
-  private section: Section;
-}
+// export class Section {
+//   private section: Section;
+// }
 
-export class Client {
-  private kuali?: KualiCourseCatalog[];
-  private pidMap?: Map<string, string>;
+// export class Client {
+//   private kuali?: KualiCourseCatalog[];
+//   private pidMap?: Map<string, string>;
 
-  async init() {
-    this.kuali = await got(COURSES_URL).json<KualiCourseCatalog[]>();
-    this.pidMap = subjectCodeToPidMapper(this.kuali);
-    return this;
-  }
+//   async init() {
+//     this.kuali = await got(COURSES_URL).json<KualiCourseCatalog[]>();
+//     this.pidMap = subjectCodeToPidMapper(this.kuali);
+//     return this;
+//   }
 
-  public getCourses(details = false) {
-    this.invariant();
-    if (details) {
-      return this.kuali.map(c => new Course(this.pidMap.get(c.__catalogCourseId + c.subjectCode.name), c).init());
-    } else {
-      return this.kuali.map(c => new Course(this.pidMap.get(c.__catalogCourseId + c.subjectCode.name), c));
-    }
-  }
+//   public getCourses(details = false) {
+//     this.invariant();
+//     if (details) {
+//       return this.kuali.map(c => new Course(this.pidMap.get(c.__catalogCourseId + c.subjectCode.name), c).init());
+//     } else {
+//       return this.kuali.map(c => new Course(this.pidMap.get(c.__catalogCourseId + c.subjectCode.name), c));
+//     }
+//   }
 
-  public async getSections(subject: string, code: string, term = getCurrentTerm()) {
-    const res = await got(classScheduleListingUrl(term, subject, code));
-    const $ = cheerio.load(res.body);
-    const sections = await classScheduleListingExtractor($);
+//   public async getSections(subject: string, code: string, term = getCurrentTerm()) {
+//     const res = await got(classScheduleListingUrl(term, subject, code));
+//     const $ = cheerio.load(res.body);
+//     const sections = await classScheduleListingExtractor($);
 
-    return sections.map(() => new Section());
-  }
+//     return sections.map(() => new Section());
+//   }
 
-  private invariant() {
-    if (this.kuali === undefined || this.pidMap === undefined) {
-      new Error(`Client not initialized! Please run init()`);
-    }
-  }
-}
+//   private invariant() {
+//     if (this.kuali === undefined || this.pidMap === undefined) {
+//       new Error(`Client not initialized! Please run init()`);
+//     }
+//   }
+// }
