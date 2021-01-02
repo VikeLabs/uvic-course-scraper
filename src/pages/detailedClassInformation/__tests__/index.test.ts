@@ -22,13 +22,16 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitListSeats.actual).toBe(0);
     expect(parsed.waitListSeats.remaining).toBe(50);
 
-    // expect(!parsed.requirements.level).toStrictEqual(['undergraduate']);
-    // expect(!parsed.requirements.fieldOfStudy).toStrictEqual([
-    //   'EN: Biomedical Engineering',
-    //   'EN: Computer Engineering',
-    //   'EN: Electrical Engr',
-    //   'EN: Software Engineering BSENG',
-    // ]);
+    const level = parsed.requirements!.level;
+    const fieldOfStudy = parsed.requirements!.fieldOfStudy!;
+
+    expect(level).toStrictEqual(['undergraduate']);
+    expect(fieldOfStudy).toStrictEqual([
+      'EN: Biomedical Engineering',
+      'EN: Computer Engineering',
+      'EN: Electrical Engr',
+      'EN: Software Engineering BSENG',
+    ]);
   });
 
   it('parses CSC355 correctly - case with no field requirements', async () => {
@@ -43,8 +46,11 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitListSeats.actual).toBe(0);
     expect(parsed.waitListSeats.remaining).toBe(10);
 
-    // expect(parsed.requirements.level).toStrictEqual(['undergraduate']);
-    // expect(parsed.requirements.fieldOfStudy).toBeUndefined();
+    const level = parsed.requirements!.level;
+    const fieldOfStudy = parsed.requirements!.fieldOfStudy!;
+
+    expect(level).toStrictEqual(['undergraduate']);
+    expect(fieldOfStudy).toBeUndefined();
   });
 
   it('parses LAW309 correctly - case with law restriction and no field requirements', async () => {
@@ -59,7 +65,10 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitListSeats.actual).toBe(0);
     expect(parsed.waitListSeats.remaining).toBe(100);
 
-    // expect(parsed.requirements.level).toStrictEqual(['law']);
-    // expect(parsed.requirements.fieldOfStudy).toBeUndefined();
+    const level = parsed.requirements!.level;
+    const fieldOfStudy = parsed.requirements!.fieldOfStudy!;
+
+    expect(level).toStrictEqual(['law']);
+    expect(fieldOfStudy).toBeUndefined();
   });
 });
