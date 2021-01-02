@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
 
+import { getScheduleFileByCourse, getSectionFileByCRN } from '../../../dev/path-builders';
 import { detailedClassInfoExtractor } from '../index';
-import { getScheduleFileByCourse, getSectionFileByCRN } from '../../../common/pathBuilders';
 
 describe('Detailed Class Information', () => {
   it('should throw error when wrong page type is given', async () => {
@@ -18,9 +18,9 @@ describe('Detailed Class Information', () => {
     expect(parsed.seats.actual).toBe(99);
     expect(parsed.seats.remaining).toBe(31);
 
-    expect(parsed.waitlistSeats.capacity).toBe(50);
-    expect(parsed.waitlistSeats.actual).toBe(0);
-    expect(parsed.waitlistSeats.remaining).toBe(50);
+    expect(parsed.waitListSeats.capacity).toBe(50);
+    expect(parsed.waitListSeats.actual).toBe(0);
+    expect(parsed.waitListSeats.remaining).toBe(50);
 
     expect(parsed.requirements.level).toStrictEqual(['undergraduate']);
     expect(parsed.requirements.fieldOfStudy).toStrictEqual([

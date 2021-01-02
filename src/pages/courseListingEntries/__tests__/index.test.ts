@@ -1,14 +1,15 @@
-import * as cheerio from 'cheerio';
 import * as fs from 'fs';
+
+import * as cheerio from 'cheerio';
 import each from 'jest-each';
 
-import { classScheduleListingExtractor } from '../index';
 import {
   getScheduleFileByCourse,
   getSchedulePathsBySubject,
   getSchedulePathsByTerm,
   getSectionFileByCRN,
-} from '../../../common/pathBuilders';
+} from '../../../dev/path-builders';
+import { classScheduleListingExtractor } from '../index';
 
 describe('Class Schedule Listing Parser', () => {
   it('should throw error when wrong page type is given', async () => {
@@ -22,7 +23,6 @@ describe('Class Schedule Listing Parser', () => {
     const $ = cheerio.load(f);
     const parsed = await classScheduleListingExtractor($);
 
-    expect(parsed[0].title).toBe('Continuous-Time Signals and Systems');
     expect(parsed[0].crn).toBe('10953');
     expect(parsed[0].associatedTerm).toStrictEqual({ start: '202009', end: '202012' });
     expect(parsed[0].registrationDates).toStrictEqual({ start: 'Jun 22, 2020', end: 'Sep 25, 2020' });
@@ -31,8 +31,8 @@ describe('Class Schedule Listing Parser', () => {
     expect(parsed[0].sectionType).toBe('lecture');
     expect(parsed[0].credits).toBe('1.500');
     expect(parsed[0].levels).toStrictEqual(['law', 'undergraduate']);
-    expect(parsed[0].schedule[0].type).toBe('Every Week');
-    expect(parsed[0].schedule[0].instructors).toStrictEqual(['Michael David  Adams (P)']);
+    expect(parsed[0].meetingTimes[0].type).toBe('Every Week');
+    expect(parsed[0].meetingTimes[0].instructors).toStrictEqual(['Michael David  Adams (P)']);
   });
 });
 
@@ -42,7 +42,6 @@ describe('Class Schedule Listing Parser', () => {
     const $ = cheerio.load(f);
     const parsed = await classScheduleListingExtractor($);
 
-    expect(parsed[0].title).toBe('Fundamentals of Chemistry from Atoms to Materials');
     expect(parsed[0].crn).toBe('10487');
     expect(parsed[0].associatedTerm).toStrictEqual({ start: '202009', end: '202012' });
     expect(parsed[0].registrationDates).toStrictEqual({ start: 'Jun 22, 2020', end: 'Sep 25, 2020' });
@@ -51,8 +50,8 @@ describe('Class Schedule Listing Parser', () => {
     expect(parsed[0].sectionType).toBe('lecture');
     expect(parsed[0].credits).toBe('1.500');
     expect(parsed[0].levels).toStrictEqual(['law', 'undergraduate']);
-    expect(parsed[0].schedule[0].type).toBe('Every Week');
-    expect(parsed[0].schedule[0].instructors).toStrictEqual([
+    expect(parsed[0].meetingTimes[0].type).toBe('Every Week');
+    expect(parsed[0].meetingTimes[0].instructors).toStrictEqual([
       'Genevieve Nicole  Boice (P)',
       'Neil   Burford',
       'J. Scott   McIndoe',
@@ -70,12 +69,12 @@ const assertFields = async (path: string) => {
     expect(e.sectionCode).toMatch(/[A|B|T]\d+/);
     expect(e.credits).toMatch(/\d\.\d{3}/);
   });
-}
+};
 
 describe('Class Schedule Listing Parser (CRN) CSC', () => {
   const namePathPairs = [...getSchedulePathsBySubject('202009', 'CSC'), ...getSchedulePathsBySubject('202101', 'CSC')];
 
-  each(namePathPairs).it('%s has the expected title ', async (name:string, path: string) => {
+  each(namePathPairs).it('%s has the expected title ', async (name: string, path: string) => {
     await assertFields(path);
   });
 });
