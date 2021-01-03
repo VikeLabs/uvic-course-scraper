@@ -9,7 +9,7 @@ import { detailedClassInfoExtractor } from '../index';
 const assertFields = async (path: string) => {
   const $ = cheerio.load(await fs.promises.readFile(path));
   const parsed = detailedClassInfoExtractor($);
-  expect(parsed.seats.capacity).toBeGreaterThan(0);
+  expect(parsed.seats.capacity).toBeGreaterThanOrEqual(0);
 };
 
 describe('Detailed Class Information', () => {
