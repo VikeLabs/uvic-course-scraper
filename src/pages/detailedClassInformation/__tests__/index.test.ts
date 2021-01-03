@@ -57,9 +57,12 @@ describe('Detailed Class Information', () => {
 
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
+    //const classification = parsed.requirements?.classification;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
+    //expect(classification).toBeUndefined();
+
   });
 
   it('parses LAW309 correctly - case with law restriction and no field requirements', async () => {
@@ -80,6 +83,31 @@ describe('Detailed Class Information', () => {
     expect(level).toStrictEqual(['law']);
     expect(fieldOfStudy).toBeUndefined();
   });
+
+  it('parses AHVS 430 correctly - case with classification requirements', async () => {
+    const $ = cheerio.load(await getSectionFileByCRN('202009', '10076'));
+    const parsed = await detailedClassInfoExtractor($);
+
+    expect(parsed.seats.capacity).toBe(10);
+    expect(parsed.seats.actual).toBe(2);
+    expect(parsed.seats.remaining).toBe(8);
+
+    expect(parsed.waitListSeats.capacity).toBe(10);
+    expect(parsed.waitListSeats.actual).toBe(0);
+    expect(parsed.waitListSeats.remaining).toBe(10);
+
+    const level = parsed.requirements?.level;
+    const fieldOfStudy = parsed.requirements?.fieldOfStudy;
+    const classification = parsed.requirements?.classification;
+
+    expect(level).toStrictEqual(['undergraduate']);
+    expect(fieldOfStudy).toStrictEqual(["Art History and Visual Studies", "History in Art", "Interdisciplinary"]);
+    expect(classification).toStrictEqual(['Year 4', 'Year 5'])
+
+  });
+
+
+
 });
 
 describe('Detailed Class Information Parser All', () => {

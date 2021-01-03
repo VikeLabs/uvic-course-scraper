@@ -39,6 +39,7 @@ export interface KualiCourseItem extends KualiCourseCatalog {
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
 export type sectionType = 'lecture' | 'lab' | 'tutorial';
+export type classification = 'year 1' | 'year 2' | 'year 3' | 'year 4' | 'year 5';
 
 export interface MeetingTimes {
   type: string;
@@ -79,6 +80,7 @@ interface Seating {
 interface Requirements {
   level: levelType[];
   fieldOfStudy?: string[];
+  classification?: string[];
 }
 
 export interface DetailedClassInformation {

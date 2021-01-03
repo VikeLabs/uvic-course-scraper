@@ -1,5 +1,5 @@
 import { assertPageTitle } from '../../common/assertions';
-import { DetailedClassInformation, levelType } from '../../types';
+import { DetailedClassInformation, levelType, classification } from '../../types';
 
 /**
  * Get more details for a section. Most importantly, the section capacities
@@ -28,6 +28,9 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   const idxField = requirementsInfo.findIndex(
     e => e === 'Must be enrolled in one of the following Fields of Study (Major, Minor,  or Concentration):'
   );
+  const idxClassification = requirementsInfo.findIndex(
+    e => e === 'Must be enrolled in one of the following Classifications:'
+  );
   const idxEnd = requirementsInfo.findIndex(
     e => e === 'This course contains prerequisites please see the UVic Calendar for more information'
   );
@@ -53,11 +56,15 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   const level1 = requirementsInfo[idxLevel + 1].toLowerCase().trim() as levelType;
   level.push(level1);
 
+  const classification: classification[] = [];
+
   if (numberOfLevels > 1) {
     for (let i = 1; i < numberOfLevels; i++) {
       level.push(requirementsInfo[idxLevel + 1 + i].toLowerCase().trim() as levelType);
     }
   }
+
+
 
   // If fields or the end cannot be found returns undefined for fields
   if (idxField == -1 || idxEnd == -1) {
@@ -75,17 +82,43 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
 
       requirements: {
         level: level,
+        classification: classification,
       },
     };
   }
 
   const fields: string[] = [];
+  const classifications: string[] = [];
   let i = idxField + 1;
   let j = 0;
 
-  for (i; i < idxEnd; i++) {
-    fields[j] = requirementsInfo[i].trim();
-    j++;
+
+  if (idxClassification == -1) {
+    for (i; i < idxEnd; i++) {
+      fields[j] = requirementsInfo[i].trim();
+      j++;
+    }
+  }
+
+  else {
+    let i = idxField + 1;
+    let j = 0;
+
+    for (i; i < idxClassification; i++) {
+      fields[j] = requirementsInfo[i].trim();
+      j++;
+    }
+
+    i = idxClassification + 1;
+    j = 0;
+
+    for (i; i < idxEnd; i++) {
+      classifications[j] = requirementsInfo[i].trim();
+      j++;
+    }
+
+
+
   }
 
   return {
@@ -103,6 +136,7 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     requirements: {
       level: level as levelType[],
       fieldOfStudy: fields,
+      classification: classifications,
     },
   };
 };
