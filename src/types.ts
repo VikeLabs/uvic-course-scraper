@@ -37,7 +37,7 @@ export interface KualiCourseItem extends KualiCourseCatalog {
   hoursCatalogText?: string;
 }
 
-export type levelType = 'law' | 'undergraduate' | 'graduate';
+export type levelType = 'law' | 'undergraduate' | 'graduate' | undefined;
 export type sectionType = 'lecture' | 'lab' | 'tutorial';
 export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5';
 

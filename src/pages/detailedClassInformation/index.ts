@@ -52,26 +52,36 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     e => e === 'This course contains prerequisites please see the UVic Calendar for more information'
   );
 
-  // TODO: fix this (not always right)
-  const numberOfLevels = idxField - (idxLevel + 1);
+  // Defaults number of levels to -1 unless we can confirm there are levels,
+  // if we can confirm there are levels set number of levels
+  let numberOfLevels = -1
+  if (idxField !== -1) {
+    numberOfLevels = idxField - (idxLevel + 1);
+  } else if (idxEnd !== -1) {
+    numberOfLevels = idxEnd - (idxLevel + 1);
+  }
 
   // If restrictions can't be found return just seating info.
   if (idx === -1) {
     return data;
   }
 
-  const level = requirementsInfo
-    .slice(idxLevel + 1, idxLevel + numberOfLevels + 1)
-    .map(v => v.toLowerCase().trim() as levelType);
+  // If we have one or more level set level
+  let level = undefined
+  if (numberOfLevels !== -1 && numberOfLevels !== 0) {
+    level = requirementsInfo
+      .slice(idxLevel + 1, idxLevel + numberOfLevels + 1)
+      .map(v => v.toLowerCase().trim() as levelType);
 
-  // If fields or the end cannot be found returns undefined for fields
-  if (idxField === -1 || idxEnd === -1) {
-    return {
-      ...data,
-      requirements: {
-        level,
-      },
-    };
+    // If fields or the end cannot be found returns undefined for fields
+    if (idxField === -1 || idxEnd === -1) {
+      return {
+        ...data,
+        requirements: {
+          level,
+        },
+      };
+    }
   }
 
   // requirements/classification parsing
