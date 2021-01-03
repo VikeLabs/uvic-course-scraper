@@ -9,6 +9,7 @@ import { detailedClassInfoExtractor } from '../index';
 const assertFields = async (path: string) => {
   const $ = cheerio.load(await fs.promises.readFile(path));
   const parsed = detailedClassInfoExtractor($);
+  expect(parsed.seats.capacity).toBeGreaterThan(0);
 };
 
 describe('Detailed Class Information', () => {
@@ -30,8 +31,8 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitListSeats.actual).toBe(0);
     expect(parsed.waitListSeats.remaining).toBe(50);
 
-    const level = parsed.requirements!.level;
-    const fieldOfStudy = parsed.requirements!.fieldOfStudy!;
+    const level = parsed.requirements?.level;
+    const fieldOfStudy = parsed.requirements?.fieldOfStudy;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toStrictEqual([
@@ -54,8 +55,8 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitListSeats.actual).toBe(0);
     expect(parsed.waitListSeats.remaining).toBe(10);
 
-    const level = parsed.requirements!.level;
-    const fieldOfStudy = parsed.requirements!.fieldOfStudy!;
+    const level = parsed.requirements?.level;
+    const fieldOfStudy = parsed.requirements?.fieldOfStudy;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
