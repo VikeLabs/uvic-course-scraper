@@ -4,7 +4,7 @@ import { DetailedClassInformation, levelType } from '../../types';
 /**
  * Get more details for a section. Most importantly, the section capacities
  */
-export const detailedClassInfoExtractor = async ($: cheerio.Root): Promise<DetailedClassInformation> => {
+export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInformation => {
   assertPageTitle('Detailed Class Information', $);
 
   const seatElement = $(`table[summary="This layout table is used to present the seating numbers."]>tbody>tr`);

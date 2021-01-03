@@ -1,13 +1,21 @@
-import * as cheerio from 'cheerio';
+import * as fs from 'fs';
 
-import { getScheduleFileByCourse, getSectionFileByCRN } from '../../../dev/path-builders';
+import * as cheerio from 'cheerio';
+import each from 'jest-each';
+
+import { getDetailPathsByTerm, getScheduleFileByCourse, getSectionFileByCRN } from '../../../dev/path-builders';
 import { detailedClassInfoExtractor } from '../index';
+
+const assertFields = async (path: string) => {
+  const $ = cheerio.load(await fs.promises.readFile(path));
+  const parsed = detailedClassInfoExtractor($);
+};
 
 describe('Detailed Class Information', () => {
   it('should throw error when wrong page type is given', async () => {
     const $ = cheerio.load(await getScheduleFileByCourse('202009', 'CHEM', '101'));
 
-    await expect(async () => await detailedClassInfoExtractor($)).rejects.toThrowError('wrong page type for parser');
+    await expect(async () => detailedClassInfoExtractor($)).rejects.toThrowError('wrong page type for parser');
   });
 
   it('parses ECE260 correctly', async () => {
@@ -55,7 +63,7 @@ describe('Detailed Class Information', () => {
 
   it('parses LAW309 correctly - case with law restriction and no field requirements', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '13082'));
-    const parsed = await detailedClassInfoExtractor($);
+    const parsed = detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(50);
     expect(parsed.seats.actual).toBe(50);
@@ -65,10 +73,20 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitListSeats.actual).toBe(0);
     expect(parsed.waitListSeats.remaining).toBe(100);
 
-    const level = parsed.requirements!.level;
-    const fieldOfStudy = parsed.requirements!.fieldOfStudy!;
+    const level = parsed.requirements?.level;
+    const fieldOfStudy = parsed.requirements?.fieldOfStudy;
 
     expect(level).toStrictEqual(['law']);
     expect(fieldOfStudy).toBeUndefined();
+  });
+});
+
+describe('Detailed Class Information Parser All', () => {
+  describe('202001 term', () => {
+    const namePathPairs: string[][] = getDetailPathsByTerm('202009');
+
+    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+      await assertFields(path);
+    });
   });
 });
