@@ -58,47 +58,26 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     return data;
   }
 
-  const level: levelType[] = [];
+  const level = requirementsInfo
+    .slice(idxLevel + 1, numberOfLevels + idxLevel + 1)
+    .map(v => v.toLowerCase() as levelType);
 
-  for (let i = 0; i < numberOfLevels; i++) {
-    level.push(requirementsInfo[idxLevel + 1 + i].toLowerCase().trim() as levelType);
-  }
-
+  data.requirements = { level };
   // If fields or the end cannot be found returns undefined for fields
   if (idxField === -1 || idxEnd === -1) {
-    return {
-      ...data,
-      requirements: {
-        level,
-      },
-    };
+    return data;
   }
 
   // requirements/classification parsing
-  const classification: classification[] = [];
-  const fields: string[] = [];
-
   if (idxClassification === -1) {
     // no classification entires exist
-
-    requirementsInfo.slice(idxField + 1, idxEnd).forEach(v => fields.push(v.trim()));
+    data.requirements.fieldOfStudy = requirementsInfo.slice(idxField + 1, idxEnd).map(v => v.trim());
   } else {
-    // classification entries exist
-    requirementsInfo.slice(idxField + 1, idxClassification).forEach(v => fields.push(v.trim()));
+    data.requirements.fieldOfStudy = requirementsInfo.slice(idxField + 1, idxClassification).map(v => v.trim());
 
-    const d = requirementsInfo
+    data.requirements.classification = requirementsInfo
       .slice(idxClassification + 1, idxEnd)
       .map(v => (v.indexOf('Year') !== -1 ? (v.toUpperCase().replace(' ', '_') as classification) : null));
-
-    classification.push(...d);
   }
-
-  return {
-    ...data,
-    requirements: {
-      level,
-      fieldOfStudy: fields,
-      classification,
-    },
-  };
+  return data;
 };
