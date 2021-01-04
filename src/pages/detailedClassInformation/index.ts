@@ -59,7 +59,6 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   }
 
   const level: levelType[] = [];
-  const classification: classification[] = [];
 
   for (let i = 0; i < numberOfLevels; i++) {
     level.push(requirementsInfo[idxLevel + 1 + i].toLowerCase().trim() as levelType);
@@ -71,45 +70,35 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
       ...data,
       requirements: {
         level,
-        classification: classification,
       },
     };
   }
 
+  // requirements/classification parsing
+  const classification: classification[] = [];
   const fields: string[] = [];
-  const classifications: classification[] = [];
-  let i = idxField + 1;
-  let j = 0;
 
-  if (idxClassification == -1) {
-    for (i; i < idxEnd; i++) {
-      fields[j] = requirementsInfo[i].trim();
-      j++;
-    }
+  if (idxClassification === -1) {
+    // no classification entires exist
+
+    requirementsInfo.slice(idxField + 1, idxEnd).forEach(v => fields.push(v.trim()));
   } else {
-    let i = idxField + 1;
-    let j = 0;
+    // classification entries exist
+    requirementsInfo.slice(idxField + 1, idxClassification).forEach(v => fields.push(v.trim()));
 
-    for (i; i < idxClassification; i++) {
-      fields[j] = requirementsInfo[i].trim();
-      j++;
-    }
+    const d = requirementsInfo
+      .slice(idxClassification + 1, idxEnd)
+      .map(v => (v.indexOf('Year') !== -1 ? (v.toUpperCase().replace(' ', '_') as classification) : null));
 
-    i = idxClassification + 1;
-    j = 0;
-
-    for (i; i < idxEnd; i++) {
-      // classifications[j] = requirementsInfo[i].trim();
-      j++;
-    }
+    classification.push(...d);
   }
 
   return {
     ...data,
     requirements: {
-      level: level,
+      level,
       fieldOfStudy: fields,
-      classification: classifications,
+      classification,
     },
   };
 };
