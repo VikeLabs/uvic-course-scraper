@@ -62,7 +62,6 @@ describe('Detailed Class Information', () => {
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
     //expect(classification).toBeUndefined();
-
   });
 
   it('parses LAW309 correctly - case with law restriction and no field requirements', async () => {
@@ -101,13 +100,9 @@ describe('Detailed Class Information', () => {
     const classification = parsed.requirements?.classification;
 
     expect(level).toStrictEqual(['undergraduate']);
-    expect(fieldOfStudy).toStrictEqual(["Art History and Visual Studies", "History in Art", "Interdisciplinary"]);
-    expect(classification).toStrictEqual(['Year 4', 'Year 5'])
-
+    expect(fieldOfStudy).toStrictEqual(['Art History and Visual Studies', 'History in Art', 'Interdisciplinary']);
+    expect(classification).toStrictEqual(['YEAR_4', 'YEAR_5']);
   });
-
-
-
 });
 
 describe('Detailed Class Information Parser All', () => {
