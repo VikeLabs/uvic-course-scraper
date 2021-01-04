@@ -1,6 +1,19 @@
 import { assertPageTitle } from '../../common/assertions';
 import { DetailedClassInformation, levelType, classification } from '../../types';
 
+const transformSeating = (seatInfo: number[]) => ({
+  seats: {
+    capacity: seatInfo[0],
+    actual: seatInfo[1],
+    remaining: seatInfo[2],
+  },
+  waitListSeats: {
+    capacity: seatInfo[3],
+    actual: seatInfo[4],
+    remaining: seatInfo[5],
+  },
+});
+
 /**
  * Get more details for a section. Most importantly, the section capacities
  */
@@ -15,6 +28,10 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     .map(e => parseInt(e, 10))
     .filter(e => !Number.isNaN(e));
 
+  // initialize data to return
+  const data: DetailedClassInformation = { ...transformSeating(seatInfo) };
+
+  // parse requirements
   const requirementsInfo = $(
     `table[summary="This table is used to present the detailed class information."]>tbody>tr>td`
   )
@@ -37,19 +54,8 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   const numberOfLevels = idxField - (idxLevel + 1);
 
   // If restrictions cant be found returns undefined for level and fields
-  if (idx == -1) {
-    return {
-      seats: {
-        capacity: seatInfo[0],
-        actual: seatInfo[1],
-        remaining: seatInfo[2],
-      },
-      waitListSeats: {
-        capacity: seatInfo[3],
-        actual: seatInfo[4],
-        remaining: seatInfo[5],
-      },
-    };
+  if (idx === -1) {
+    return data;
   }
 
   const level: levelType[] = [];
@@ -64,22 +70,10 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     }
   }
 
-
-
   // If fields or the end cannot be found returns undefined for fields
-  if (idxField == -1 || idxEnd == -1) {
+  if (idxField === -1 || idxEnd === -1) {
     return {
-      seats: {
-        capacity: seatInfo[0],
-        actual: seatInfo[1],
-        remaining: seatInfo[2],
-      },
-      waitListSeats: {
-        capacity: seatInfo[3],
-        actual: seatInfo[4],
-        remaining: seatInfo[5],
-      },
-
+      ...data,
       requirements: {
         level: level,
         classification: classification,
@@ -88,19 +82,16 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   }
 
   const fields: string[] = [];
-  const classifications: string[] = [];
+  const classifications: classification[] = [];
   let i = idxField + 1;
   let j = 0;
-
 
   if (idxClassification == -1) {
     for (i; i < idxEnd; i++) {
       fields[j] = requirementsInfo[i].trim();
       j++;
     }
-  }
-
-  else {
+  } else {
     let i = idxField + 1;
     let j = 0;
 
@@ -116,23 +107,10 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
       classifications[j] = requirementsInfo[i].trim();
       j++;
     }
-
-
-
   }
 
   return {
-    seats: {
-      capacity: seatInfo[0],
-      actual: seatInfo[1],
-      remaining: seatInfo[2],
-    },
-    waitListSeats: {
-      capacity: seatInfo[3],
-      actual: seatInfo[4],
-      remaining: seatInfo[5],
-    },
-
+    ...data,
     requirements: {
       level: level as levelType[],
       fieldOfStudy: fields,
