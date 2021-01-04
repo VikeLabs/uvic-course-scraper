@@ -53,21 +53,16 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   );
   const numberOfLevels = idxField - (idxLevel + 1);
 
-  // If restrictions cant be found returns undefined for level and fields
+  // If restrictions can't be found return just seating info.
   if (idx === -1) {
     return data;
   }
 
   const level: levelType[] = [];
-  const level1 = requirementsInfo[idxLevel + 1].toLowerCase().trim() as levelType;
-  level.push(level1);
-
   const classification: classification[] = [];
 
-  if (numberOfLevels > 1) {
-    for (let i = 1; i < numberOfLevels; i++) {
-      level.push(requirementsInfo[idxLevel + 1 + i].toLowerCase().trim() as levelType);
-    }
+  for (let i = 0; i < numberOfLevels; i++) {
+    level.push(requirementsInfo[idxLevel + 1 + i].toLowerCase().trim() as levelType);
   }
 
   // If fields or the end cannot be found returns undefined for fields
@@ -75,7 +70,7 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     return {
       ...data,
       requirements: {
-        level: level,
+        level,
         classification: classification,
       },
     };
@@ -104,7 +99,7 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     j = 0;
 
     for (i; i < idxEnd; i++) {
-      classifications[j] = requirementsInfo[i].trim();
+      // classifications[j] = requirementsInfo[i].trim();
       j++;
     }
   }
@@ -112,7 +107,7 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   return {
     ...data,
     requirements: {
-      level: level as levelType[],
+      level: level,
       fieldOfStudy: fields,
       classification: classifications,
     },
