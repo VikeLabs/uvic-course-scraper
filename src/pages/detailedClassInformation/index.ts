@@ -51,6 +51,8 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   const idxEnd = requirementsInfo.findIndex(
     e => e === 'This course contains prerequisites please see the UVic Calendar for more information'
   );
+
+  // TODO: fix this (not always right)
   const numberOfLevels = idxField - (idxLevel + 1);
 
   // If restrictions can't be found return just seating info.
@@ -59,25 +61,44 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   }
 
   const level = requirementsInfo
-    .slice(idxLevel + 1, numberOfLevels + idxLevel + 1)
-    .map(v => v.toLowerCase() as levelType);
+    .slice(idxLevel + 1, idxLevel + numberOfLevels + 1)
+    .map(v => v.toLowerCase().trim() as levelType);
 
-  data.requirements = { level };
   // If fields or the end cannot be found returns undefined for fields
   if (idxField === -1 || idxEnd === -1) {
-    return data;
+    return {
+      ...data,
+      requirements: {
+        level,
+      },
+    };
   }
 
   // requirements/classification parsing
+  const classification: classification[] = [];
+  const fields: string[] = [];
+
   if (idxClassification === -1) {
     // no classification entires exist
-    data.requirements.fieldOfStudy = requirementsInfo.slice(idxField + 1, idxEnd).map(v => v.trim());
-  } else {
-    data.requirements.fieldOfStudy = requirementsInfo.slice(idxField + 1, idxClassification).map(v => v.trim());
 
-    data.requirements.classification = requirementsInfo
+    requirementsInfo.slice(idxField + 1, idxEnd).forEach(v => fields.push(v.trim()));
+  } else {
+    // classification entries exist
+
+    requirementsInfo.slice(idxField + 1, idxClassification).forEach(v => fields.push(v.trim()));
+    const d = requirementsInfo
       .slice(idxClassification + 1, idxEnd)
       .map(v => (v.indexOf('Year') !== -1 ? (v.toUpperCase().replace(' ', '_') as classification) : null));
+
+    classification.push(...d);
   }
-  return data;
+
+  return {
+    ...data,
+    requirements: {
+      level,
+      fieldOfStudy: fields,
+      classification,
+    },
+  };
 };
