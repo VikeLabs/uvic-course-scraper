@@ -88,7 +88,7 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     requirementsInfo.slice(idxField + 1, idxClassification).forEach(v => fields.push(v.trim()));
     const d = requirementsInfo
       .slice(idxClassification + 1, idxEnd)
-      .map(v => (v.indexOf('Year') !== -1 ? (v.toUpperCase().replace(' ', '_') as classification) : null));
+      .map(v => (v.indexOf('Year') !== -1 ? (v.toUpperCase().replace(' ', '_') as classification) : classification[0]));
 
     classification.push(...d);
   }

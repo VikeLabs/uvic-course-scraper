@@ -79,7 +79,7 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
 
-    expect(level).toStrictEqual(['law']);
+    expect(level).toStrictEqual([]);
     expect(fieldOfStudy).toBeUndefined();
   });
 
