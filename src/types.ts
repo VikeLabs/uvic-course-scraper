@@ -39,6 +39,7 @@ export interface KualiCourseItem extends KualiCourseCatalog {
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
 export type sectionType = 'lecture' | 'lab' | 'tutorial';
+export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5';
 
 export interface MeetingTimes {
   type: string;
@@ -76,59 +77,16 @@ export interface Seating {
   remaining: number;
 }
 
+interface Requirements {
+  level: levelType[];
+  fieldOfStudy?: string[];
+  classification?: classification[];
+}
+
 export interface DetailedClassInformation {
   seats: Seating;
   waitListSeats: Seating;
-  requirements: string[];
+  requirements?: Requirements;
 }
 
-// Kuali
-
-export interface SubjectCode {
-  name: string;
-  description: string;
-  id: string;
-  linkedGroup: string;
-}
-
-// export interface KualiCourseItem {
-//   __passedCatalogQuery: boolean;
-//   description: string;
-//   pid: string;
-//   title: string;
-//   supplementalNotes: string;
-//   __catalogCourseId: string;
-//   proForma: string;
-//   dateStart: string;
-//   credits: {
-//     credits: {
-//       min: string;
-//       max: string;
-//     };
-//     value: string;
-//     chosen: string;
-//   };
-//   crossListedCourses: {
-//     __catalogCourseId: string;
-//     pid: string;
-//     title: string;
-//   }[];
-//   id: string;
-//   subjectCode: SubjectCode;
-//   catalogActivationDate: string;
-//   hoursCatalogText: string;
-//   _score: number;
-// }
-
-// export interface KualiCourseCatalog {
-//   __catalogCourseId: string;
-//   __passedCatalogQuery: boolean;
-//   dateStart: string;
-//   pid: string;
-//   id: string;
-//   title: string;
-//   subjectCode: SubjectCode;
-//   catalogActivationDate: string;
-//   _score: number;
-// }
 export type CourseSection = ClassScheduleListing & DetailedClassInformation;

@@ -1,16 +1,25 @@
-import * as cheerio from 'cheerio';
+import * as fs from 'fs';
 
-import { getScheduleFileByCourse, getSectionFileByCRN } from '../../../dev/path-builders';
+import * as cheerio from 'cheerio';
+import each from 'jest-each';
+
+import { getDetailPathsByTerm, getScheduleFileByCourse, getSectionFileByCRN } from '../../../dev/path-builders';
 import { detailedClassInfoExtractor } from '../index';
+
+const assertFields = async (path: string) => {
+  const $ = cheerio.load(await fs.promises.readFile(path));
+  const parsed = detailedClassInfoExtractor($);
+  expect(parsed.seats.capacity).toBeGreaterThanOrEqual(0);
+};
 
 describe('Detailed Class Information', () => {
   it('should throw error when wrong page type is given', async () => {
     const $ = cheerio.load(await getScheduleFileByCourse('202009', 'CHEM', '101'));
 
-    await expect(async () => await detailedClassInfoExtractor($)).rejects.toThrowError('wrong page type for parser');
+    await expect(async () => detailedClassInfoExtractor($)).rejects.toThrowError('wrong page type for parser');
   });
 
-  it.skip('parses ECE260 correctly', async () => {
+  it('parses ECE260 correctly', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '10953'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -22,17 +31,86 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitListSeats.actual).toBe(0);
     expect(parsed.waitListSeats.remaining).toBe(50);
 
-    // this should be broken up to optional attributes.
-    // levels is can probably be removed as it's also information we have from the class listing.
-    // the field restrictions can probably be extracted cleaner.
-    expect(parsed.requirements).toBe(`
-    Must be enrolled in one of the following Levels:
-    Undergraduate
-Must be enrolled in one of the following Fields of Study (Major, Minor, or Concentration):
-    EN: Biomedical Engineering
-    EN: Computer Engineering
-    EN: Electrical Engr
-    EN: Software Engineering BSENG
-`);
+    const level = parsed.requirements?.level;
+    const fieldOfStudy = parsed.requirements?.fieldOfStudy;
+
+    expect(level).toStrictEqual(['undergraduate']);
+    expect(fieldOfStudy).toStrictEqual([
+      'EN: Biomedical Engineering',
+      'EN: Computer Engineering',
+      'EN: Electrical Engr',
+      'EN: Software Engineering BSENG',
+    ]);
+  });
+
+  it('parses CSC355 correctly - case with no field requirements', async () => {
+    const $ = cheerio.load(await getSectionFileByCRN('202009', '10801'));
+    const parsed = await detailedClassInfoExtractor($);
+
+    expect(parsed.seats.capacity).toBe(32);
+    expect(parsed.seats.actual).toBe(17);
+    expect(parsed.seats.remaining).toBe(15);
+
+    expect(parsed.waitListSeats.capacity).toBe(10);
+    expect(parsed.waitListSeats.actual).toBe(0);
+    expect(parsed.waitListSeats.remaining).toBe(10);
+
+    const level = parsed.requirements?.level;
+    const fieldOfStudy = parsed.requirements?.fieldOfStudy;
+    //const classification = parsed.requirements?.classification;
+
+    expect(level).toStrictEqual(['undergraduate']);
+    expect(fieldOfStudy).toBeUndefined();
+    //expect(classification).toBeUndefined();
+  });
+
+  it('parses LAW309 correctly - case with law restriction and no field requirements', async () => {
+    const $ = cheerio.load(await getSectionFileByCRN('202009', '13082'));
+    const parsed = detailedClassInfoExtractor($);
+
+    expect(parsed.seats.capacity).toBe(50);
+    expect(parsed.seats.actual).toBe(50);
+    expect(parsed.seats.remaining).toBe(0);
+
+    expect(parsed.waitListSeats.capacity).toBe(100);
+    expect(parsed.waitListSeats.actual).toBe(0);
+    expect(parsed.waitListSeats.remaining).toBe(100);
+
+    const level = parsed.requirements?.level;
+    const fieldOfStudy = parsed.requirements?.fieldOfStudy;
+
+    expect(level).toStrictEqual([]);
+    expect(fieldOfStudy).toBeUndefined();
+  });
+
+  it('parses AHVS 430 correctly - case with classification requirements', async () => {
+    const $ = cheerio.load(await getSectionFileByCRN('202009', '10076'));
+    const parsed = await detailedClassInfoExtractor($);
+
+    expect(parsed.seats.capacity).toBe(10);
+    expect(parsed.seats.actual).toBe(2);
+    expect(parsed.seats.remaining).toBe(8);
+
+    expect(parsed.waitListSeats.capacity).toBe(10);
+    expect(parsed.waitListSeats.actual).toBe(0);
+    expect(parsed.waitListSeats.remaining).toBe(10);
+
+    const level = parsed.requirements?.level;
+    const fieldOfStudy = parsed.requirements?.fieldOfStudy;
+    const classification = parsed.requirements?.classification;
+
+    expect(level).toStrictEqual(['undergraduate']);
+    expect(fieldOfStudy).toStrictEqual(['Art History and Visual Studies', 'History in Art', 'Interdisciplinary']);
+    expect(classification).toStrictEqual(['YEAR_4', 'YEAR_5']);
+  });
+});
+
+describe('Detailed Class Information Parser All', () => {
+  describe('202001 term', () => {
+    const namePathPairs: string[][] = getDetailPathsByTerm('202009');
+
+    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+      await assertFields(path);
+    });
   });
 });

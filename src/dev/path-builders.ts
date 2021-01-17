@@ -35,3 +35,14 @@ export const getScheduleFileByCourse = async (term: string, subject: string, cod
 export const getSectionFileByCRN = (term: string, crn: string) => {
   return fs.promises.readFile(path.join(appRoot.toString(), `static/sections/${term}/${crn}.html`));
 };
+
+export const getDetailPathsByTerm = (term: string): string[][] => {
+  const paths = glob.sync(path.join(appRoot.toString(), `static/sections/${term}/*.html`));
+  return paths.map(thisPath => [
+    path
+      .basename(thisPath)
+      .replace('_', ' ')
+      .replace('.html', ''),
+    thisPath,
+  ]);
+};
