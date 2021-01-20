@@ -7,7 +7,7 @@ import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
 import { KualiCourseCatalog, KualiCourseItem } from './types';
 import { getCurrTerm as getCurrentTerm } from './utils';
 
-const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
+const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5f21b66d95f09c001ac436a0';
 const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
 
 /**

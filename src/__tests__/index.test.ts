@@ -1,17 +1,21 @@
 import { UvicCourseScraper } from '..';
 
-describe('client', () => {
-  it('works properly', async () => {
+describe('a random index from getAllCourses()', () => {
+  it('has all the expected attributes', async () => {
     const client = await UvicCourseScraper();
     const allCourses = await client.getAllCourses();
-    console.log(allCourses);
-    //TODO: write test for getAllCourses()
 
-    // console.log(await courseDetails)
-    //   const sections = await courseDetails.getSections('202005');
-    //   console.log(sections);
-    //   sections.forEach(v => {
-    //     console.log(v);
-    //   });
+    const courseIdx = Math.floor(Math.random() * allCourses.length);
+
+    expect(allCourses[courseIdx]).toHaveProperty('__catalogCourseId')
+    expect(allCourses[courseIdx]).toHaveProperty('__passedCatalogQuery')
+    expect(allCourses[courseIdx]).toHaveProperty('_score')
+    expect(allCourses[courseIdx]).toHaveProperty('catalogActivationDate')
+    expect(allCourses[courseIdx]).toHaveProperty('dateStart')
+    expect(allCourses[courseIdx]).toHaveProperty('getDetails')
+    expect(allCourses[courseIdx]).toHaveProperty('id')
+    expect(allCourses[courseIdx]).toHaveProperty('pid')
+    expect(allCourses[courseIdx]).toHaveProperty('subjectCode')
+    expect(allCourses[courseIdx]).toHaveProperty('title')
   });
 });
