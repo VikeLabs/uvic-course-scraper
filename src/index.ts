@@ -67,7 +67,7 @@ export const UvicCourseScraper = async () => {
    * Gets a complete list of all courses and their data in the Kuali catalog.
    * @return {KualiCourseCatalog[]}
    */
-  const getAllCourses = () => {
+  const getAllCourses = (): KualiCourseCatalog[] => {
     return kuali.map(v => ({
       ...v,
       getDetails: () => got(COURSE_DETAIL_URL + v.pid).json<KualiCourseItem>(),
