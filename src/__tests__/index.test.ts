@@ -7,15 +7,15 @@ describe('a random index from getAllCourses()', () => {
 
     const courseIdx = Math.floor(Math.random() * allCourses.length);
 
-    expect(allCourses[courseIdx]).toHaveProperty('__catalogCourseId')
-    expect(allCourses[courseIdx]).toHaveProperty('__passedCatalogQuery')
-    expect(allCourses[courseIdx]).toHaveProperty('_score')
-    expect(allCourses[courseIdx]).toHaveProperty('catalogActivationDate')
-    expect(allCourses[courseIdx]).toHaveProperty('dateStart')
-    expect(allCourses[courseIdx]).toHaveProperty('getDetails')
-    expect(allCourses[courseIdx]).toHaveProperty('id')
-    expect(allCourses[courseIdx]).toHaveProperty('pid')
-    expect(allCourses[courseIdx]).toHaveProperty('subjectCode')
-    expect(allCourses[courseIdx]).toHaveProperty('title')
+    expect(allCourses[courseIdx]).toHaveProperty('__catalogCourseId');
+    expect(allCourses[courseIdx]).toHaveProperty('__passedCatalogQuery');
+    expect(allCourses[courseIdx]).toHaveProperty('_score');
+    expect(allCourses[courseIdx]).toHaveProperty('catalogActivationDate');
+    expect(allCourses[courseIdx]).toHaveProperty('dateStart');
+    expect(allCourses[courseIdx]).toHaveProperty('getDetails');
+    expect(allCourses[courseIdx]).toHaveProperty('id');
+    expect(allCourses[courseIdx]).toHaveProperty('pid');
+    expect(allCourses[courseIdx]).toHaveProperty('subjectCode');
+    expect(allCourses[courseIdx]).toHaveProperty('title');
   });
 });
