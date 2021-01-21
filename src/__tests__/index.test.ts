@@ -19,3 +19,12 @@ describe('a random index from getAllCourses()', () => {
     expect(allCourses[courseIdx]).toHaveProperty('title')
   });
 });
+
+describe('when getSeats() is envoked', () => {
+  it('has the expected data', async () => {
+    const client = await UvicCourseScraper();
+    const seats = await client.getSeats('20001');
+    expect(seats).toHaveProperty('seats')
+    expect(seats).toHaveProperty('waitListSeats')
+  });
+});
