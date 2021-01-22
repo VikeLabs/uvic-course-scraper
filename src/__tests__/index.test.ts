@@ -1,7 +1,7 @@
 import { UvicCourseScraper } from '..';
 
-describe('a random index from getAllCourses()', () => {
-  it('has all the expected attributes', async () => {
+describe('call getAllCourses()', () => {
+  it('should have all required attributes for a random course', async () => {
     const client = await UvicCourseScraper();
     const allCourses = await client.getAllCourses();
 
@@ -20,7 +20,7 @@ describe('a random index from getAllCourses()', () => {
   });
 });
 
-describe('when getSeats() is envoked', () => {
+describe('call getSeats()', () => {
   it('has the expected data', async () => {
     const client = await UvicCourseScraper();
     const seats = await client.getSeats('20001');
