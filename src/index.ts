@@ -74,6 +74,8 @@ export const UvicCourseScraper = async () => {
     }));
   };
 
+  //temp comment ignore this
+
   const getSeats = async (crn: string): Promise<DetailedClassInformation> => {
     const { seats, waitListSeats } = await fetchSectionDetails(crn, getCurrentTerm());
     return { seats, waitListSeats }
