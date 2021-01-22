@@ -5,7 +5,7 @@ import { classScheduleListingUrl, detailedClassInformationUrl } from './common/u
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
 import { DetailedClassInformation, KualiCourseCatalog, KualiCourseItem } from './types';
-import { getCurrTerm as getCurrentTerm, getCurrTerm } from './utils';
+import { getCurrentTerm } from './utils';
 
 const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5f21b66d95f09c001ac436a0';
 const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
@@ -75,7 +75,7 @@ export const UvicCourseScraper = async () => {
   };
 
   const getSeats = async (crn: string): Promise<DetailedClassInformation> => {
-    const details = await fetchSectionDetails(crn, getCurrTerm());
+    const details = await fetchSectionDetails(crn, getCurrentTerm());
     return {
       seats: details.seats,
       waitListSeats: details.waitListSeats

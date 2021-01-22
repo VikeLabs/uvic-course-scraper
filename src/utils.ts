@@ -51,7 +51,7 @@ export function getCurrentTerms(plusMinus: number): string[] {
   return terms.sort();
 }
 
-export function getCurrTerm(date: dayjs.Dayjs = dayjs()) {
+export function getCurrentTerm(date: dayjs.Dayjs = dayjs()) {
   const year = date.year().toString();
   const currMonth = date.month();
   let month = '';
