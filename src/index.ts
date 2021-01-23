@@ -65,6 +65,7 @@ export const UvicCourseScraper = async () => {
 
   /**
    * Gets a complete list of all courses and their data in the Kuali catalog.
+   * 
    * @return {KualiCourseCatalog[]}
    */
   const getAllCourses = () => {
@@ -74,8 +75,12 @@ export const UvicCourseScraper = async () => {
     }));
   };
 
-  //temp comment ignore this
-
+  /**
+   * Fetches the data on seats and waitlist seats for a given course section.
+   * 
+   * @param crn ie. '12345', '20001'
+   * @return {Promise<DetailedClassInformation>}
+   */
   const getSeats = async (crn: string): Promise<DetailedClassInformation> => {
     const { seats, waitListSeats } = await fetchSectionDetails(crn, getCurrentTerm());
     return { seats, waitListSeats }
