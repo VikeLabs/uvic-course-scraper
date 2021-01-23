@@ -73,7 +73,7 @@ export const UvicCourseScraper = async () => {
    *
    * @return {KualiCourseCatalog[]}
    */
-  const getAllCourses = () => {
+  const getAllCourses = (): KualiCourseCatalog[] => {
     return kuali.map(v => ({
       ...v,
       getDetails: () => got(COURSE_DETAIL_URL + v.pid).json<KualiCourseItem>(),

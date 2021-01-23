@@ -29,8 +29,6 @@ describe('call getAllCourses()', () => {
     expect(allCourses[courseIdx]).toHaveProperty('pid');
     expect(allCourses[courseIdx]).toHaveProperty('subjectCode');
     expect(allCourses[courseIdx]).toHaveProperty('title');
-  });
-});
 
 describe('call getSeats()', () => {
   it('has the expected data for a given section', async () => {
