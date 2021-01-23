@@ -1,12 +1,12 @@
-import { UvicCourseScraper } from '..';
-import { getSectionFileByCRN } from '../dev/path-builders'
-import coursesJSON from '../../static/courses/courses.json';
+import nock from 'nock';
 
-import nock from 'nock'
+import { UvicCourseScraper } from '..';
+import coursesJSON from '../../static/courses/courses.json';
+import { getSectionFileByCRN } from '../dev/path-builders';
 
 afterEach(() => {
   nock.cleanAll();
-})
+});
 
 describe('call getAllCourses()', () => {
   it('should have all expected data for a course', async () => {
@@ -19,16 +19,16 @@ describe('call getAllCourses()', () => {
 
     const courseIdx = Math.floor(Math.random() * allCourses.length);
 
-    expect(allCourses[courseIdx]).toHaveProperty('__catalogCourseId')
-    expect(allCourses[courseIdx]).toHaveProperty('__passedCatalogQuery')
-    expect(allCourses[courseIdx]).toHaveProperty('_score')
-    expect(allCourses[courseIdx]).toHaveProperty('catalogActivationDate')
-    expect(allCourses[courseIdx]).toHaveProperty('dateStart')
-    expect(allCourses[courseIdx]).toHaveProperty('getDetails')
-    expect(allCourses[courseIdx]).toHaveProperty('id')
-    expect(allCourses[courseIdx]).toHaveProperty('pid')
-    expect(allCourses[courseIdx]).toHaveProperty('subjectCode')
-    expect(allCourses[courseIdx]).toHaveProperty('title')
+    expect(allCourses[courseIdx]).toHaveProperty('__catalogCourseId');
+    expect(allCourses[courseIdx]).toHaveProperty('__passedCatalogQuery');
+    expect(allCourses[courseIdx]).toHaveProperty('_score');
+    expect(allCourses[courseIdx]).toHaveProperty('catalogActivationDate');
+    expect(allCourses[courseIdx]).toHaveProperty('dateStart');
+    expect(allCourses[courseIdx]).toHaveProperty('getDetails');
+    expect(allCourses[courseIdx]).toHaveProperty('id');
+    expect(allCourses[courseIdx]).toHaveProperty('pid');
+    expect(allCourses[courseIdx]).toHaveProperty('subjectCode');
+    expect(allCourses[courseIdx]).toHaveProperty('title');
   });
 });
 

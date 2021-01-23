@@ -4,10 +4,15 @@ import got from 'got';
 import { classScheduleListingUrl, detailedClassInformationUrl } from './common/urls';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
-import { DetailedClassInformation, KualiCourseCatalog, KualiCourseItem } from './types';
+import {
+  DetailedClassInformation,
+  KualiCourseCatalog,
+  KualiCourseItem,
+  COURSES_URL_W2021 as COURSES_URL,
+} from './types';
 import { getCurrentTerm } from './utils';
 
-const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5f21b66d95f09c001ac436a0';
+// TODO: Currently not in use with current implementations,
 const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
 
 /**
@@ -64,8 +69,8 @@ export const UvicCourseScraper = async () => {
   const pidMap = subjectCodeToPidMapper(kuali);
 
   /**
-   * Gets a complete list of all courses and their data in the Kuali catalog.
-   * 
+   * Gets a complete list of all courses and their data in the Kuali catalog
+   *
    * @return {KualiCourseCatalog[]}
    */
   const getAllCourses = () => {
@@ -77,17 +82,17 @@ export const UvicCourseScraper = async () => {
 
   /**
    * Fetches the data on seats and waitlist seats for a given course section.
-   * 
+   *
    * @param crn ie. '12345', '20001'
    * @return {Promise<DetailedClassInformation>}
    */
   const getSeats = async (crn: string): Promise<DetailedClassInformation> => {
     const { seats, waitListSeats } = await fetchSectionDetails(crn, getCurrentTerm());
-    return { seats, waitListSeats }
-  }
+    return { seats, waitListSeats };
+  };
 
   return {
     getAllCourses,
-    getSeats
+    getSeats,
   };
 };
