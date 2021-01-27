@@ -4,11 +4,14 @@ import got from 'got';
 import { classScheduleListingUrl, detailedClassInformationUrl } from './common/urls';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
-import { KualiCourseCatalog, KualiCourseItem } from './types';
-import { getCurrTerm as getCurrentTerm } from './utils';
-
-const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5f21b66d95f09c001ac436a0';
-const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
+import {
+  DetailedClassInformation,
+  KualiCourseCatalog,
+  KualiCourseItem,
+  COURSES_URL_W2021 as COURSES_URL,
+  COURSE_DETAIL_URL,
+} from './types';
+import { getCurrentTerm } from './utils';
 
 /**
  * Generates a Map that maps a subject and code to a pid used internally within Kuali.
@@ -64,7 +67,8 @@ export const UvicCourseScraper = async () => {
   const pidMap = subjectCodeToPidMapper(kuali);
 
   /**
-   * Gets a complete list of all courses and their data in the Kuali catalog.
+   * Gets a complete list of all courses and their data in the Kuali catalog
+   *
    * @return {KualiCourseCatalog[]}
    */
   const getAllCourses = (): KualiCourseCatalog[] => {
@@ -74,7 +78,20 @@ export const UvicCourseScraper = async () => {
     }));
   };
 
+  /**
+   * Fetches the data on seats and waitlist seats for a given course section.
+   *
+   * @param crn ie. '12345', '20001'
+   * @param term i.e. '202009', '202101'
+   * @return {Promise<DetailedClassInformation>}
+   */
+  const getSeats = async (term: string, crn: string): Promise<DetailedClassInformation> => {
+    const { seats, waitListSeats } = await fetchSectionDetails(crn, term);
+    return { seats, waitListSeats };
+  };
+
   return {
     getAllCourses,
+    getSeats,
   };
 };
