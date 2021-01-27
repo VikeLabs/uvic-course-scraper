@@ -9,11 +9,9 @@ import {
   KualiCourseCatalog,
   KualiCourseItem,
   COURSES_URL_W2021 as COURSES_URL,
+  COURSE_DETAIL_URL,
 } from './types';
 import { getCurrentTerm } from './utils';
-
-// TODO: Currently not in use with current implementations,
-const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
 
 /**
  * Generates a Map that maps a subject and code to a pid used internally within Kuali.
@@ -84,10 +82,11 @@ export const UvicCourseScraper = async () => {
    * Fetches the data on seats and waitlist seats for a given course section.
    *
    * @param crn ie. '12345', '20001'
+   * @param term i.e. '202009', '202101'
    * @return {Promise<DetailedClassInformation>}
    */
-  const getSeats = async (crn: string): Promise<DetailedClassInformation> => {
-    const { seats, waitListSeats } = await fetchSectionDetails(crn, getCurrentTerm());
+  const getSeats = async (term: string, crn: string): Promise<DetailedClassInformation> => {
+    const { seats, waitListSeats } = await fetchSectionDetails(crn, term);
     return { seats, waitListSeats };
   };
 

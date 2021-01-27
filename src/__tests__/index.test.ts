@@ -40,7 +40,7 @@ describe('call getSeats()', () => {
       .reply(200, htmlResponse);
 
     const client = await UvicCourseScraper();
-    const classSeats = await client.getSeats('20001');
+    const classSeats = await client.getSeats('202101', '20001');
 
     const seats = classSeats.seats;
     const waitListSeats = classSeats.waitListSeats;
