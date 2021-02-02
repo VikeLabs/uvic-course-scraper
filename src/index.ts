@@ -107,41 +107,9 @@ export const UvicCourseScraper = async () => {
     term: string = getCurrentTerm()
   ): Promise<KualiCourseItem> => {
     const getDetails = fetchCourseDetails(pidMap);
-    const {
-      description,
-      supplementalNotes,
-      proForma,
-      credits,
-      crossListedCourses,
-      hoursCatalogText,
-      __catalogCourseId,
-      __passedCatalogQuery,
-      dateStart,
-      pid,
-      id,
-      title,
-      subjectCode,
-      catalogActivationDate,
-      _score,
-    } = await getDetails(subject, code);
+    const courseDetails = (await getDetails(subject, code)) as KualiCourseItem;
 
-    return {
-      description,
-      supplementalNotes,
-      proForma,
-      credits,
-      crossListedCourses,
-      hoursCatalogText,
-      __catalogCourseId,
-      __passedCatalogQuery,
-      dateStart,
-      pid,
-      id,
-      title,
-      subjectCode,
-      catalogActivationDate,
-      _score,
-    };
+    return courseDetails;
   };
 
   return {
