@@ -10,6 +10,7 @@ import {
   KualiCourseItem,
   COURSES_URL_W2021 as COURSES_URL,
   COURSE_DETAIL_URL,
+  CourseSection,
 } from './types';
 import { getCurrentTerm } from './utils';
 
@@ -90,8 +91,30 @@ export const UvicCourseScraper = async () => {
     return { seats, waitListSeats };
   };
 
+  /**
+   * Fetches all BAN1P data for a given course, section, and term.
+   *
+   * @param term i.e. '202009'
+   * @param subject i.e. 'SENG', 'ECON'
+   * @param code i.e. '180', '225'
+   * @return {Promise<CourseSection[]>}
+   */
+  const getCourseSectionsByTerm = async (term: string, subject: string, code: string): Promise<CourseSection[]> => {
+    const courseSections: CourseSection[] = [];
+    const sections = await fetchSections(subject, code, term);
+    for (const section of sections) {
+      const details = await fetchSectionDetails(section.crn, term);
+      courseSections.push({
+        ...section,
+        ...details,
+      });
+    }
+    return courseSections;
+  };
+
   return {
     getAllCourses,
     getSeats,
+    getCourseSectionsByTerm,
   };
 };
