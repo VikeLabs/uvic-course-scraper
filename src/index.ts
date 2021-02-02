@@ -99,7 +99,13 @@ export const UvicCourseScraper = async () => {
    * @param term i.e. '202009'
    * @return {Promise<KualiCourseItem>}
    */
-  const getCourseDetails = async (subject: string, code: string, term = getCurrentTerm()): Promise<KualiCourseItem> => {
+  // TODO: Implement functionality for term parameter.
+  // This will be a result of adding logic which uses the proper Kuali/BAN1P link
+  const getCourseDetails = async (
+    subject: string,
+    code: string,
+    term: string = getCurrentTerm()
+  ): Promise<KualiCourseItem> => {
     const getDetails = fetchCourseDetails(pidMap);
     const {
       description,
@@ -144,9 +150,3 @@ export const UvicCourseScraper = async () => {
     getCourseDetails,
   };
 };
-
-// const main = async () => {
-//   const client = await UvicCourseScraper();
-//   console.log(await client.getCourseDetails('SENG', '360'));
-// };
-// main();
