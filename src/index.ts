@@ -55,7 +55,8 @@ const fetchCourseDetails = (pidMap: Map<string, string>) => async (subject: stri
   const pid = pidMap.get(subject + code);
   // TODO: we probably don't want to return the Kuali data as-is.
   const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
-  // TODO: strip HTML tags from courseDetails.description
+  // strip HTML tags from courseDetails.description
+  courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
   return courseDetails;
 };
 
@@ -90,8 +91,62 @@ export const UvicCourseScraper = async () => {
     return { seats, waitListSeats };
   };
 
+  /**
+   * Fetches course details from Kuali for a given course.
+   *
+   * @param subject i.e. 'SENG', 'ECON'
+   * @param code i.e. '360', '180A'
+   * @param term i.e. '202009'
+   * @return {Promise<KualiCourseItem>}
+   */
+  const getCourseDetails = async (subject: string, code: string, term = getCurrentTerm()): Promise<KualiCourseItem> => {
+    const getDetails = fetchCourseDetails(pidMap);
+    const {
+      description,
+      supplementalNotes,
+      proForma,
+      credits,
+      crossListedCourses,
+      hoursCatalogText,
+      __catalogCourseId,
+      __passedCatalogQuery,
+      dateStart,
+      pid,
+      id,
+      title,
+      subjectCode,
+      catalogActivationDate,
+      _score,
+    } = await getDetails(subject, code);
+
+    return {
+      description,
+      supplementalNotes,
+      proForma,
+      credits,
+      crossListedCourses,
+      hoursCatalogText,
+      __catalogCourseId,
+      __passedCatalogQuery,
+      dateStart,
+      pid,
+      id,
+      title,
+      subjectCode,
+      catalogActivationDate,
+      _score,
+    };
+  };
+
   return {
     getAllCourses,
     getSeats,
+    getCourseDetails,
   };
 };
+
+// const main = async () => {
+//   const client = await UvicCourseScraper();
+//   console.log(await client.getCourseDetails('SENG', '360'));
+// };
+// main();
