@@ -51,7 +51,10 @@ const fetchSectionDetails = async (crn: string, term: string) => {
  * @param subject ie. CSC, SENG, PHYS
  * @param code ie. 100, 265, 115
  */
-const fetchCourseDetails = (pidMap: Map<string, string>) => async (subject: string, code: string) => {
+const fetchCourseDetails = (pidMap: Map<string, string>) => async (
+  subject: string,
+  code: string
+): Promise<KualiCourseItem> => {
   const pid = pidMap.get(subject + code);
   // TODO: we probably don't want to return the Kuali data as-is.
   const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
@@ -106,10 +109,9 @@ export const UvicCourseScraper = async () => {
     code: string,
     term: string = getCurrentTerm()
   ): Promise<KualiCourseItem> => {
-    const getDetails = fetchCourseDetails(pidMap);
-    const courseDetails = (await getDetails(subject, code)) as KualiCourseItem;
+    const getDetails = await fetchCourseDetails(pidMap)(subject, code);
 
-    return courseDetails;
+    return getDetails;
   };
 
   return {
