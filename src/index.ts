@@ -92,7 +92,7 @@ export const UvicCourseScraper = async () => {
   };
 
   /**
-   * Fetches all BAN1P data for a given course, section, and term.
+   * Fetches all BAN1P data for a given course and term.
    *
    * @param term i.e. '202009'
    * @param subject i.e. 'SENG', 'ECON'
