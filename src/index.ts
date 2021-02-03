@@ -109,9 +109,7 @@ export const UvicCourseScraper = async () => {
     code: string,
     term: string = getCurrentTerm()
   ): Promise<KualiCourseItem> => {
-    const getDetails = await fetchCourseDetails(pidMap)(subject, code);
-
-    return getDetails;
+    return await fetchCourseDetails(pidMap)(subject, code);
   };
 
   return {
