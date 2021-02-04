@@ -56,7 +56,7 @@ describe('call getSeats()', () => {
   });
 });
 
-describe('call getCourseSectionsByTerm', () => {
+describe('call getCourseSections', () => {
   it('has the expected data for a given class', async () => {
     const crns = ['22642', '22643', '22644', '22645'];
     const sectionsResponse = await getScheduleFileByCourse('202101', 'SENG', '371');
@@ -72,7 +72,7 @@ describe('call getCourseSectionsByTerm', () => {
     }
 
     const client = await UvicCourseScraper();
-    const courseSections = await client.getCourseSectionsByTerm('202101', 'SENG', '371');
+    const courseSections = await client.getCourseSections('202101', 'SENG', '371');
 
     expect(courseSections.length).toEqual(4);
 

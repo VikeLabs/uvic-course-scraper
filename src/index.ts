@@ -103,16 +103,23 @@ export const UvicCourseScraper = async () => {
    * @param code i.e. '180', '225'
    * @return {Promise<CourseSection[]>}
    */
-  const getCourseSectionsByTerm = async (term: string, subject: string, code: string): Promise<CourseSection[]> => {
+  const getCourseSections = async (
+    term: string = getCurrentTerm(),
+    subject: string,
+    code: string
+  ): Promise<CourseSection[]> => {
     // retrieve sections for given term, subject and code.
     const sections = await fetchSections(subject, code, term);
 
-    return Promise.all(sections.map((async section => {
-      const details = await fetchSectionDetails(section.crn, term);
-      return {
-        ...details, ...section
-      }
-    })))
+    return Promise.all(
+      sections.map(async section => {
+        const details = await fetchSectionDetails(section.crn, term);
+        return {
+          ...details,
+          ...section,
+        };
+      })
+    );
   };
 
   /**
@@ -136,7 +143,7 @@ export const UvicCourseScraper = async () => {
   return {
     getAllCourses,
     getSeats,
-    getCourseSectionsByTerm,
+    getCourseSections,
     getCourseDetails,
   };
 };
