@@ -104,16 +104,15 @@ export const UvicCourseScraper = async () => {
    * @return {Promise<CourseSection[]>}
    */
   const getCourseSectionsByTerm = async (term: string, subject: string, code: string): Promise<CourseSection[]> => {
-    const courseSections: CourseSection[] = [];
+    // retrieve sections for given term, subject and code.
     const sections = await fetchSections(subject, code, term);
-    for (const section of sections) {
+
+    return Promise.all(sections.map((async section => {
       const details = await fetchSectionDetails(section.crn, term);
-      courseSections.push({
-        ...section,
-        ...details,
-      });
-    }
-    return courseSections;
+      return {
+        ...details, ...section
+      }
+    })))
   };
 
   /**
