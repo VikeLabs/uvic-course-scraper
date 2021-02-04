@@ -1,5 +1,5 @@
 {
-  "name": "uvic-course-scraper",
+  "name": "@vikelabs/uvic-course-scraper",
   "version": "0.1.0",
   "description": "UVic Course Scrapper",
   "main": "dist/index.js",
