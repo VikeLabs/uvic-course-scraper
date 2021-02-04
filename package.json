@@ -15,9 +15,9 @@
   "author": "VikeLabs",
   "license": "GPL-3.0",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "dayjs": "^1.9.6",
-    "got": "^11.8.0"
+    "cheerio": "^1.0.0-rc.5",
+    "dayjs": "^1.10.4",
+    "got": "^11.8.1"
   },
   "devDependencies": {
     "@types/app-root-path": "^1.2.4",
