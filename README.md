@@ -3,25 +3,22 @@
 [![Issues][issues-shield]][issues-url]
 [![Code Coverage][coverage-shield]][coverage-url]
 
-# scheduler-scraper
+# UVic Course Scraper
 
-Scheduler Scraper is a Node.js library that parses information from [University of Victoria](https://uvic.ca) (UVic) course calandar and course schedule information sources. It uses [Cheerio](https://cheerio.js.org/) under the hood to parse HTML.
+UVic Course Scraper is a Node.js library that parses information from [University of Victoria](https://uvic.ca) (UVic) course calandar and course schedule information sources. It uses [Cheerio](https://cheerio.js.org/) under the hood to parse HTML.
 
 As a developer, you would use this to parse HTML and JSON from Kuali and BAN1P which would be retrieved by any method like fetch etc.
 
 # Install
 
 ```
-npm install @vikelabs/scheduler-scraper
+npm install @vikelabs/uvic-course-scraper
 ```
 
 # Usage
-
-**WIP**: Prototype design, subject to change.
-
 ```ts
 // initialize a scraper client
-const client = await Demo();
+const client = await UVicCourseScraper();
 
 // example: get the course details for CSC 111
 const course = await client.getCourseDetails('CSC', '111');
@@ -40,10 +37,10 @@ const sections1 = await client.getSections('CSC', '111');
 1. Clone the repo to your machine by running the following in your terminal:
 
 ```
-git clone https://github.com/VikeLabs/scheduler-scraper.git
+git clone https://github.com/VikeLabs/uvic-course-scraper.git
 ```
 
-2. Once you have `schedule-scraper` open as a project, run `npm install` to get your environment set up with the dependencies this project uses.
+2. Once you have `uvic-course-scraper` open as a project, run `npm install` to get your environment set up with the dependencies this project uses.
 3. If you want, run and experiment with `example.ts` using `npx ts-node-dev example.ts` to get a feel for how cheerio and RegEx works on the type of sites our project is hitting.
 4. Find an unassigned task on [ZenHub](https://app.zenhub.com/workspaces/team-schedule-courses-5f973f50ae36d70012eb5b2e/board?repos=216653028) to work on.
 5. Create a new branch using `git checkout -b <branch-name>` (make sure it's up to date with `master`)

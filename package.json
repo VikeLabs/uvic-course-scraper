@@ -1,9 +1,10 @@
 {
-  "name": "scheduler-scraper",
-  "version": "1.0.0",
-  "description": "UVic Web Scrapper",
+  "name": "uvic-course-scraper",
+  "version": "0.1.0",
+  "description": "UVic Course Scrapper",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": "github:vikelabs/uvic-course-scraper",
   "scripts": {
     "dump": "ts-node src/dev/cli.ts",
     "test": "jest",

@@ -1,4 +1,4 @@
-name: scheduler-scraper
+name: uvic-course-scraper
 
 on:
     push:
