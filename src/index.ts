@@ -51,11 +51,15 @@ const fetchSectionDetails = async (crn: string, term: string) => {
  * @param subject ie. CSC, SENG, PHYS
  * @param code ie. 100, 265, 115
  */
-const fetchCourseDetails = (pidMap: Map<string, string>) => async (subject: string, code: string) => {
+const fetchCourseDetails = (pidMap: Map<string, string>) => async (
+  subject: string,
+  code: string
+): Promise<KualiCourseItem> => {
   const pid = pidMap.get(subject + code);
   // TODO: we probably don't want to return the Kuali data as-is.
   const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
-  // TODO: strip HTML tags from courseDetails.description
+  // strip HTML tags from courseDetails.description
+  courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
   return courseDetails;
 };
 
@@ -90,8 +94,27 @@ export const UvicCourseScraper = async () => {
     return { seats, waitListSeats };
   };
 
+  /**
+   * Fetches course details from Kuali for a given course.
+   *
+   * @param subject i.e. 'SENG', 'ECON'
+   * @param code i.e. '360', '180A'
+   * @param term i.e. '202009'
+   * @return {Promise<KualiCourseItem>}
+   */
+  // TODO: Implement functionality for term parameter.
+  // This will be a result of adding logic which uses the proper Kuali/BAN1P link
+  const getCourseDetails = async (
+    subject: string,
+    code: string,
+    term: string = getCurrentTerm()
+  ): Promise<KualiCourseItem> => {
+    return await fetchCourseDetails(pidMap)(subject, code);
+  };
+
   return {
     getAllCourses,
     getSeats,
+    getCourseDetails,
   };
 };
