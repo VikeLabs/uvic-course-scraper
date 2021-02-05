@@ -52,7 +52,7 @@ const seats = course[1].seats;
 git clone https://github.com/VikeLabs/scheduler-scraper.git
 ```
 
-2. Once you have `schedule-scraper` open as a project, run `npm install` to get your environment set up with the dependencies this project uses.
+2. Once you have `uvic-course-scraper` open as a project, run `npm install` to get your environment set up with the dependencies this project uses.
 3. If you want, run and experiment with `example.ts` using `npx ts-node-dev example.ts` to get a feel for how cheerio and RegEx works on the type of sites our project is hitting.
 4. Find an unassigned task on [ZenHub](https://app.zenhub.com/workspaces/team-schedule-courses-5f973f50ae36d70012eb5b2e/board?repos=216653028) to work on.
 5. Create a new branch using `git checkout -b <branch-name>` (make sure it's up to date with `master`)
