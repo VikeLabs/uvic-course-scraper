@@ -1,6 +1,6 @@
 import nock from 'nock';
 
-import { UvicCourseScraper } from '..';
+import { UVicCourseScraper } from '..';
 import coursesJSON from '../../static/courses/courses.json';
 import { getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
 
@@ -16,7 +16,7 @@ describe('call getAllCourses()', () => {
       .get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0')
       .reply(200, coursesJSON);
 
-    const client = await UvicCourseScraper();
+    const client = await UVicCourseScraper();
     const allCourses = await client.getAllCourses();
 
     const courseIdx = Math.floor(Math.random() * allCourses.length);
@@ -41,7 +41,7 @@ describe('call getSeats()', () => {
       .get('/BAN1P/bwckschd.p_disp_detail_sched?term_in=202101&crn_in=20001')
       .reply(200, htmlResponse);
 
-    const client = await UvicCourseScraper();
+    const client = await UVicCourseScraper();
     const classSeats = await client.getSeats('202101', '20001');
 
     const seats = classSeats.seats;
@@ -71,7 +71,7 @@ describe('call getCourseSections', () => {
         .reply(200, detailsResponse);
     }
 
-    const client = await UvicCourseScraper();
+    const client = await UVicCourseScraper();
     const courseSections = await client.getCourseSections('202101', 'SENG', '371');
 
     expect(courseSections.length).toEqual(4);
@@ -110,7 +110,7 @@ describe('call getCourseDetails()', () => {
       .get('/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/SkMkeY6XV')
       .reply(200, courseDetailJSON);
 
-    const client = await UvicCourseScraper();
+    const client = await UVicCourseScraper();
     const courseDetails = await client.getCourseDetails('SENG', '360');
 
     expect(courseDetails.description).toEqual(

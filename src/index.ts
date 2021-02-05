@@ -64,7 +64,7 @@ const fetchCourseDetails = (pidMap: Map<string, string>) => async (
   return courseDetails;
 };
 
-export const UvicCourseScraper = async () => {
+export const UVicCourseScraper = async () => {
   // upon initialization, we download the main Kuali courses JSON file.
   const kuali = await got(COURSES_URL).json<KualiCourseCatalog[]>();
 

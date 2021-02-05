@@ -5,6 +5,7 @@
 
 # uvic-course-scraper
 
+
 UVic Course Scraper is a Node.js library that parses information from [University of Victoria](https://uvic.ca) (UVic) course calandar and course schedule information sources. It uses [Cheerio](https://cheerio.js.org/) under the hood to parse HTML.
 
 As a developer, you would use this to parse HTML and JSON from Kuali and BAN1P which would be retrieved by any method like fetch etc.
@@ -12,10 +13,10 @@ As a developer, you would use this to parse HTML and JSON from Kuali and BAN1P w
 # Usage
 
 ## Install
-
 ```
 npm install @vikelabs/uvic-course-scraper
 ```
+
 ## Initialization
 ```ts
 const client = await UvicCourseScraper();
@@ -34,6 +35,13 @@ The following table provides descriptions of the methods available on the object
 ```ts
 // initialize the client
 const client = await UvicCourseScraper();
+=======
+```
+
+# Usage
+```ts
+// initialize a scraper client
+const client = await UVicCourseScraper();
 
 // example: get the course sections for CSC 111
 const course = await client.getCourseSections('202101', 'CSC', '111');
@@ -49,7 +57,7 @@ const seats = course[1].seats;
 1. Clone the repo to your machine by running the following in your terminal:
 
 ```
-git clone https://github.com/VikeLabs/scheduler-scraper.git
+git clone https://github.com/VikeLabs/uvic-course-scraper.git
 ```
 
 2. Once you have `uvic-course-scraper` open as a project, run `npm install` to get your environment set up with the dependencies this project uses.
