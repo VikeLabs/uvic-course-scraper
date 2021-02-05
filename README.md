@@ -31,14 +31,7 @@ The following table provides descriptions of the methods available on the object
 |``getCourseSections(term: string, subject: string, code: string)``|Returns array of ``CourseSection`` objects with details for each section of the course in the given term|
 |``getSeats(term: string, crn: string)``|Returns a ``DetailedClassInformation`` object with the `seats` and `waitListSeats` for the course|
 
-## Examples
-```ts
-// initialize the client
-const client = await UvicCourseScraper();
-=======
-```
-
-# Usage
+## Example
 ```ts
 // initialize a scraper client
 const client = await UVicCourseScraper();
