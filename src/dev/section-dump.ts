@@ -12,12 +12,12 @@ import { forEachHelper } from './utils';
 export const sectionsUtil = async (term: string) => {
   const CRNs: string[] = [];
   const namePathPairs: string[][] = getSchedulePathsByTerm(term);
-  const paths: string[] = namePathPairs.map(namePathPair => namePathPair[1]);
+  const paths: string[] = namePathPairs.map((namePathPair) => namePathPair[1]);
 
   const parseCRNsFromClassScheduleListing = async (path: string): Promise<void> => {
     const $ = cheerio.load(await fs.promises.readFile(path));
     const parsed = await classScheduleListingExtractor($);
-    CRNs.push(...parsed.map(section => section.crn));
+    CRNs.push(...parsed.map((section) => section.crn));
   };
 
   const writeCourseSectionsToFS = async (crn: string) => {
@@ -34,7 +34,7 @@ export const sectionsUtil = async (term: string) => {
     }
   };
 
-  await Promise.all(paths.map(async path => await parseCRNsFromClassScheduleListing(path)));
+  await Promise.all(paths.map(async (path) => await parseCRNsFromClassScheduleListing(path)));
 
   await forEachHelper(CRNs, writeCourseSectionsToFS, 50);
 };

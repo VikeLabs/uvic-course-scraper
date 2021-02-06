@@ -20,7 +20,7 @@ import { getCurrentTerm } from './utils';
  */
 const subjectCodeToPidMapper = (kuali: KualiCourseCatalog[]) => {
   const dict: Map<string, string> = new Map();
-  kuali.forEach(v => {
+  kuali.forEach((v) => {
     dict.set(v.__catalogCourseId, v.pid);
   });
   return dict;
@@ -77,7 +77,7 @@ export const UVicCourseScraper = async () => {
    * @return {KualiCourseCatalog[]}
    */
   const getAllCourses = (): KualiCourseCatalog[] => {
-    return kuali.map(v => ({
+    return kuali.map((v) => ({
       ...v,
       getDetails: () => got(COURSE_DETAIL_URL + v.pid).json<KualiCourseItem>(),
     }));
@@ -112,7 +112,7 @@ export const UVicCourseScraper = async () => {
     const sections = await fetchSections(subject, code, term);
 
     return Promise.all(
-      sections.map(async section => {
+      sections.map(async (section) => {
         const details = await fetchSectionDetails(section.crn, term);
         return {
           ...details,

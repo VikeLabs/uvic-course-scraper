@@ -23,10 +23,6 @@ describe('page extractor: Course Listing Term', (): void => {
 
   it('has page has the expected title', async () => {
     const $ = cheerio.load(await fs.promises.readFile(getFilePath('misc/UVIC_CourseListingTerm.html')));
-    expect(
-      $('title')
-        .first()
-        .text()
-    ).toBe('Course Listing Term');
+    expect($('title').first().text()).toBe('Course Listing Term');
   });
 });
