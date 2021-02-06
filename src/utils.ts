@@ -51,14 +51,14 @@ export function getCurrentTerms(plusMinus: number): string[] {
   return terms.sort();
 }
 
-export function getCurrTerm(date: dayjs.Dayjs = dayjs()) {
+export function getCurrentTerm(date: dayjs.Dayjs = dayjs()): string {
   const year = date.year().toString();
   const currMonth = date.month();
   let month = '';
 
-  if (1 <= currMonth && currMonth < 5) {
+  if (0 <= currMonth && currMonth < 4) {
     month = '01';
-  } else if (5 <= currMonth && currMonth < 9) {
+  } else if (4 <= currMonth && currMonth < 10) {
     month = '05';
   } else {
     month = '09';

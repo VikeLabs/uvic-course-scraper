@@ -64,7 +64,7 @@ const assertFields = async (path: string) => {
   const $ = cheerio.load(await fs.promises.readFile(path));
   const parsed = await classScheduleListingExtractor($);
 
-  parsed.forEach(e => {
+  parsed.forEach((e) => {
     expect(e.crn).toMatch(/\d{5}/);
     expect(e.sectionCode).toMatch(/[A|B|T]\d+/);
     expect(e.credits).toMatch(/\d\.\d{3}/);
