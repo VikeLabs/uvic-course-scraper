@@ -40,7 +40,7 @@ describe('call getSeats()', () => {
       .reply(200, htmlResponse);
 
     const client = await UVicCourseScraper();
-    const classSeats = await client.getSeats('202101', '20001');
+    const classSeats = await client.getSeats('20001', '202101');
 
     const seats = classSeats.seats;
     const waitListSeats = classSeats.waitListSeats;
@@ -70,7 +70,7 @@ describe('call getCourseSections', () => {
     }
 
     const client = await UVicCourseScraper();
-    const courseSections = await client.getCourseSections('202101', 'SENG', '371');
+    const courseSections = await client.getCourseSections('SENG', '371', '202101');
 
     expect(courseSections.length).toEqual(4);
 
