@@ -90,7 +90,7 @@ export const UVicCourseScraper = async () => {
    * @param term i.e. '202009', '202101'
    * @return {Promise<DetailedClassInformation>}
    */
-  const getSeats = async (term: string, crn: string): Promise<DetailedClassInformation> => {
+  const getSeats = async (crn: string, term: string): Promise<DetailedClassInformation> => {
     const { seats, waitListSeats } = await fetchSectionDetails(crn, term);
     return { seats, waitListSeats };
   };
@@ -104,9 +104,9 @@ export const UVicCourseScraper = async () => {
    * @return {Promise<CourseSection[]>}
    */
   const getCourseSections = async (
-    term: string = getCurrentTerm(),
     subject: string,
-    code: string
+    code: string,
+    term: string = getCurrentTerm()
   ): Promise<CourseSection[]> => {
     // retrieve sections for given term, subject and code.
     const sections = await fetchSections(subject, code, term);
@@ -134,8 +134,8 @@ export const UVicCourseScraper = async () => {
   // This will be a result of adding logic which uses the proper Kuali/BAN1P link
   const getCourseDetails = async (
     subject: string,
-    code: string,
-    term: string = getCurrentTerm()
+    code: string
+    // TODO: term: string = getCurrentTerm()
   ): Promise<KualiCourseItem> => {
     return fetchCourseDetails(pidMap)(subject, code);
   };
