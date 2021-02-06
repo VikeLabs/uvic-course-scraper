@@ -30,8 +30,8 @@ The following table provides descriptions of the methods available on the object
 |--------|-------------|
 |``getAllCourses()``|Returns array of ``KualiCourseCatalog`` objects containing all courses active in the Kuali catalog|
 |``getCourseDetails(subject: string, code: string)``|Returns a ``KualiCourseItem`` object with details for the course|
-|``getCourseSections(term: string, subject: string, code: string)``|Returns array of ``CourseSection`` objects with details for each section of the course in the given term|
-|``getSeats(term: string, crn: string)``|Returns a ``DetailedClassInformation`` object with the `seats` and `waitListSeats` for the course|
+|``getCourseSections(subject: string, code: string, term: string)``|Returns array of ``CourseSection`` objects with details for each section of the course in the given term|
+|``getSeats(crn: string, term: string)``|Returns a ``DetailedClassInformation`` object with the `seats` and `waitListSeats` for the course|
 
 ## Example
 ```ts
