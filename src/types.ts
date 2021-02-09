@@ -22,6 +22,7 @@ export interface KualiCourseCatalog {
 }
 
 export interface KualiCourseItem extends KualiCourseCatalog {
+  [x: string]: any;
   description: string;
   supplementalNotes?: string;
   proForma: string;
@@ -38,7 +39,13 @@ export interface KualiCourseItem extends KualiCourseCatalog {
     pid: string;
     title: string;
   }[];
-  hoursCatalogText?: string;
+  //This has two types because the ones returned from uvic is a
+  //string so we parse it to turn into an object type, this is explicitly turned into an object in KualiCourse
+  hoursCatalogText?: string | { lecture: string; lab: string; tutorial: string };
+}
+
+export interface KualiCourse extends KualiCourseItem {
+  hoursCatalogText?: { lecture: string; lab: string; tutorial: string };
 }
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';

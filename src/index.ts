@@ -11,6 +11,7 @@ import {
   COURSES_URL_W2021 as COURSES_URL,
   COURSE_DETAIL_URL,
   CourseSection,
+  KualiCourse,
 } from './types';
 import { getCurrentTerm } from './utils';
 
@@ -61,6 +62,16 @@ const fetchCourseDetails = (pidMap: Map<string, string>) => async (
   const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
   // strip HTML tags from courseDetails.description
   courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
+  if (typeof courseDetails.hoursCatalogText === 'string') {
+    const hours = courseDetails.hoursCatalogText;
+    const temp: string[] | undefined = hours.split('-');
+    const courseDetailsWithHours: KualiCourse = {
+      ...courseDetails,
+      hoursCatalogText: { lecture: temp[0], lab: temp[1], tutorial: temp[2] },
+    };
+    return courseDetailsWithHours;
+  }
+
   return courseDetails;
 };
 
@@ -147,3 +158,9 @@ export const UVicCourseScraper = async () => {
     getCourseDetails,
   };
 };
+const main = async () => {
+  const client = await UVicCourseScraper();
+  const courseDetails = await client.getCourseDetails('SENG', '360');
+  console.log(courseDetails);
+};
+main();
