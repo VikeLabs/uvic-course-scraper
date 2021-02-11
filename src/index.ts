@@ -62,14 +62,17 @@ const fetchCourseDetails = (pidMap: Map<string, string>) => async (
   const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
   // strip HTML tags from courseDetails.description
   courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
-  if (typeof courseDetails.hoursCatalogText === 'string') {
+  //TODO: move these to a Kuali specific extract function (like what we're doing with BAN1P)
+  if (courseDetails.hoursCatalogText) {
     const hours = courseDetails.hoursCatalogText;
-    const temp: string[] | undefined = hours.split('-');
-    const courseDetailsWithHours: KualiCourse = {
-      ...courseDetails,
-      hoursCatalogText: { lecture: temp[0], lab: temp[1], tutorial: temp[2] },
-    };
-    return courseDetailsWithHours;
+    if (typeof hours === 'string') {
+      const temp: string[] = hours.split('-');
+      const courseDetailsWithHours: KualiCourse = {
+        ...courseDetails,
+        hoursCatalogText: { lecture: temp[0], lab: temp[1], tutorial: temp[2] },
+      };
+      return courseDetailsWithHours;
+    }
   }
 
   return courseDetails;
