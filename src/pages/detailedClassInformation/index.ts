@@ -25,8 +25,8 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   const seatInfo = seatElement
     .text()
     .split('\n')
-    .map(e => parseInt(e, 10))
-    .filter(e => !Number.isNaN(e));
+    .map((e) => parseInt(e, 10))
+    .filter((e) => !Number.isNaN(e));
 
   // initialize data to return
   const data: DetailedClassInformation = { ...transformSeating(seatInfo) };
@@ -37,19 +37,19 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   )
     .text()
     .split('\n')
-    .map(s => s.trim())
-    .filter(e => e.length);
+    .map((s) => s.trim())
+    .filter((e) => e.length);
 
-  const idx = requirementsInfo.findIndex(e => e === 'Restrictions:');
-  const idxLevel = requirementsInfo.findIndex(e => e === requirementsInfo[idx + 1]);
+  const idx = requirementsInfo.findIndex((e) => e === 'Restrictions:');
+  const idxLevel = requirementsInfo.findIndex((e) => e === requirementsInfo[idx + 1]);
   const idxField = requirementsInfo.findIndex(
-    e => e === 'Must be enrolled in one of the following Fields of Study (Major, Minor,  or Concentration):'
+    (e) => e === 'Must be enrolled in one of the following Fields of Study (Major, Minor,  or Concentration):'
   );
   const idxClassification = requirementsInfo.findIndex(
-    e => e === 'Must be enrolled in one of the following Classifications:'
+    (e) => e === 'Must be enrolled in one of the following Classifications:'
   );
   const idxEnd = requirementsInfo.findIndex(
-    e => e === 'This course contains prerequisites please see the UVic Calendar for more information'
+    (e) => e === 'This course contains prerequisites please see the UVic Calendar for more information'
   );
 
   // TODO: fix this (not always right)
@@ -62,7 +62,7 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
 
   const level = requirementsInfo
     .slice(idxLevel + 1, idxLevel + numberOfLevels + 1)
-    .map(v => v.toLowerCase().trim() as levelType);
+    .map((v) => v.toLowerCase().trim() as levelType);
 
   // If fields or the end cannot be found returns undefined for fields
   if (idxField === -1 || idxEnd === -1) {
@@ -81,14 +81,16 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   if (idxClassification === -1) {
     // no classification entires exist
 
-    requirementsInfo.slice(idxField + 1, idxEnd).forEach(v => fields.push(v.trim()));
+    requirementsInfo.slice(idxField + 1, idxEnd).forEach((v) => fields.push(v.trim()));
   } else {
     // classification entries exist
 
-    requirementsInfo.slice(idxField + 1, idxClassification).forEach(v => fields.push(v.trim()));
+    requirementsInfo.slice(idxField + 1, idxClassification).forEach((v) => fields.push(v.trim()));
     const d = requirementsInfo
       .slice(idxClassification + 1, idxEnd)
-      .map(v => (v.indexOf('Year') !== -1 ? (v.toUpperCase().replace(' ', '_') as classification) : classification[0]));
+      .map((v) =>
+        v.indexOf('Year') !== -1 ? (v.toUpperCase().replace(' ', '_') as classification) : classification[0]
+      );
 
     classification.push(...d);
   }

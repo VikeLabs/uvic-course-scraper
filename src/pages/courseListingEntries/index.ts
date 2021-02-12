@@ -39,12 +39,8 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Cl
     // Parse block before schedule table
     const sectionInfo = $(`tr td`, sectionEntry)
       .each((i, el) => {
-        $(el)
-          .find('table')
-          .remove();
-        $(el)
-          .find('a')
-          .remove();
+        $(el).find('table').remove();
+        $(el).find('a').remove();
       })
       .text()
       .trim();
@@ -104,10 +100,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Cl
     // Parse the levels from the string and split them into an array
     // i.e. "Levels: Law, Undergraduate" -> [law, undergraduate]
     if (levelsRegex.test(sectionInfo)) {
-      const levels = levelsRegex
-        .exec(sectionInfo)![1]
-        .toLowerCase()
-        .trim();
+      const levels = levelsRegex.exec(sectionInfo)![1].toLowerCase().trim();
       classSchedule.levels = levels.split(/,\s*/) as levelType[];
     }
 
@@ -124,10 +117,7 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Cl
 
     // Check if online or in-person instructional method
     if (instructionalMethodRegex.test(sectionInfo)) {
-      classSchedule.instructionalMethod = instructionalMethodRegex
-        .exec(sectionInfo)![1]
-        .toLowerCase()
-        .trim();
+      classSchedule.instructionalMethod = instructionalMethodRegex.exec(sectionInfo)![1].toLowerCase().trim();
     }
 
     // TODO: parse this into int

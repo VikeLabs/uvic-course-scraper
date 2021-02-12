@@ -28,10 +28,6 @@ describe('page extractor: Search for Courses', (): void => {
   it('has page has the expected title', async () => {
     // pull from local filesystem
     const $ = cheerio.load(await fs.promises.readFile(getFilePath('misc/UVIC_SearchForCourses.html')));
-    expect(
-      $('title')
-        .first()
-        .text()
-    ).toBe('Search for Courses');
+    expect($('title').first().text()).toBe('Search for Courses');
   });
 });
