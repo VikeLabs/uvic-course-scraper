@@ -92,7 +92,7 @@ jobs:
           fail_ci_if_error: true # optional (default = false)
           verbose: true # optional (default = false)
 
-  publish-npm:
+  publish-npm: #
     environment: deployment
     runs-on: ubuntu-latest
     steps:
