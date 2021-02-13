@@ -105,12 +105,12 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
 
-#      - name: Bump minor version
-#        uses: 'phips28/gh-action-bump-version@master'
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.github_token }}
+      - name: Bump minor version
+        uses: 'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
 
       - name: Publish NPM Package
-        run: echo ${{secrets.npm_token}} && npm ci && npm publish --access public
+        run: npm ci && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
