@@ -56,7 +56,7 @@ const fetchSectionDetails = async (crn: string, term: string) => {
 const fetchCourseDetails = (pidMap: Map<string, string>) => async (
   subject: string,
   code: string
-): Promise<ParsedKualiCourse> => {
+): Promise<KualiCourseItem> => {
   const pid = pidMap.get(subject + code);
   // TODO: we probably don't want to return the Kuali data as-is.
   const courseDetails = await got(COURSE_DETAIL_URL + pid).json<ParsedKualiCourse>();
@@ -74,8 +74,11 @@ const fetchCourseDetails = (pidMap: Map<string, string>) => async (
       return courseDetailsWithHours;
     }
   }
-
-  return courseDetails;
+  const courseDetailsParsed: KualiCourseItem = {
+    ...courseDetails,
+    hoursCatalogText: undefined,
+  };
+  return courseDetailsParsed;
 };
 
 export const UVicCourseScraper = async () => {
@@ -150,7 +153,7 @@ export const UVicCourseScraper = async () => {
     subject: string,
     code: string
     // TODO: term: string = getCurrentTerm()
-  ): Promise<ParsedKualiCourse> => {
+  ): Promise<KualiCourseItem> => {
     return fetchCourseDetails(pidMap)(subject, code);
   };
 
