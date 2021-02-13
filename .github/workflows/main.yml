@@ -7,7 +7,6 @@ on:
     branches: [ master, feature/auto-npm-publishing ]
 
 jobs:
-  # This workflow contains a single job called "build"
   lint:
     name: lint
     runs-on: ubuntu-latest
@@ -106,10 +105,10 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
 
-      - name: Bump minor version
-        uses: 'phips28/gh-action-bump-version@master'
-        env:
-          GITHUB_TOKEN: ${{ secrets.github_token }}
+#      - name: Bump minor version
+#        uses: 'phips28/gh-action-bump-version@master'
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.github_token }}
 
       - name: Publish NPM Package
         run: echo ${{secrets.npm_token}} && npm ci && npm publish --access public
