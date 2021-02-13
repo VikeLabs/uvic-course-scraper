@@ -21,7 +21,7 @@ export interface KualiCourseCatalog {
   _score: number;
 }
 
-export interface KualiCourseItem extends KualiCourseCatalog {
+export interface ParsedKualiCourse extends KualiCourseCatalog {
   description: string;
   supplementalNotes?: string;
   proForma: string;
@@ -41,7 +41,7 @@ export interface KualiCourseItem extends KualiCourseCatalog {
   hoursCatalogText?: string | { lecture: string; lab: string; tutorial: string };
 }
 
-export interface KualiCourse extends KualiCourseItem {
+export interface KualiCourseItem extends ParsedKualiCourse {
   //This has two types because the ones returned from uvic is a
   //string so we parse it to turn into an object type, this is explicitly turned into an object in KualiCourse
   hoursCatalogText?: { lecture: string; lab: string; tutorial: string };

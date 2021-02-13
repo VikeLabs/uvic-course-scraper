@@ -7,11 +7,11 @@ import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
 import {
   DetailedClassInformation,
   KualiCourseCatalog,
-  KualiCourseItem,
+  ParsedKualiCourse,
   COURSES_URL_W2021 as COURSES_URL,
   COURSE_DETAIL_URL,
   CourseSection,
-  KualiCourse,
+  KualiCourseItem,
 } from './types';
 import { getCurrentTerm } from './utils';
 
@@ -56,10 +56,10 @@ const fetchSectionDetails = async (crn: string, term: string) => {
 const fetchCourseDetails = (pidMap: Map<string, string>) => async (
   subject: string,
   code: string
-): Promise<KualiCourseItem> => {
+): Promise<ParsedKualiCourse> => {
   const pid = pidMap.get(subject + code);
   // TODO: we probably don't want to return the Kuali data as-is.
-  const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
+  const courseDetails = await got(COURSE_DETAIL_URL + pid).json<ParsedKualiCourse>();
   // strip HTML tags from courseDetails.description
   courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
   //TODO: move these to a Kuali specific extract function (like what we're doing with BAN1P)
@@ -67,7 +67,7 @@ const fetchCourseDetails = (pidMap: Map<string, string>) => async (
     const hours = courseDetails.hoursCatalogText;
     if (typeof hours === 'string') {
       const temp: string[] = hours.split('-');
-      const courseDetailsWithHours: KualiCourse = {
+      const courseDetailsWithHours: KualiCourseItem = {
         ...courseDetails,
         hoursCatalogText: { lecture: temp[0], lab: temp[1], tutorial: temp[2] },
       };
@@ -93,7 +93,7 @@ export const UVicCourseScraper = async () => {
   const getAllCourses = (): KualiCourseCatalog[] => {
     return kuali.map((v) => ({
       ...v,
-      getDetails: () => got(COURSE_DETAIL_URL + v.pid).json<KualiCourseItem>(),
+      getDetails: () => got(COURSE_DETAIL_URL + v.pid).json<ParsedKualiCourse>(),
     }));
   };
 
@@ -150,7 +150,7 @@ export const UVicCourseScraper = async () => {
     subject: string,
     code: string
     // TODO: term: string = getCurrentTerm()
-  ): Promise<KualiCourseItem> => {
+  ): Promise<ParsedKualiCourse> => {
     return fetchCourseDetails(pidMap)(subject, code);
   };
 
@@ -161,9 +161,3 @@ export const UVicCourseScraper = async () => {
     getCourseDetails,
   };
 };
-const main = async () => {
-  const client = await UVicCourseScraper();
-  const courseDetails = await client.getCourseDetails('SENG', '360');
-  console.log(courseDetails);
-};
-main();

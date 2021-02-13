@@ -1,5 +1,5 @@
 import coursesJSON from '../../static/courses/courses.json';
-import { KualiCourseItem } from '../types';
+import { ParsedKualiCourse } from '../types';
 
 /**
  * Tool designed to identify optional json fields in the KualiCourseItem type
@@ -28,16 +28,16 @@ const fieldCounter = {
   hoursCatalogText: 0,
 };
 
-const countFields = (kualiCourseItem: KualiCourseItem, key: string) => {
-  fieldCounter[key as keyof KualiCourseItem]++;
+const countFields = (kualiCourseItem: ParsedKualiCourse, key: string) => {
+  fieldCounter[key as keyof ParsedKualiCourse]++;
 };
 
 const getFieldCount = (key: string) => {
-  return fieldCounter[key as keyof KualiCourseItem];
+  return fieldCounter[key as keyof ParsedKualiCourse];
 };
 
 const main = async () => {
-  const kualiCourseItems = coursesJSON as KualiCourseItem[];
+  const kualiCourseItems = coursesJSON as ParsedKualiCourse[];
 
   for (const kualiCourseItem of kualiCourseItems) {
     for (const key in kualiCourseItem) {
