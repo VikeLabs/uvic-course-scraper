@@ -112,6 +112,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.github_token }}
 
       - name: Publish NPM Package
-        run: npm ci && npm publish --access public
+        run: echo ${{secrets.npm_token}} && npm ci && npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
