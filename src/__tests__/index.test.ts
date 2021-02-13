@@ -12,7 +12,7 @@ afterEach(() => {
 
 describe('call getAllCourses()', () => {
   it('should have all expected data for a course', async () => {
-    nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0').reply(200, coursesJSON);
+    nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0/').reply(200, coursesJSON);
 
     const client = await UVicCourseScraper();
     const allCourses = await client.getAllCourses();
@@ -101,7 +101,7 @@ describe('call getCourseSections', () => {
 
 describe('call getCourseDetails()', () => {
   it('has the expected data for a given class', async () => {
-    nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0').reply(200, coursesJSON);
+    nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0/').reply(200, coursesJSON);
     nock('https://uvic.kuali.co')
       .get('/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/SkMkeY6XV')
       .reply(200, courseDetailJSON);

@@ -1,6 +1,8 @@
 import * as cheerio from 'cheerio';
 import got from 'got';
 
+import * as kualiUrls from '../static/courses/kualiUrls.json';
+
 import { classScheduleListingUrl, detailedClassInformationUrl } from './common/urls';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
@@ -8,11 +10,23 @@ import {
   DetailedClassInformation,
   KualiCourseCatalog,
   KualiCourseItem,
-  COURSES_URL_W2021 as COURSES_URL,
   COURSE_DETAIL_URL,
   CourseSection,
 } from './types';
-import { getCurrentTerm } from './utils';
+import { getCurrentTerm, isKeyof } from './utils';
+
+/**
+ * Fetches the Kuali URL for a given term
+ * @returns a kuali url as a string
+ */
+const getKualiUrl = (term: string): string => {
+  const key = Number(term);
+  if (isKeyof(kualiUrls, key)) {
+    return kualiUrls[key];
+  }
+
+  return '';
+};
 
 /**
  * Generates a Map that maps a subject and code to a pid used internally within Kuali.
@@ -58,7 +72,9 @@ const fetchCourseDetails = (pidMap: Map<string, string>) => async (
 ): Promise<KualiCourseItem> => {
   const pid = pidMap.get(subject + code);
   // TODO: we probably don't want to return the Kuali data as-is.
-  const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
+  const url = getKualiUrl(getCurrentTerm());
+  console.log(url + pid);
+  const courseDetails = await got(url + pid).json<KualiCourseItem>();
   // strip HTML tags from courseDetails.description
   courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
   return courseDetails;
@@ -66,7 +82,8 @@ const fetchCourseDetails = (pidMap: Map<string, string>) => async (
 
 export const UVicCourseScraper = async () => {
   // upon initialization, we download the main Kuali courses JSON file.
-  const kuali = await got(COURSES_URL).json<KualiCourseCatalog[]>();
+  const url = getKualiUrl(getCurrentTerm());
+  const kuali = await got(url).json<KualiCourseCatalog[]>();
 
   // a map to map human readable subjectCode to a pid required for requests
   const pidMap = subjectCodeToPidMapper(kuali);
