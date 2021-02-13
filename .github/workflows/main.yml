@@ -112,5 +112,7 @@ jobs:
 
       - name: Publish NPM Package
         run: npm ci && npm publish --access public
+        with:
+          registry-url: https://registry.npmjs.org/
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
