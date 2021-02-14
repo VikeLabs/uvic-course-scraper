@@ -5,14 +5,14 @@ import got from 'got';
 
 import coursesJSON from '../../static/courses/courses.json';
 import { classScheduleListingUrl } from '../common/urls';
-import { KualiCourseItem } from '../types';
+import { ParsedKualiCourse } from '../ParsedKualiCourse';
 
 import { forEachHelper } from './utils';
 
 export const scheduleUtil = async (term: string) => {
-  const writeCourseScheduleToFS = async (kualiCourseItem: KualiCourseItem) => {
-    const subject = kualiCourseItem.subjectCode.name;
-    const code = kualiCourseItem.__catalogCourseId.slice(subject.length);
+  const writeCourseScheduleToFS = async (parsedKualiCourse: ParsedKualiCourse) => {
+    const subject = parsedKualiCourse.subjectCode.name;
+    const code = parsedKualiCourse.__catalogCourseId.slice(subject.length);
 
     const url = classScheduleListingUrl(term, subject, code);
     const res = await got(url);
@@ -33,8 +33,8 @@ export const scheduleUtil = async (term: string) => {
   console.log('Starting schedule dump\n');
   const start = performance.now();
 
-  const kualiCourseItems = coursesJSON as KualiCourseItem[];
-  await forEachHelper(kualiCourseItems, writeCourseScheduleToFS, 10);
+  const parsedKualiCourses = coursesJSON as ParsedKualiCourse[];
+  await forEachHelper(parsedKualiCourses, writeCourseScheduleToFS, 10);
 
   const finish = performance.now();
   console.log(`Getting course data took ${(finish - start) / 60000} minutes`);

@@ -2,14 +2,14 @@ import coursesJSON from '../../static/courses/courses.json';
 import { ParsedKualiCourse } from '../types';
 
 /**
- * Tool designed to identify optional json fields in the KualiCourseItem type
+ * Tool designed to identify optional json fields in the parsedKualiCourse type
  * For most up-to-date results, run course-dump before hand
  *
  * Counts the number of times each field is found in a Kuali course
  * Any fields found which are not a field of 'fieldCounter' will have a count of NaN
  */
 
-// All fields copied from KualiCourseItem type
+// All fields copied from parsedKualiCourse type
 const fieldCounter = {
   __catalogCourseId: 0,
   __passedCatalogQuery: 0,
@@ -28,7 +28,7 @@ const fieldCounter = {
   hoursCatalogText: 0,
 };
 
-const countFields = (kualiCourseItem: ParsedKualiCourse, key: string) => {
+const countFields = (parsedKualiCourse: ParsedKualiCourse, key: string) => {
   fieldCounter[key as keyof ParsedKualiCourse]++;
 };
 
@@ -37,19 +37,19 @@ const getFieldCount = (key: string) => {
 };
 
 const main = async () => {
-  const kualiCourseItems = coursesJSON as ParsedKualiCourse[];
+  const parsedKualiCourses = coursesJSON as ParsedKualiCourse[];
 
-  for (const kualiCourseItem of kualiCourseItems) {
-    for (const key in kualiCourseItem) {
-      countFields(kualiCourseItem, key);
+  for (const parsedKualiCourse of parsedKualiCourses) {
+    for (const key in parsedKualiCourse) {
+      countFields(parsedKualiCourse, key);
     }
   }
 
-  const total = kualiCourseItems.length;
+  const total = parsedKualiCourses.length;
 
   console.log('-------- Persistent Fields --------');
 
-  for (const key in kualiCourseItems[0]) {
+  for (const key in parsedKualiCourses[0]) {
     const count = getFieldCount(key);
 
     if (count === total) {
@@ -59,7 +59,7 @@ const main = async () => {
 
   console.log('-------- Optional Fields --------');
 
-  for (const key in kualiCourseItems[0]) {
+  for (const key in parsedKualiCourses[0]) {
     const count = getFieldCount(key);
 
     if (count != total) {
