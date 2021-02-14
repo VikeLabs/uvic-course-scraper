@@ -5,7 +5,7 @@ import got from 'got';
 
 import coursesJSON from '../../static/courses/courses.json';
 import { classScheduleListingUrl } from '../common/urls';
-import { ParsedKualiCourse } from '../ParsedKualiCourse';
+import { ParsedKualiCourse } from '../types';
 
 import { forEachHelper } from './utils';
 

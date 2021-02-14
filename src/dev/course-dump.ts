@@ -3,7 +3,7 @@ import { performance } from 'perf_hooks';
 
 import got from 'got';
 
-import { ParsedKualiCourse } from '../ParsedKualiCourse';
+import { ParsedKualiCourse } from '../types';
 
 import { forEachHelper } from './utils';
 
@@ -11,13 +11,13 @@ const COURSES_URL = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506
 const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
 
 const writeCoursesToFS = (parsedKualiCourse: ParsedKualiCourse[]) => {
-  fs.writeFileSync('static/courses/courses.json', JSON.stringify(ParsedKualiCourse));
+  fs.writeFileSync('static/courses/courses.json', JSON.stringify(parsedKualiCourse));
 
   const coursesMetadata = JSON.stringify({
     path: COURSES_URL,
     courseDetailPath: COURSE_DETAIL_URL,
     // TODO this may contain links that don't work. should remove them
-    pids: ParsedKualiCourse.map((parsedKualiCourse: ParsedKualiCourse) => ParsedKualiCourse.pid),
+    pids: parsedKualiCourse.map((parsedKualiCourse: ParsedKualiCourse) => parsedKualiCourse.pid),
     datetime: Date.now(),
   });
 
@@ -30,7 +30,7 @@ const writeCoursesToFS = (parsedKualiCourse: ParsedKualiCourse[]) => {
 export const coursesUtil = async () => {
   const courseMapper = async (parsedKualiCourse: ParsedKualiCourse) => {
     // ex: https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/r1xcyOamN
-    Object.assign(parsedKualiCourse, await got(COURSE_DETAIL_URL + ParsedKualiCourse.pid).json());
+    Object.assign(parsedKualiCourse, await got(COURSE_DETAIL_URL + parsedKualiCourse.pid).json());
   };
 
   // Start timer
