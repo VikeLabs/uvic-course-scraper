@@ -48,12 +48,31 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   const idxClassification = requirementsInfo.findIndex(
     (e) => e === 'Must be enrolled in one of the following Classifications:'
   );
-  const idxEnd = requirementsInfo.findIndex(
+  const idxNegativeClassification = requirementsInfo.findIndex(
+    (e) => e === 'may not be enrolled as the following classifications:'
+  );
+  let idxEnd = requirementsInfo.findIndex(
     (e) => e === 'This course contains prerequisites please see the UVic Calendar for more information'
   );
 
-  // TODO: fix this (not always right)
-  const numberOfLevels = idxField - (idxLevel + 1);
+  // if there is no end string, set idxEnd to where it would be
+  if (idxEnd == -1) {
+    idxEnd = requirementsInfo.length;
+  }
+
+  let numberOfLevels = -1;
+
+  if (idxLevel > -1) {
+    if (idxField > -1) {
+      numberOfLevels = idxField - (idxLevel + 1);
+    } else if (idxClassification > -1) {
+      numberOfLevels = idxClassification - (idxLevel + 1);
+    } else if (idxNegativeClassification > -1) {
+      numberOfLevels = idxNegativeClassification - (idxLevel + 1);
+    } else {
+      numberOfLevels = idxEnd - (idxLevel + 1);
+    }
+  }
 
   // If restrictions can't be found return just seating info.
   if (idx === -1) {
