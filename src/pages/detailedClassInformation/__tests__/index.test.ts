@@ -91,7 +91,7 @@ describe('Detailed Class Information', () => {
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
-    expect(classification).toStrictEqual(['YEAR_4']);
+    expect(classification).toStrictEqual(['YEAR_1', 'YEAR_2', 'YEAR_3', 'YEAR_5']);
   });
 
   it('parses CSC355 correctly - case with no fields or classifications', async () => {
