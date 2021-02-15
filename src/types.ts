@@ -38,7 +38,9 @@ export interface KualiCourseItem extends KualiCourseCatalog {
     pid: string;
     title: string;
   }[];
-  hoursCatalogText?: string;
+  //This has two types because the JSON returned from uvic is a
+  //string so we parse it to turn into an object type after the parsing is done.
+  hoursCatalogText?: string | { lecture: string; lab: string; tutorial: string };
 }
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';

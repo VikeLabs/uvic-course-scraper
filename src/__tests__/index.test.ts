@@ -120,7 +120,11 @@ describe('call getCourseDetails()', () => {
       chosen: 'fixed',
     });
     expect(courseDetails.crossListedCourses).toBeUndefined();
-    expect(courseDetails.hoursCatalogText).toEqual('3-2-0');
+    expect(courseDetails.hoursCatalogText).toStrictEqual({
+      lecture: '3',
+      lab: '2',
+      tutorial: '0',
+    });
     expect(courseDetails.__catalogCourseId).toEqual('SENG360');
     expect(courseDetails.__passedCatalogQuery).toBeTruthy();
     expect(courseDetails.dateStart).toEqual('2020-01-01');

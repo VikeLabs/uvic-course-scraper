@@ -2,14 +2,14 @@ import coursesJSON from '../../static/courses/courses.json';
 import { KualiCourseItem } from '../types';
 
 /**
- * Tool designed to identify optional json fields in the KualiCourseItem type
+ * Tool designed to identify optional json fields in the kualiCourseItem type
  * For most up-to-date results, run course-dump before hand
  *
  * Counts the number of times each field is found in a Kuali course
  * Any fields found which are not a field of 'fieldCounter' will have a count of NaN
  */
 
-// All fields copied from KualiCourseItem type
+// All fields copied from kualiCourseItem type
 const fieldCounter = {
   __catalogCourseId: 0,
   __passedCatalogQuery: 0,
