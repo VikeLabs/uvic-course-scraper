@@ -7,11 +7,10 @@ import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
 import {
   DetailedClassInformation,
   KualiCourseCatalog,
-  ParsedKualiCourse,
+  KualiCourseItem,
   COURSES_URL_W2021 as COURSES_URL,
   COURSE_DETAIL_URL,
   CourseSection,
-  KualiCourseItem,
 } from './types';
 import { getCurrentTerm } from './utils';
 
@@ -59,7 +58,7 @@ const fetchCourseDetails = (pidMap: Map<string, string>) => async (
 ): Promise<KualiCourseItem> => {
   const pid = pidMap.get(subject + code);
   // TODO: we probably don't want to return the Kuali data as-is.
-  const courseDetails = await got(COURSE_DETAIL_URL + pid).json<ParsedKualiCourse>();
+  const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
   // strip HTML tags from courseDetails.description
   courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
   //TODO: move these to a Kuali specific extract function (like what we're doing with BAN1P)
@@ -96,7 +95,7 @@ export const UVicCourseScraper = async () => {
   const getAllCourses = (): KualiCourseCatalog[] => {
     return kuali.map((v) => ({
       ...v,
-      getDetails: () => got(COURSE_DETAIL_URL + v.pid).json<ParsedKualiCourse>(),
+      getDetails: () => got(COURSE_DETAIL_URL + v.pid).json<KualiCourseItem>(),
     }));
   };
 
