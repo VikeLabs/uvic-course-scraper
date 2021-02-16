@@ -1,6 +1,6 @@
 import nock from 'nock';
 
-import { getAllCourses, getCourseDetails, getCourseSections, getSeats } from '..';
+import { UVicCourseScraper } from '..';
 import coursesJSON from '../../static/courses/courses.json';
 import { getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
 
@@ -14,7 +14,8 @@ describe('call getAllCourses()', () => {
   it('should have all expected data for a course', async () => {
     nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0').reply(200, coursesJSON);
 
-    const allCourses = await getAllCourses();
+    const client = UVicCourseScraper();
+    const allCourses = await client.getAllCourses();
 
     const courseIdx = Math.floor(Math.random() * allCourses.length);
 
@@ -37,7 +38,8 @@ describe('call getCourseDetails()', () => {
       .get('/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/SkMkeY6XV')
       .reply(200, courseDetailJSON);
 
-    const courseDetails = await getCourseDetails('SkMkeY6XV');
+    const client = UVicCourseScraper();
+    const courseDetails = await client.getCourseDetails('SkMkeY6XV');
 
     expect(courseDetails.description).toEqual(
       'Topics include basic cryptography, security protocols, access control, multilevel security, physical and environmental security, network security, application security, e-services security, human aspects and business continuity planning. Discusses applications which need various combinations of confidentiality, availability, integrity and covertness properties; mechanisms to incorporate and test these properties in systems. Policy and legal issues are also covered.'
@@ -87,7 +89,8 @@ describe('call getCourseSections', () => {
         .reply(200, detailsResponse);
     }
 
-    const courseSections = await getCourseSections('202101', 'SENG', '371');
+    const client = UVicCourseScraper();
+    const courseSections = await client.getCourseSections('202101', 'SENG', '371');
 
     expect(courseSections.length).toEqual(4);
 
@@ -118,7 +121,8 @@ describe('call getSeats()', () => {
       .get('/BAN1P/bwckschd.p_disp_detail_sched?term_in=202101&crn_in=20001')
       .reply(200, htmlResponse);
 
-    const classSeats = await getSeats('202101', '20001');
+    const client = UVicCourseScraper();
+    const classSeats = await client.getSeats('202101', '20001');
 
     const seats = classSeats.seats;
     const waitListSeats = classSeats.waitListSeats;

@@ -14,59 +14,67 @@ import {
 } from './types';
 import { getCurrentTerm } from './utils';
 
-/**
- * Gets all courses from the Kuali catalog
- *
- * @return {KualiCourseCatalog[]}
- */
-export const getAllCourses = async (): Promise<KualiCourseCatalog[]> => {
-  const courseCatalog = await got(COURSES_URL).json<KualiCourseCatalog[]>();
-  return courseCatalog;
-};
+export const UVicCourseScraper = () => {
+  /**
+   * Gets all courses from the Kuali catalog
+   *
+   * @return {KualiCourseCatalog[]}
+   */
+  const getAllCourses = async (): Promise<KualiCourseCatalog[]> => {
+    const courseCatalog = await got(COURSES_URL).json<KualiCourseCatalog[]>();
+    return courseCatalog;
+  };
 
-/**
- * Gets details of a single course from Kuali
- *
- * @param pid ie. ByS23Pp7E
- */
-export const getCourseDetails = async (pid: string): Promise<KualiCourseItem> => {
-  // TODO: we probably don't want to return the Kuali data as-is.
-  const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
-  // strip HTML tags from courseDetails.description
-  courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
-  // parse hoursCatalogText into object
-  const hoursCatalogText = courseDetails.hoursCatalogText as string;
-  const hours: string[] = hoursCatalogText.split('-');
-  courseDetails.hoursCatalogText = hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined;
-  return courseDetails;
-};
+  /**
+   * Gets details of a single course from Kuali
+   *
+   * @param pid ie. ByS23Pp7E
+   */
+  const getCourseDetails = async (pid: string): Promise<KualiCourseItem> => {
+    // TODO: we probably don't want to return the Kuali data as-is.
+    const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
+    // strip HTML tags from courseDetails.description
+    courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
+    // parse hoursCatalogText into object
+    const hoursCatalogText = courseDetails.hoursCatalogText as string;
+    const hours: string[] = hoursCatalogText.split('-');
+    courseDetails.hoursCatalogText = hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined;
+    return courseDetails;
+  };
 
-/**
- * Gets all sections for a course in a given term from BAN1P
- *
- * @param term i.e. '202009'
- * @param subject i.e. 'SENG', 'ECON'
- * @param code i.e. '180', '225'
- */
-export const getCourseSections = async (
-  term: string = getCurrentTerm(),
-  subject: string,
-  code: string
-): Promise<ClassScheduleListing[]> => {
-  const res = await got(classScheduleListingUrl(term, subject, code));
-  const $ = cheerio.load(res.body);
-  return classScheduleListingExtractor($);
-};
+  /**
+   * Gets all sections for a course in a given term from BAN1P
+   *
+   * @param term i.e. '202009'
+   * @param subject i.e. 'SENG', 'ECON'
+   * @param code i.e. '180', '225'
+   */
+  const getCourseSections = async (
+    term: string = getCurrentTerm(),
+    subject: string,
+    code: string
+  ): Promise<ClassScheduleListing[]> => {
+    const res = await got(classScheduleListingUrl(term, subject, code));
+    const $ = cheerio.load(res.body);
+    return classScheduleListingExtractor($);
+  };
 
-/**
- * Gets seats and waitlist seats for a given course section from BAN1P
- *
- * @param term i.e. '202009', '202101'
- * @param crn ie. '12345', '20001'
- * @return {Promise<DetailedClassInformation>}
- */
-export const getSeats = async (term: string, crn: string): Promise<DetailedClassInformation> => {
-  const res = await got(detailedClassInformationUrl(term, crn));
-  const $ = cheerio.load(res.body);
-  return detailedClassInfoExtractor($);
+  /**
+   * Gets seats and waitlist seats for a given course section from BAN1P
+   *
+   * @param term i.e. '202009', '202101'
+   * @param crn ie. '12345', '20001'
+   * @return {Promise<DetailedClassInformation>}
+   */
+  const getSeats = async (term: string, crn: string): Promise<DetailedClassInformation> => {
+    const res = await got(detailedClassInformationUrl(term, crn));
+    const $ = cheerio.load(res.body);
+    return detailedClassInfoExtractor($);
+  };
+  return {
+    getAllCourses,
+    getSeats,
+    getCourseSections,
+    getCourseDetails,
+  };
 };
