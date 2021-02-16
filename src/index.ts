@@ -73,8 +73,8 @@ export const UVicCourseScraper = () => {
   };
   return {
     getAllCourses,
-    getSeats,
-    getCourseSections,
     getCourseDetails,
+    getCourseSections,
+    getSeats,
   };
 };
