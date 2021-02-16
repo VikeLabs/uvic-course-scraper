@@ -94,5 +94,3 @@ export interface DetailedClassInformation {
   waitListSeats: Seating;
   requirements?: Requirements;
 }
-
-export type CourseSection = ClassScheduleListing & DetailedClassInformation;
