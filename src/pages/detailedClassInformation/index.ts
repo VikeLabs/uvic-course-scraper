@@ -49,7 +49,7 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     (e) => e === 'Must be enrolled in one of the following Classifications:'
   );
   const idxNegativeClassification = requirementsInfo.findIndex(
-    (e) => e === 'may not be enrolled as the following classifications:'
+    (e) => e === 'May not be enrolled as the following Classifications:'
   );
   let idxEnd = requirementsInfo.findIndex(
     (e) => e === 'This course contains prerequisites please see the UVic Calendar for more information'
