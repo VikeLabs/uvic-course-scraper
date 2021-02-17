@@ -14,13 +14,13 @@ import {
 } from './types';
 import { getCurrentTerm } from './utils';
 
-export const UVicCourseScraper = () => {
+export class UVicCourseScraper {
   /**
    * Gets all courses from the Kuali catalog
    *
    * @return {KualiCourseCatalog[]}
    */
-  const getAllCourses = async (): Promise<KualiCourseCatalog[]> => {
+  public static async getAllCourses(): Promise<KualiCourseCatalog[]> {
     const courseCatalog = await got(COURSES_URL).json<KualiCourseCatalog[]>();
     return courseCatalog;
   };
@@ -30,7 +30,7 @@ export const UVicCourseScraper = () => {
    *
    * @param pid ie. ByS23Pp7E
    */
-  const getCourseDetails = async (pid: string): Promise<KualiCourseItem> => {
+  public static async getCourseDetails(pid: string): Promise<KualiCourseItem> {
     // TODO: we probably don't want to return the Kuali data as-is.
     const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
     // strip HTML tags from courseDetails.description
@@ -49,11 +49,11 @@ export const UVicCourseScraper = () => {
    * @param subject i.e. 'SENG', 'ECON'
    * @param code i.e. '180', '225'
    */
-  const getCourseSections = async (
+  public static async getCourseSections(
     term: string = getCurrentTerm(),
     subject: string,
     code: string
-  ): Promise<ClassScheduleListing[]> => {
+  ): Promise<ClassScheduleListing[]> {
     const res = await got(classScheduleListingUrl(term, subject, code));
     const $ = cheerio.load(res.body);
     return classScheduleListingExtractor($);
@@ -66,15 +66,9 @@ export const UVicCourseScraper = () => {
    * @param crn ie. '12345', '20001'
    * @return {Promise<DetailedClassInformation>}
    */
-  const getSeats = async (term: string, crn: string): Promise<DetailedClassInformation> => {
+  public static async getSectionSeats(term: string, crn: string): Promise<DetailedClassInformation> {
     const res = await got(detailedClassInformationUrl(term, crn));
     const $ = cheerio.load(res.body);
     return detailedClassInfoExtractor($);
-  };
-  return {
-    getAllCourses,
-    getCourseDetails,
-    getCourseSections,
-    getSeats,
   };
 };

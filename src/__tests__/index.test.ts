@@ -14,8 +14,7 @@ describe('call getAllCourses()', () => {
   it('should have all expected data for a course', async () => {
     nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0').reply(200, coursesJSON);
 
-    const client = UVicCourseScraper();
-    const allCourses = await client.getAllCourses();
+    const allCourses = await UVicCourseScraper.getAllCourses();
 
     const courseIdx = Math.floor(Math.random() * allCourses.length);
 
@@ -33,13 +32,12 @@ describe('call getAllCourses()', () => {
 
 describe('call getCourseDetails()', () => {
   it('has the expected data for a given class', async () => {
-    nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0').reply(200, coursesJSON);
+    const pid = 'SkMkeY6XV';
     nock('https://uvic.kuali.co')
-      .get('/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/SkMkeY6XV')
+      .get('/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/' + pid)
       .reply(200, courseDetailJSON);
 
-    const client = UVicCourseScraper();
-    const courseDetails = await client.getCourseDetails('SkMkeY6XV');
+    const courseDetails = await UVicCourseScraper.getCourseDetails(pid);
 
     expect(courseDetails.description).toEqual(
       'Topics include basic cryptography, security protocols, access control, multilevel security, physical and environmental security, network security, application security, e-services security, human aspects and business continuity planning. Discusses applications which need various combinations of confidentiality, availability, integrity and covertness properties; mechanisms to incorporate and test these properties in systems. Policy and legal issues are also covered.'
@@ -60,7 +58,7 @@ describe('call getCourseDetails()', () => {
     expect(courseDetails.__catalogCourseId).toEqual('SENG360');
     expect(courseDetails.__passedCatalogQuery).toBeTruthy();
     expect(courseDetails.dateStart).toEqual('2020-01-01');
-    expect(courseDetails.pid).toEqual('SkMkeY6XV');
+    expect(courseDetails.pid).toEqual(pid);
     expect(courseDetails.id).toEqual('5cbdf65a56bbef2400c2f0e9');
     expect(courseDetails.title).toEqual('Security Engineering');
     expect(courseDetails.subjectCode).toStrictEqual({
@@ -76,21 +74,15 @@ describe('call getCourseDetails()', () => {
 
 describe('call getCourseSections', () => {
   it('has the expected data for a given class', async () => {
-    const crns = ['22642', '22643', '22644', '22645'];
-    const sectionsResponse = await getScheduleFileByCourse('202101', 'SENG', '371');
+    const term = '202101';
+    const subject = 'SENG';
+    const code = '371';
+    const sectionsResponse = await getScheduleFileByCourse(term, subject, code);
     nock('https://www.uvic.ca')
-      .get('/BAN1P/bwckctlg.p_disp_listcrse?term_in=202101&subj_in=SENG&crse_in=371&schd_in=')
+      .get('/BAN1P/bwckctlg.p_disp_listcrse?term_in=' + term + '&subj_in=' + subject + '&crse_in=' + code + '&schd_in=')
       .reply(200, sectionsResponse);
-    // mock each detailed class info page
-    for (const crn of crns) {
-      const detailsResponse = await getSectionFileByCRN('202101', crn);
-      nock('https://www.uvic.ca')
-        .get(`/BAN1P/bwckschd.p_disp_detail_sched?term_in=202101&crn_in=${crn}`)
-        .reply(200, detailsResponse);
-    }
 
-    const client = UVicCourseScraper();
-    const courseSections = await client.getCourseSections('202101', 'SENG', '371');
+    const courseSections = await UVicCourseScraper.getCourseSections(term, subject, code);
 
     expect(courseSections.length).toEqual(4);
 
@@ -114,15 +106,16 @@ describe('call getCourseSections', () => {
   });
 });
 
-describe('call getSeats()', () => {
+describe('call getSectionSeats()', () => {
+  const term = '202101';
+  const crn = '20001';
   it('has the expected data for a given section', async () => {
-    const htmlResponse = await getSectionFileByCRN('202101', '20001');
+    const htmlResponse = await getSectionFileByCRN(term, crn);
     nock('https://www.uvic.ca')
-      .get('/BAN1P/bwckschd.p_disp_detail_sched?term_in=202101&crn_in=20001')
+      .get('/BAN1P/bwckschd.p_disp_detail_sched?term_in=' + term + '&crn_in=' + crn)
       .reply(200, htmlResponse);
 
-    const client = UVicCourseScraper();
-    const classSeats = await client.getSeats('202101', '20001');
+    const classSeats = await UVicCourseScraper.getSectionSeats(term, crn);
 
     const seats = classSeats.seats;
     const waitListSeats = classSeats.waitListSeats;

@@ -22,29 +22,27 @@ The following table provides descriptions of the methods available on the object
 |``getAllCourses()``|Returns ``KualiCourseCatalog[]`` with all active courses in the Kuali catalog|
 |``getCourseDetails(pid: string)``|Returns ``KualiCourseItem`` with details for the course with the given pid|
 |``getCourseSections(subject: string, code: string, term: string)``|Returns ``ClassScheduleListing[]`` with section details for all sections of the course in the given term|
-|``getSeats(term: string, crn: string)``|Returns ``DetailedClassInformation`` with the `seats` and `waitListSeats` for the course|
+|``getSectionSeats(term: string, crn: string)``|Returns ``DetailedClassInformation`` with the `seats` and `waitListSeats` for the course|
 
 ## Example
 ```ts
 const { UVicCourseScraper } = require('@vikelabs/uvic-course-scraper');
 
-const client = UVicCourseScraper();
-
-// get all courses from Kuali course catalog
-const allCourses: KualiCourseCatalog[] = await client.getAllCourses();
+// get all courses from the Kuali course catalog
+const allCourses: KualiCourseCatalog[] = await UVicCourseScraper.getAllCourses();
 const courseTitle: string = allCourses[0].title;
 
-// get the course details for course with pid 'ByS23Pp7E' (in this case, thats ACAN 225)
-const courseDetails: KualiCourseItem = await client.getCourseDetails('ByS23Pp7E');
+// get course details for course with pid 'ByS23Pp7E' (in this case thats ACAN 225)
+const courseDetails: KualiCourseItem = await UVicCourseScraper.getCourseDetails('ByS23Pp7E');
 const courseDescription: string = courseDetails[0].description;
 const courseLectureHours: string = courseDetails[0].hoursCatalogText.lecture;
 
-// get the course sections for CSC 111 in spring 2021
-const courseSections: ClassScheduleListing[] = await client.getCourseSections('202101', 'CSC', '111');
+// get course sections for CSC 111 in spring 2021
+const courseSections: ClassScheduleListing[] = await UVicCourseScraper.getCourseSections('202101', 'CSC', '111');
 const courseSectionCode: string = courseSections[0].sectionCode;
 
-// get the seats for course section with CRN 10953 in spring 2021 (in this case thats ECE 260 - A01)
-const sectionSeats: DetailedClassInformation = await client.getSeats('202101', '10953');
+// get seats for course section with CRN 10953 in spring 2021 (in this case thats ECE 260 - A01)
+const sectionSeats: DetailedClassInformation = await UVicCourseScraper.getSectionSeats('202101', '10953');
 const sectionTotalSeats: number = sectionSeats.seats.capacity;
 ```
 
