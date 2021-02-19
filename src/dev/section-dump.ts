@@ -9,7 +9,7 @@ import { classScheduleListingExtractor } from '../pages/courseListingEntries';
 import { getSchedulePathsByTerm } from './path-builders';
 import { forEachHelper } from './utils';
 
-export const sectionsUtil = async (term: string): Promise<void> => {
+export const sectionsUtil = async (term: string) => {
   const CRNs: string[] = [];
   const namePathPairs: string[][] = getSchedulePathsByTerm(term);
   const paths: string[] = namePathPairs.map((namePathPair) => namePathPair[1]);

@@ -9,7 +9,7 @@ import { KualiCourseItem } from '../types';
 
 import { forEachHelper } from './utils';
 
-export const scheduleUtil = async (term: string): Promise<void> => {
+export const scheduleUtil = async (term: string) => {
   const writeCourseScheduleToFS = async (kualiCourseItem: KualiCourseItem) => {
     const subject = kualiCourseItem.subjectCode.name;
     const code = kualiCourseItem.__catalogCourseId.slice(subject.length);

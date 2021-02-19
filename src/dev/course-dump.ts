@@ -27,7 +27,7 @@ const writeCoursesToFS = (kualiCourseItem: KualiCourseItem[]) => {
 /**
  * Downloads all courses. Saves this to courses.json and courses.metadata.json.
  */
-export const coursesUtil = async (): Promise<void> => {
+export const coursesUtil = async () => {
   const courseMapper = async (kualiCourseItem: KualiCourseItem) => {
     // ex: https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/r1xcyOamN
     Object.assign(kualiCourseItem, await got(COURSE_DETAIL_URL + kualiCourseItem.pid).json());
