@@ -54,7 +54,7 @@ export class UVicCourseScraper {
     subject: string,
     code: string
   ): Promise<ClassScheduleListing[]> {
-    const res = await got(classScheduleListingUrl(term, subject, code));
+    const res = await got(classScheduleListingUrl(term, subject.toUpperCase(), code));
     const $ = cheerio.load(res.body);
     return classScheduleListingExtractor($);
   };
