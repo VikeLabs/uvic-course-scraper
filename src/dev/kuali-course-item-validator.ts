@@ -13,6 +13,8 @@ import { KualiCourseItem } from '../types';
 const fieldCounter = {
   __catalogCourseId: 0,
   __passedCatalogQuery: 0,
+  allGradingTypes: 0,
+  formerlyNotesText: 0,
   dateStart: 0,
   pid: 0,
   id: 0,
@@ -26,6 +28,7 @@ const fieldCounter = {
   credits: 0,
   crossListedCourses: 0,
   hoursCatalogText: 0,
+  repeatableCatalogText: 0,
 };
 
 const countFields = (kualiCourseItem: KualiCourseItem, key: string) => {
