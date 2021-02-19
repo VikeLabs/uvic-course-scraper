@@ -25,7 +25,7 @@ export interface KualiCourseItem extends KualiCourseCatalog {
   description: string;
   supplementalNotes?: string;
   formerlyNotesText?: string;
-  allGradingTypes?: any;
+  allGradingTypes?: { [key: string]: string };
   proForma: string;
   credits: {
     credits: {
