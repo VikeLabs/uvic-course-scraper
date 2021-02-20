@@ -3,9 +3,9 @@ import nock from 'nock';
 import { UVicCourseScraper } from '..';
 import coursesJSON from '../../static/courses/courses.json';
 import { getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
+import { KualiCourseItem } from '../types';
 
 import courseDetailJSON from './static/courseDetail.json';
-import { KualiCourseItem } from '../types';
 
 const nockCourseCatalog = () => {
   nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0').reply(200, coursesJSON);
@@ -14,7 +14,8 @@ const nockCourseCatalog = () => {
 const nockCourseDetails = (pid: string) => {
   nock('https://uvic.kuali.co')
     .get('/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/' + pid)
-    .reply(200, courseDetailJSON);};
+    .reply(200, courseDetailJSON);
+};
 
 afterEach(() => {
   nock.cleanAll();

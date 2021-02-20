@@ -23,7 +23,7 @@ export class UVicCourseScraper {
   public static async getAllCourses(): Promise<KualiCourseCatalog[]> {
     const courseCatalog = await got(COURSES_URL).json<KualiCourseCatalog[]>();
     return courseCatalog;
-  };
+  }
 
   private static subjectCodeToPidMapper = (kuali: KualiCourseCatalog[]) => {
     kuali.forEach((v) => {
@@ -65,7 +65,7 @@ export class UVicCourseScraper {
     const hours: string[] = hoursCatalogText.split('-');
     courseDetails.hoursCatalogText = hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined;
     return courseDetails;
-  };
+  }
 
   /**
    * Gets all sections for a course in a given term from BAN1P
@@ -82,7 +82,7 @@ export class UVicCourseScraper {
     const res = await got(classScheduleListingUrl(term, subject.toUpperCase(), code));
     const $ = cheerio.load(res.body);
     return classScheduleListingExtractor($);
-  };
+  }
 
   /**
    * Gets seats and waitList seats for a given course section from BAN1P
@@ -94,5 +94,5 @@ export class UVicCourseScraper {
     const res = await got(detailedClassInformationUrl(term, crn));
     const $ = cheerio.load(res.body);
     return detailedClassInfoExtractor($);
-  };
-};
+  }
+}
