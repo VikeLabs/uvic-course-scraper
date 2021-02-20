@@ -113,4 +113,4 @@ jobs:
       - name: Publish NPM Package
         run: npm ci && npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
