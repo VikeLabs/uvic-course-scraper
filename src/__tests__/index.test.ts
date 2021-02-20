@@ -5,6 +5,16 @@ import coursesJSON from '../../static/courses/courses.json';
 import { getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
 
 import courseDetailJSON from './static/courseDetail.json';
+import { KualiCourseItem } from '../types';
+
+const nockCourseCatalog = () => {
+  nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0').reply(200, coursesJSON);
+};
+
+const nockCourseDetails = (pid: string) => {
+  nock('https://uvic.kuali.co')
+    .get('/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/' + pid)
+    .reply(200, courseDetailJSON);};
 
 afterEach(() => {
   nock.cleanAll();
@@ -12,7 +22,7 @@ afterEach(() => {
 
 describe('call getAllCourses()', () => {
   it('should have all expected data for a course', async () => {
-    nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0').reply(200, coursesJSON);
+    nockCourseCatalog();
 
     const allCourses = await UVicCourseScraper.getAllCourses();
 
@@ -30,45 +40,61 @@ describe('call getAllCourses()', () => {
   });
 });
 
+const expectSENG360 = (pid: string, courseDetails: KualiCourseItem) => {
+  expect(courseDetails.description).toEqual(
+    'Topics include basic cryptography, security protocols, access control, multilevel security, physical and environmental security, network security, application security, e-services security, human aspects and business continuity planning. Discusses applications which need various combinations of confidentiality, availability, integrity and covertness properties; mechanisms to incorporate and test these properties in systems. Policy and legal issues are also covered.'
+  );
+  expect(courseDetails.supplementalNotes).toEqual('');
+  expect(courseDetails.proForma).toEqual('no');
+  expect(courseDetails.credits).toStrictEqual({
+    credits: { min: '1.5', max: '1.5' },
+    value: '1.5',
+    chosen: 'fixed',
+  });
+  expect(courseDetails.crossListedCourses).toBeUndefined();
+  expect(courseDetails.hoursCatalogText).toStrictEqual({
+    lecture: '3',
+    lab: '2',
+    tutorial: '0',
+  });
+  expect(courseDetails.__catalogCourseId).toEqual('SENG360');
+  expect(courseDetails.__passedCatalogQuery).toBeTruthy();
+  expect(courseDetails.dateStart).toEqual('2020-01-01');
+  expect(courseDetails.pid).toEqual(pid);
+  expect(courseDetails.id).toEqual('5cbdf65a56bbef2400c2f0e9');
+  expect(courseDetails.title).toEqual('Security Engineering');
+  expect(courseDetails.subjectCode).toStrictEqual({
+    name: 'SENG',
+    description: 'Software Engineering (SENG)',
+    id: '5c14042b42504f2400e6580b',
+    linkedGroup: '5c3e3006ae5f593258bbf801',
+  });
+  expect(courseDetails.catalogActivationDate).toEqual('2019-11-15');
+  expect(courseDetails._score).toEqual(1);
+};
+
 describe('call getCourseDetails()', () => {
   it('has the expected data for a given class', async () => {
+    nockCourseCatalog();
+
     const pid = 'SkMkeY6XV';
-    nock('https://uvic.kuali.co')
-      .get('/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/' + pid)
-      .reply(200, courseDetailJSON);
+    nockCourseDetails(pid);
 
-    const courseDetails = await UVicCourseScraper.getCourseDetails(pid);
+    const client = new UVicCourseScraper();
+    const courseDetails: KualiCourseItem = await client.getCourseDetails('SENG', '360');
 
-    expect(courseDetails.description).toEqual(
-      'Topics include basic cryptography, security protocols, access control, multilevel security, physical and environmental security, network security, application security, e-services security, human aspects and business continuity planning. Discusses applications which need various combinations of confidentiality, availability, integrity and covertness properties; mechanisms to incorporate and test these properties in systems. Policy and legal issues are also covered.'
-    );
-    expect(courseDetails.supplementalNotes).toEqual('');
-    expect(courseDetails.proForma).toEqual('no');
-    expect(courseDetails.credits).toStrictEqual({
-      credits: { min: '1.5', max: '1.5' },
-      value: '1.5',
-      chosen: 'fixed',
-    });
-    expect(courseDetails.crossListedCourses).toBeUndefined();
-    expect(courseDetails.hoursCatalogText).toStrictEqual({
-      lecture: '3',
-      lab: '2',
-      tutorial: '0',
-    });
-    expect(courseDetails.__catalogCourseId).toEqual('SENG360');
-    expect(courseDetails.__passedCatalogQuery).toBeTruthy();
-    expect(courseDetails.dateStart).toEqual('2020-01-01');
-    expect(courseDetails.pid).toEqual(pid);
-    expect(courseDetails.id).toEqual('5cbdf65a56bbef2400c2f0e9');
-    expect(courseDetails.title).toEqual('Security Engineering');
-    expect(courseDetails.subjectCode).toStrictEqual({
-      name: 'SENG',
-      description: 'Software Engineering (SENG)',
-      id: '5c14042b42504f2400e6580b',
-      linkedGroup: '5c3e3006ae5f593258bbf801',
-    });
-    expect(courseDetails.catalogActivationDate).toEqual('2019-11-15');
-    expect(courseDetails._score).toEqual(1);
+    expectSENG360(pid, courseDetails);
+  });
+});
+
+describe('call getCourseDetailsByPid()', () => {
+  it('has the expected data for a given class', async () => {
+    const pid = 'SkMkeY6XV';
+    nockCourseDetails(pid);
+
+    const courseDetails = await UVicCourseScraper.getCourseDetailsByPid(pid);
+
+    expectSENG360(pid, courseDetails);
   });
 });
 

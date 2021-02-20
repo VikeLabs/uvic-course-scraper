@@ -15,22 +15,47 @@ import {
 import { getCurrentTerm } from './utils';
 
 export class UVicCourseScraper {
+  private static subjectCodeToPidMap: Map<string, string> = new Map();
+
   /**
    * Gets all courses from the Kuali catalog
-   *
-   * @return {KualiCourseCatalog[]}
    */
   public static async getAllCourses(): Promise<KualiCourseCatalog[]> {
     const courseCatalog = await got(COURSES_URL).json<KualiCourseCatalog[]>();
     return courseCatalog;
   };
 
+  private static subjectCodeToPidMapper = (kuali: KualiCourseCatalog[]) => {
+    kuali.forEach((v) => {
+      UVicCourseScraper.subjectCodeToPidMap.set(v.__catalogCourseId, v.pid);
+    });
+    return UVicCourseScraper.subjectCodeToPidMap;
+  };
+
   /**
-   * Gets details of a single course from Kuali
+   * Maps a subject and code to pid then gets course details from Kuali
    *
-   * @param pid ie. ByS23Pp7E
+   * @param subject ie. 'CSC'
+   * @param code ie. '111'
    */
-  public static async getCourseDetails(pid: string): Promise<KualiCourseItem> {
+  // TODO: support get course details by term
+  public async getCourseDetails(subject: string, code: string): Promise<KualiCourseItem> {
+    if (UVicCourseScraper.subjectCodeToPidMap.size == 0) {
+      const courseCatalog = await UVicCourseScraper.getAllCourses();
+      UVicCourseScraper.subjectCodeToPidMapper(courseCatalog);
+    }
+
+    const pid = UVicCourseScraper.subjectCodeToPidMap.get(subject + code) as string;
+    const courseDetails = await UVicCourseScraper.getCourseDetailsByPid(pid);
+    return courseDetails;
+  }
+
+  /**
+   * Gets details of a single course from Kuali by pid
+   *
+   * @param pid ie. 'ByS23Pp7E'
+   */
+  public static async getCourseDetailsByPid(pid: string): Promise<KualiCourseItem> {
     // TODO: we probably don't want to return the Kuali data as-is.
     const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
     // strip HTML tags from courseDetails.description
@@ -60,11 +85,10 @@ export class UVicCourseScraper {
   };
 
   /**
-   * Gets seats and waitlist seats for a given course section from BAN1P
+   * Gets seats and waitList seats for a given course section from BAN1P
    *
    * @param term i.e. '202009', '202101'
    * @param crn ie. '12345', '20001'
-   * @return {Promise<DetailedClassInformation>}
    */
   public static async getSectionSeats(term: string, crn: string): Promise<DetailedClassInformation> {
     const res = await got(detailedClassInformationUrl(term, crn));
