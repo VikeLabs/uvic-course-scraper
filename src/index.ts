@@ -62,8 +62,10 @@ export class UVicCourseScraper {
     courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
     // parse hoursCatalogText into object
     const hoursCatalogText = courseDetails.hoursCatalogText as string;
-    const hours: string[] = hoursCatalogText.split('-');
-    courseDetails.hoursCatalogText = hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined;
+    if (hoursCatalogText) {
+      const hours: string[] = hoursCatalogText.split('-');
+      courseDetails.hoursCatalogText = hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined;
+    }
     return courseDetails;
   }
 
