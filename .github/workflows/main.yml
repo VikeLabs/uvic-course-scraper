@@ -93,6 +93,7 @@ jobs:
           verbose: true # optional (default = false)
 
   publish-npm:
+    if: github.ref == 'refs/heads/master'
     needs: [ lint, build, test ]
     environment: deployment
     runs-on: ubuntu-latest
