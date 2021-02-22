@@ -115,4 +115,4 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish npm package
-        run: npm ci && npm publish --access public
+        run: npm ci && npm run build && npm publish --access public
