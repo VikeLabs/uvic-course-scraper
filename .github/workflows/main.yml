@@ -103,10 +103,10 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
 
-        - name: Configure CI Git User
-          run: |
-            git config --global user.name 'vikelabs-bot'
-            git config --global user.email 'vikelabs-bot-github@vikelabs.ca'
+      - name: Configure CI Git User
+        run: |
+          git config --global user.name 'vikelabs-bot'
+          git config --global user.email 'vikelabs-bot-github@vikelabs.ca'
 
       - name: Setup Node.js
         uses: actions/setup-node@v1
