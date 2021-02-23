@@ -66,6 +66,9 @@
     "src/**/*"
   ],
   "exclude": [
+    "src/dev",
+    "src/static",
+    "src/example",
     "src/pages/legacyCalendar/*",
     "node_modules",
     "**/__tests__/*",

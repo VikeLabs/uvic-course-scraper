@@ -2,6 +2,8 @@ export const COURSES_URL_F2020 = 'https://uvic.kuali.co/api/v1/catalog/courses/5
 export const COURSES_URL_W2021 = 'https://uvic.kuali.co/api/v1/catalog/courses/5f21b66d95f09c001ac436a0';
 export const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
 
+export * from './types';
+
 export interface SubjectCode {
   name: string;
   description: string;
