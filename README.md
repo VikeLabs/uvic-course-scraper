@@ -136,11 +136,11 @@ This contains detailed information about a class like:
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/VikeLabs/scheduler-scraper.svg?style=flat-square
-[contributors-url]: https://github.com/VikeLabs/scheduler-scraper/graphs/contributors
-[stars-shield]: https://img.shields.io/github/stars/VikeLabs/scheduler-scraper.svg?style=flat-square
-[stars-url]: https://github.com/VikeLabs/scheduler-scraper/stargazers
-[issues-shield]: https://img.shields.io/github/issues/VikeLabs/scheduler-scraper.svg?style=flat-square
-[issues-url]: https://github.com/othneildrew/VikeLabs/scheduler-scraper/issues
-[coverage-shield]: https://codecov.io/gh/vikelabs/uvic-course-scraper/branch/master/graph/badge.svg?token=06B7FNZ8TH
-[coverage-url]: https://codecov.io/gh/vikelabs/uvic-course-scraper
+[contributors-shield]: https://img.shields.io/github/contributors/VikeLabs/uvic-course-scraper.svg?style=flat-square
+[contributors-url]: https://github.com/VikeLabs/uvic-course-scraper/graphs/contributors
+[stars-shield]: https://img.shields.io/github/stars/VikeLabs/uvic-course-scraper.svg?style=flat-square
+[stars-url]: https://github.com/VikeLabs/uvic-course-scraper/stargazers
+[issues-shield]: https://img.shields.io/github/issues/VikeLabs/uvic-course-scraper.svg?style=flat-square
+[issues-url]: https://github.com/othneildrew/VikeLabs/uvic-course-scraper/issues
+[coverage-shield]: https://codecov.io/gh/VikeLabs/uvic-course-scraper/branch/master/graph/badge.svg?token=06B7FNZ8TH
+[coverage-url]: https://codecov.io/gh/VikeLabs/uvic-course-scraper

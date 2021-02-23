@@ -1,83 +1,132 @@
 name: uvic-course-scraper
 
 on:
-    push:
-        branches: [master]
-    pull_request:
-        branches: [master]
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
-    # This workflow contains a single job called "build"
-    lint:
-        name: lint
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v2
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v1
-              with:
-                  node-version: 12
-            - name: Cache npm dependencies
-              uses: actions/cache@v1
-              with:
-                  key: npm-${{ hashFiles('package-lock.json') }}
-                  path: ~/.npm
-                  restore-keys: |
-                      npm-
-            - name: Install dependencies
-              run: npm ci --ignore-scripts --no-audit --no-progress
-            - name: Lint
-              run: npm run lint
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
 
-    test:
-        name: test
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v2
+      - name: Cache npm dependencies
+        uses: actions/cache@v1
+        with:
+          key: npm-${{ hashFiles('package-lock.json') }}
+          path: ~/.npm
+          restore-keys: |
+            npm-
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v1
-              with:
-                  node-version: 12
-            - name: Cache npm dependencies
-              uses: actions/cache@v1
-              with:
-                  key: npm-${{ hashFiles('package-lock.json') }}
-                  path: ~/.npm
-                  restore-keys: |
-                      npm-
-            - name: Install dependencies
-              run: npm ci --ignore-scripts --no-audit --no-progress
-            - name: test
-              run: npm test -- --coverage
-            - name: Upload coverage to Codecov
-              uses: codecov/codecov-action@v1
-              with:
-                name: codecov-umbrella # optional
-                fail_ci_if_error: true # optional (default = false)
-                verbose: true # optional (default = false)
-    build:
-        name: build
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit --no-progress
 
-            - name: Setup Node.js
-              uses: actions/setup-node@v1
-              with:
-                  node-version: 12
-            - name: Cache npm dependencies
-              uses: actions/cache@v1
-              with:
-                  key: npm-${{ hashFiles('package-lock.json') }}
-                  path: ~/.npm
-                  restore-keys: |
-                      npm-
-            - name: Install dependencies
-              run: npm ci --ignore-scripts --no-audit --no-progress
-            - name: build
-              run: npm run build
+      - name: Lint
+        run: npm run lint
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v1
+        with:
+          key: npm-${{ hashFiles('package-lock.json') }}
+          path: ~/.npm
+          restore-keys: |
+            npm-
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit --no-progress
+
+      - name: Build
+        run: npm run build
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v1
+        with:
+          key: npm-${{ hashFiles('package-lock.json') }}
+          path: ~/.npm
+          restore-keys: |
+            npm-
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit --no-progress
+
+      - name: Test
+        run: npm test -- --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          name: codecov-umbrella # optional
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
+
+  publish-npm:
+    if: github.ref == 'refs/heads/master'
+    needs: [ lint, build, test ]
+    environment: deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v1
+        with:
+          key: npm-${{ hashFiles('package-lock.json') }}
+          path: ~/.npm
+          restore-keys: |
+            npm-
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts --no-audit --no-progress
+
+      - name: Bump minor version
+        uses: 'phips28/gh-action-bump-version@master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create .npmrc for auth token publishing
+        run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+        env:
+          # token must be generated by admin account to vikelabs org, currently gnomi
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Build and publish npm package
+        run: npm run build && npm publish --access public
