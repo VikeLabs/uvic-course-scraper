@@ -1,6 +1,7 @@
 [![Contributors][contributors-shield]][contributors-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
+![npm][npm-shield]
 [![Code Coverage][coverage-shield]][coverage-url]
 
 # uvic-course-scraper
@@ -142,5 +143,6 @@ This contains detailed information about a class like:
 [stars-url]: https://github.com/VikeLabs/uvic-course-scraper/stargazers
 [issues-shield]: https://img.shields.io/github/issues/VikeLabs/uvic-course-scraper.svg?style=flat-square
 [issues-url]: https://github.com/othneildrew/VikeLabs/uvic-course-scraper/issues
+[npm-shield]: https://img.shields.io/npm/v/@vikelabs/uvic-course-scraper?style=flat-square
 [coverage-shield]: https://codecov.io/gh/VikeLabs/uvic-course-scraper/branch/master/graph/badge.svg?token=06B7FNZ8TH
 [coverage-url]: https://codecov.io/gh/VikeLabs/uvic-course-scraper
