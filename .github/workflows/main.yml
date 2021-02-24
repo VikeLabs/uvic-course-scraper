@@ -94,6 +94,7 @@ jobs:
 
   bump-npm-version:
     if: github.ref == 'refs/heads/master' && github.actor != 'vikelabs-bot'
+    needs: [ lint, build, test ]
     environment: deployment
     runs-on: ubuntu-latest
     steps:
