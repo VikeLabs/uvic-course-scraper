@@ -93,7 +93,7 @@ jobs:
           verbose: true # optional (default = false)
 
   publish-npm:
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' && github.actor == 'vikelabs-bot'
     needs: [ lint, build, test ]
     environment: deployment
     runs-on: ubuntu-latest
