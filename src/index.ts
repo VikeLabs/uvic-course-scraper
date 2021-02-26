@@ -1,10 +1,22 @@
 import * as cheerio from 'cheerio';
 import got from 'got';
 
-import { classScheduleListingUrl, courseDetailUrl, coursesUrl, detailedClassInformationUrl } from './common/urls';
+import {
+  classScheduleListingUrl,
+  courseDetailUrl,
+  coursesUrl,
+  detailedClassInformationUrl,
+  subjectsUrl,
+} from './common/urls';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
-import { DetailedClassInformation, KualiCourseCatalog, KualiCourseItem, ClassScheduleListing } from './types';
+import {
+  DetailedClassInformation,
+  KualiCourseCatalog,
+  KualiCourseItem,
+  ClassScheduleListing,
+  KualiSubject,
+} from './types';
 import { getCatalogIdForTerm, getCurrentTerm } from './utils';
 
 export * from './types';
@@ -89,5 +101,13 @@ export class UVicCourseScraper {
   public static async getSectionSeats(term: string, crn: string): Promise<DetailedClassInformation> {
     const res = await got(detailedClassInformationUrl(term, crn));
     return detailedClassInfoExtractor(cheerio.load(res.body));
+  }
+
+  /**
+   * Gets all subjects from the BAN1P. Automatically uses the current term if not defined.
+   * @param term i.e. '202009', '202101'
+   */
+  public static async getSubjects(term = getCurrentTerm()): Promise<KualiSubject[]> {
+    return await got(subjectsUrl(getCatalogIdForTerm(term))).json<KualiSubject[]>();
   }
 }
