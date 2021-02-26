@@ -19,6 +19,11 @@ export interface SubjectCode {
   linkedGroup: string;
 }
 
+export interface KualiSubject {
+  subject: string;
+  title: string;
+}
+
 export interface KualiCourseCatalog {
   __catalogCourseId: string;
   __passedCatalogQuery: boolean;
