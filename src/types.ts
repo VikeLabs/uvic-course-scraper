@@ -1,8 +1,16 @@
-export const COURSES_URL_F2020 = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
-export const COURSES_URL_W2021 = 'https://uvic.kuali.co/api/v1/catalog/courses/5f21b66d95f09c001ac436a0';
-export const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
-
-export * from './types';
+// need to do runtime checks, so we do this instead of an object?
+export function getCatalogForTerm(term: string): string {
+  switch (term) {
+    case '202009':
+      return '5d9ccc4eab7506001ae4c225';
+    case '202101':
+      return '5f21b66d95f09c001ac436a0';
+    case '202105':
+      return '5ff357f8d30280001b0c26dd';
+    default:
+      return '';
+  }
+}
 
 export interface SubjectCode {
   name: string;
