@@ -106,8 +106,24 @@ describe('Detailed Class Information', () => {
 });
 
 describe('Detailed Class Information Parser All', () => {
-  describe('202001 term', () => {
+  describe.skip('202009 term', () => {
     const namePathPairs: string[][] = getDetailPathsByTerm('202009');
+
+    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+      await assertFields(path);
+    });
+  });
+
+  describe('202101 term', () => {
+    const namePathPairs: string[][] = getDetailPathsByTerm('202101');
+
+    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+      await assertFields(path);
+    });
+  });
+
+  describe('202105 term', () => {
+    const namePathPairs: string[][] = getDetailPathsByTerm('202105');
 
     each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
