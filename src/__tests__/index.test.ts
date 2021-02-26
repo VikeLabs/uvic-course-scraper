@@ -1,11 +1,18 @@
+jest.mock('../utils');
 import nock from 'nock';
+import { mocked } from 'ts-jest/utils';
 
 import { UVicCourseScraper } from '..';
 import coursesJSON from '../../static/courses/courses-202009.json';
+import subjects202009 from '../../static/subjects/subjects-202009.json';
+import subjects202105 from '../../static/subjects/subjects-202105.json';
 import { getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
 import { getCatalogForTerm, KualiCourseItem } from '../types';
+import { getCurrentTerm } from '../utils';
 
 import courseDetailJSON from './static/courseDetail.json';
+
+const mockGetCurrentTerm = mocked(getCurrentTerm);
 
 const nockCourseCatalog = (term: string) => {
   nock('https://uvic.kuali.co')
@@ -157,5 +164,30 @@ describe('call getSectionSeats()', () => {
     expect(waitListSeats.capacity).toEqual(10);
     expect(waitListSeats.actual).toEqual(2);
     expect(waitListSeats.remaining).toEqual(8);
+  });
+});
+
+describe('call getSubjects()', () => {
+  afterEach(() => {
+    mockGetCurrentTerm.mockClear();
+  });
+
+  describe('with term', () => {
+    it('returns the subjects correctly', async () => {
+      nock('https://www.uvic.ca')
+        .get('/BAN1P/pkg_kuali_api.pr_get_catalog?p_catalog=' + '5ff357f8d30280001b0c26dd')
+        .reply(200, subjects202105);
+      expect((await UVicCourseScraper.getSubjects('202105')).length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('without term', () => {
+    mockGetCurrentTerm.mockReturnValueOnce('202009');
+    it('returns the subjects correctly', async () => {
+      nock('https://www.uvic.ca')
+        .get('/BAN1P/pkg_kuali_api.pr_get_catalog?p_catalog=' + '5d9ccc4eab7506001ae4c225')
+        .reply(200, subjects202009);
+      expect((await UVicCourseScraper.getSubjects()).length).toBeGreaterThan(0);
+    });
   });
 });
