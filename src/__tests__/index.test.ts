@@ -3,17 +3,19 @@ import nock from 'nock';
 import { UVicCourseScraper } from '..';
 import coursesJSON from '../../static/courses/courses.json';
 import { getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
-import { KualiCourseItem } from '../types';
+import { getCatalogForTerm, KualiCourseItem } from '../types';
 
 import courseDetailJSON from './static/courseDetail.json';
 
-const nockCourseCatalog = () => {
-  nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0').reply(200, coursesJSON);
+const nockCourseCatalog = (term: string) => {
+  nock('https://uvic.kuali.co')
+    .get(`/api/v1/catalog/courses/${getCatalogForTerm(term)}`)
+    .reply(200, coursesJSON);
 };
 
-const nockCourseDetails = (pid: string) => {
+const nockCourseDetails = (term: string, pid: string) => {
   nock('https://uvic.kuali.co')
-    .get('/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/' + pid)
+    .get(`/api/v1/catalog/course/${getCatalogForTerm(term)}/${pid}`)
     .reply(200, courseDetailJSON);
 };
 
@@ -21,11 +23,11 @@ afterEach(() => {
   nock.cleanAll();
 });
 
-describe('call getAllCourses()', () => {
+describe('call getCourses()', () => {
   it('should have all expected data for a course', async () => {
-    nockCourseCatalog();
+    nockCourseCatalog('202101');
 
-    const allCourses = await UVicCourseScraper.getAllCourses();
+    const allCourses = await UVicCourseScraper.getCourses('202101');
 
     const courseIdx = Math.floor(Math.random() * allCourses.length);
 
@@ -76,13 +78,14 @@ const expectSENG360 = (pid: string, courseDetails: KualiCourseItem) => {
 
 describe('call getCourseDetails()', () => {
   it('has the expected data for a given class', async () => {
-    nockCourseCatalog();
+    const term = '202121';
+    nockCourseCatalog(term);
 
     const pid = 'SkMkeY6XV';
-    nockCourseDetails(pid);
+    nockCourseDetails(term, pid);
 
     const client = new UVicCourseScraper();
-    const courseDetails: KualiCourseItem = await client.getCourseDetails('SENG', '360');
+    const courseDetails: KualiCourseItem = await client.getCourseDetails(term, 'SENG', '360');
 
     expectSENG360(pid, courseDetails);
   });
@@ -91,9 +94,10 @@ describe('call getCourseDetails()', () => {
 describe('call getCourseDetailsByPid()', () => {
   it('has the expected data for a given class', async () => {
     const pid = 'SkMkeY6XV';
-    nockCourseDetails(pid);
+    const term = '202101';
+    nockCourseDetails(term, pid);
 
-    const courseDetails = await UVicCourseScraper.getCourseDetailsByPid(pid);
+    const courseDetails = await UVicCourseScraper.getCourseDetailsByPid(term, pid);
 
     expectSENG360(pid, courseDetails);
   });
