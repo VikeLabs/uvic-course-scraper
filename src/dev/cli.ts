@@ -32,7 +32,7 @@ const handleClass = async (term: string, crn: string) => {
 const main = async () => {
   switch (argv.type) {
     case 'courses':
-      await coursesUtil();
+      await coursesUtil(argv.term);
       break;
     case 'schedules':
       await scheduleUtil(argv.term);
