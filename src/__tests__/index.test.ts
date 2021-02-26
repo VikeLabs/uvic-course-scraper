@@ -1,7 +1,7 @@
 import nock from 'nock';
 
 import { UVicCourseScraper } from '..';
-import coursesJSON from '../../static/courses/courses.json';
+import coursesJSON from '../../static/courses/courses-202009.json';
 import { getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
 import { getCatalogForTerm, KualiCourseItem } from '../types';
 
