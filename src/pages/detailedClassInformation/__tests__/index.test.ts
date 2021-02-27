@@ -106,7 +106,7 @@ describe('Detailed Class Information', () => {
 });
 
 describe('Detailed Class Information Parser All', () => {
-  describe.skip('202009 term', () => {
+  describe('202009 term', () => {
     const namePathPairs: string[][] = getDetailPathsByTerm('202009');
 
     each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
