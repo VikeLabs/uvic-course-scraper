@@ -3,7 +3,6 @@ import { performance } from 'perf_hooks';
 
 import got from 'got';
 
-// import coursesJSON from '../../static/courses/courses.json';
 import { classScheduleListingUrl } from '../common/urls';
 import { KualiCourseItem } from '../types';
 
