@@ -34,7 +34,6 @@ export class UVicCourseScraper {
    * @param subject ie. 'CSC'
    * @param code ie. '111'
    */
-  // TODO: support get course details by term
   public async getCourseDetails(term = getCurrentTerm(), subject: string, code: string): Promise<KualiCourseItem> {
     if (UVicCourseScraper.subjectCodeToPidMap.size === 0) {
       const courseCatalog = await UVicCourseScraper.getCourses(term);
