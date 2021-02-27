@@ -58,6 +58,11 @@ export const courseListingTermUrl = (term: string): string => {
   return `${BASE_URL}/bwckctlg.p_disp_cat_term_date?${params}`;
 };
 
+// construct subjects endpoint
+export function subjectsUrl(catalogId: string): string {
+  return `https://www.uvic.ca/BAN1P/pkg_kuali_api.pr_get_catalog?p_catalog=${catalogId}`;
+}
+
 // UVic Legacy Calendar
 // const LEGACY_BASE_URL = (year: string, month: string) => `https://web.uvic.ca/calendar${year}-${month}/CDs/`;
 
