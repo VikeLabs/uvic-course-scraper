@@ -61,7 +61,6 @@ export const courseListingTermUrl = (term: string): string => {
 // UVic Legacy Calendar
 // const LEGACY_BASE_URL = (year: string, month: string) => `https://web.uvic.ca/calendar${year}-${month}/CDs/`;
 
-// Kuali
 export function coursesUrl(id: string): string {
   return `https://uvic.kuali.co/api/v1/catalog/courses/${id}`;
 }
