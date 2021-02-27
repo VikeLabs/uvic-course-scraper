@@ -80,7 +80,7 @@ describe('Class Schedule Listing Parser (CRN) CSC', () => {
 });
 
 describe('Class Schedule Listing Parser All', () => {
-  describe.skip('202009 term', () => {
+  describe('202009 term', () => {
     const namePathPairs: string[][] = getSchedulePathsByTerm('202009');
 
     each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
