@@ -20,9 +20,12 @@ export class UVicCourseScraper {
   /**
    * Gets all courses from the Kuali catalog
    */
-  public static async getAllCourses(): Promise<KualiCourseCatalog[]> {
-    const courseCatalog = await got(COURSES_URL).json<KualiCourseCatalog[]>();
-    return courseCatalog;
+  public static async getAllCourses(): Promise<{ data: KualiCourseCatalog[]; timestamp: string; URL: string }> {
+    const URL = COURSES_URL;
+    const courseCatalog = await got(URL).json<KualiCourseCatalog[]>();
+    const tmp_Date = new Date();
+    const timestamp = tmp_Date.toISOString();
+    return { data: courseCatalog, timestamp: timestamp, URL: URL };
   }
 
   private static subjectCodeToPidMapper = (kuali: KualiCourseCatalog[]) => {
@@ -39,15 +42,21 @@ export class UVicCourseScraper {
    * @param code ie. '111'
    */
   // TODO: support get course details by term
-  public async getCourseDetails(subject: string, code: string): Promise<KualiCourseItem> {
+  public async getCourseDetails(
+    subject: string,
+    code: string
+  ): Promise<{ data: KualiCourseItem; timestamp: string; URL: string }> {
     if (UVicCourseScraper.subjectCodeToPidMap.size == 0) {
-      const courseCatalog = await UVicCourseScraper.getAllCourses();
+      const parsedData = await UVicCourseScraper.getAllCourses();
+      const courseCatalog = parsedData.data;
       UVicCourseScraper.subjectCodeToPidMapper(courseCatalog);
     }
-
+    const tmp_Date = new Date();
+    const timestamp = tmp_Date.toISOString();
     const pid = UVicCourseScraper.subjectCodeToPidMap.get(subject.toUpperCase() + code) as string;
-    const courseDetails = await UVicCourseScraper.getCourseDetailsByPid(pid);
-    return courseDetails;
+    const parsedData = await UVicCourseScraper.getCourseDetailsByPid(pid);
+    const courseDetails = parsedData.data;
+    return { data: courseDetails, timestamp: timestamp, URL: parsedData.URL };
   }
 
   /**
@@ -55,9 +64,14 @@ export class UVicCourseScraper {
    *
    * @param pid ie. 'ByS23Pp7E'
    */
-  public static async getCourseDetailsByPid(pid: string): Promise<KualiCourseItem> {
+  public static async getCourseDetailsByPid(
+    pid: string
+  ): Promise<{ data: KualiCourseItem; timestamp: string; URL: string }> {
     // TODO: we probably don't want to return the Kuali data as-is.
-    const courseDetails = await got(COURSE_DETAIL_URL + pid).json<KualiCourseItem>();
+    const URL = COURSE_DETAIL_URL + pid;
+    const tmp_Date = new Date();
+    const timestamp = tmp_Date.toISOString();
+    const courseDetails = await got(URL).json<KualiCourseItem>();
     // strip HTML tags from courseDetails.description
     courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
     // parse hoursCatalogText into object
@@ -66,7 +80,7 @@ export class UVicCourseScraper {
       const hours: string[] = hoursCatalogText.split('-');
       courseDetails.hoursCatalogText = hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined;
     }
-    return courseDetails;
+    return { data: courseDetails, timestamp: timestamp, URL: URL };
   }
 
   /**
@@ -80,10 +94,13 @@ export class UVicCourseScraper {
     term: string = getCurrentTerm(),
     subject: string,
     code: string
-  ): Promise<ClassScheduleListing[]> {
-    const res = await got(classScheduleListingUrl(term, subject.toUpperCase(), code));
+  ): Promise<{ data: ClassScheduleListing[]; timestamp: string; URL: string }> {
+    const URL = classScheduleListingUrl(term, subject.toUpperCase(), code);
+    const tmp_Date = new Date();
+    const timestamp = tmp_Date.toISOString();
+    const res = await got(URL);
     const $ = cheerio.load(res.body);
-    return classScheduleListingExtractor($);
+    return { data: await classScheduleListingExtractor($), timestamp: timestamp, URL: URL };
   }
 
   /**
@@ -92,9 +109,20 @@ export class UVicCourseScraper {
    * @param term i.e. '202009', '202101'
    * @param crn ie. '12345', '20001'
    */
-  public static async getSectionSeats(term: string, crn: string): Promise<DetailedClassInformation> {
-    const res = await got(detailedClassInformationUrl(term, crn));
+  public static async getSectionSeats(
+    term: string,
+    crn: string
+  ): Promise<{ data: DetailedClassInformation; timestamp: string; URL: string }> {
+    const URL = detailedClassInformationUrl(term, crn);
+    const tmp_Date = new Date();
+    const timestamp = tmp_Date.toISOString();
+    const res = await got(URL);
     const $ = cheerio.load(res.body);
-    return detailedClassInfoExtractor($);
+    return { data: detailedClassInfoExtractor($), timestamp: timestamp, URL: URL };
   }
 }
+const main = async () => {
+  const client = await UVicCourseScraper.getCourseSections('202009', 'SENG', '265');
+  console.log(client);
+};
+main();
