@@ -118,11 +118,6 @@ export class UVicCourseScraper {
     const timestamp = tmp_Date.toISOString();
     const res = await got(URL);
     const $ = cheerio.load(res.body);
-    return { data: detailedClassInfoExtractor($), timestamp: timestamp, URL: URL };
+    return { data: await detailedClassInfoExtractor($), timestamp: timestamp, URL: URL };
   }
 }
-const main = async () => {
-  const client = await UVicCourseScraper.getCourseSections('202009', 'SENG', '265');
-  console.log(client);
-};
-main();
