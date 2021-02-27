@@ -1,17 +1,3 @@
-// need to do runtime checks, so we do this instead of an object?
-export function getCatalogForTerm(term: string): string {
-  switch (term) {
-    case '202009':
-      return '5d9ccc4eab7506001ae4c225';
-    case '202101':
-      return '5f21b66d95f09c001ac436a0';
-    case '202105':
-      return '5ff357f8d30280001b0c26dd';
-    default:
-      return '';
-  }
-}
-
 export interface SubjectCode {
   name: string;
   description: string;
