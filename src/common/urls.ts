@@ -59,8 +59,8 @@ export const courseListingTermUrl = (term: string): string => {
 };
 
 // construct subjects endpoint
-export function subjectsUrl(id: string): string {
-  return `https://www.uvic.ca/BAN1P/pkg_kuali_api.pr_get_catalog?p_catalog=${id}`;
+export function subjectsUrl(catalogId: string): string {
+  return `https://www.uvic.ca/BAN1P/pkg_kuali_api.pr_get_catalog?p_catalog=${catalogId}`;
 }
 
 // UVic Legacy Calendar
