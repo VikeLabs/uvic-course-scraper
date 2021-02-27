@@ -4,13 +4,15 @@ import { performance } from 'perf_hooks';
 import got from 'got';
 
 import { courseDetailUrl, coursesUrl } from '../common/urls';
-import { getCatalogForTerm, KualiCourseItem } from '../types';
+import { KualiCourseItem } from '../types';
+import { getCatalogForTerm } from '../utils';
 
 import { forEachHelper } from './utils';
 
 const writeCoursesToFS = (term: string, kualiCourseItem: KualiCourseItem[]) => {
   fs.writeFileSync(`static/courses/courses-${term}.json`, JSON.stringify(kualiCourseItem));
 
+  // gets the catalog course id for a given.
   const catalog = getCatalogForTerm(term);
   const coursesMetadata = JSON.stringify({
     path: coursesUrl(catalog),
@@ -27,6 +29,7 @@ const writeCoursesToFS = (term: string, kualiCourseItem: KualiCourseItem[]) => {
  * Downloads all courses. Saves this to courses.json and courses.metadata.json.
  */
 export const coursesUtil = async (term: string): Promise<void> => {
+  // gets the catalog course id for a given.
   const catalog = getCatalogForTerm(term);
   const courseMapper = async (kualiCourseItem: KualiCourseItem) => {
     Object.assign(kualiCourseItem, await got(courseDetailUrl(catalog, kualiCourseItem.pid)).json());
