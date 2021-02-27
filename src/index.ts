@@ -4,14 +4,8 @@ import got from 'got';
 import { classScheduleListingUrl, courseDetailUrl, coursesUrl, detailedClassInformationUrl } from './common/urls';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
-import {
-  DetailedClassInformation,
-  KualiCourseCatalog,
-  KualiCourseItem,
-  ClassScheduleListing,
-  getCatalogForTerm,
-} from './types';
-import { getCurrentTerm } from './utils';
+import { DetailedClassInformation, KualiCourseCatalog, KualiCourseItem, ClassScheduleListing } from './types';
+import { getCatalogForTerm, getCurrentTerm } from './utils';
 
 export * from './types';
 
