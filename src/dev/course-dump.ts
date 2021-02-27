@@ -13,10 +13,10 @@ const writeCoursesToFS = (term: string, kualiCourseItem: KualiCourseItem[]) => {
   fs.writeFileSync(`static/courses/courses-${term}.json`, JSON.stringify(kualiCourseItem));
 
   // gets the catalog course id for a given.
-  const catalog = getCatalogForTerm(term);
+  const catalogId = getCatalogForTerm(term);
   const coursesMetadata = JSON.stringify({
-    path: coursesUrl(catalog),
-    courseDetailPath: courseDetailUrl(catalog, ''),
+    path: coursesUrl(catalogId),
+    courseDetailPath: courseDetailUrl(catalogId, ''),
     // TODO this may contain links that don't work. should remove them
     pids: kualiCourseItem.map((kualiCourseItem: KualiCourseItem) => kualiCourseItem.pid),
     datetime: Date.now(),
@@ -30,16 +30,16 @@ const writeCoursesToFS = (term: string, kualiCourseItem: KualiCourseItem[]) => {
  */
 export const coursesUtil = async (term: string): Promise<void> => {
   // gets the catalog course id for a given.
-  const catalog = getCatalogForTerm(term);
+  const catalogId = getCatalogForTerm(term);
   const courseMapper = async (kualiCourseItem: KualiCourseItem) => {
-    Object.assign(kualiCourseItem, await got(courseDetailUrl(catalog, kualiCourseItem.pid)).json());
+    Object.assign(kualiCourseItem, await got(courseDetailUrl(catalogId, kualiCourseItem.pid)).json());
   };
 
   // Start timer
   const start = performance.now();
 
   console.log('Downloading all courses');
-  const kualiCourseItems: KualiCourseItem[] = await got(coursesUrl(catalog)).json();
+  const kualiCourseItems: KualiCourseItem[] = await got(coursesUrl(catalogId)).json();
 
   console.log('Downloading details for each course');
   await forEachHelper(kualiCourseItems, courseMapper, 35);
