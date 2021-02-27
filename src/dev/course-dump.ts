@@ -5,7 +5,7 @@ import got from 'got';
 
 import { courseDetailUrl, coursesUrl } from '../common/urls';
 import { KualiCourseItem } from '../types';
-import { getCatalogForTerm } from '../utils';
+import { getCatalogIdForTerm } from '../utils';
 
 import { forEachHelper } from './utils';
 
@@ -13,7 +13,7 @@ const writeCoursesToFS = (term: string, kualiCourseItem: KualiCourseItem[]) => {
   fs.writeFileSync(`static/courses/courses-${term}.json`, JSON.stringify(kualiCourseItem));
 
   // gets the catalog course id for a given.
-  const catalogId = getCatalogForTerm(term);
+  const catalogId = getCatalogIdForTerm(term);
   const coursesMetadata = JSON.stringify({
     path: coursesUrl(catalogId),
     courseDetailPath: courseDetailUrl(catalogId, ''),
@@ -30,7 +30,7 @@ const writeCoursesToFS = (term: string, kualiCourseItem: KualiCourseItem[]) => {
  */
 export const coursesUtil = async (term: string): Promise<void> => {
   // gets the catalog course id for a given.
-  const catalogId = getCatalogForTerm(term);
+  const catalogId = getCatalogIdForTerm(term);
   const courseMapper = async (kualiCourseItem: KualiCourseItem) => {
     Object.assign(kualiCourseItem, await got(courseDetailUrl(catalogId, kualiCourseItem.pid)).json());
   };

@@ -5,7 +5,7 @@ import { classScheduleListingUrl, courseDetailUrl, coursesUrl, detailedClassInfo
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
 import { DetailedClassInformation, KualiCourseCatalog, KualiCourseItem, ClassScheduleListing } from './types';
-import { getCatalogForTerm, getCurrentTerm } from './utils';
+import { getCatalogIdForTerm, getCurrentTerm } from './utils';
 
 export * from './types';
 
@@ -17,7 +17,7 @@ export class UVicCourseScraper {
    * @param term i.e. '202009', '202101'
    */
   public static async getCourses(term = getCurrentTerm()): Promise<KualiCourseCatalog[]> {
-    return await got(coursesUrl(getCatalogForTerm(term))).json<KualiCourseCatalog[]>();
+    return await got(coursesUrl(getCatalogIdForTerm(term))).json<KualiCourseCatalog[]>();
   }
 
   private static subjectCodeToPidMapper = (term: string, kuali: KualiCourseCatalog[]) => {
@@ -52,7 +52,7 @@ export class UVicCourseScraper {
    */
   public static async getCourseDetailsByPid(term = getCurrentTerm(), pid: string): Promise<KualiCourseItem> {
     // TODO: we probably don't want to return the Kuali data as-is.
-    const courseDetails = await got(courseDetailUrl(getCatalogForTerm(term), pid)).json<KualiCourseItem>();
+    const courseDetails = await got(courseDetailUrl(getCatalogIdForTerm(term), pid)).json<KualiCourseItem>();
     // strip HTML tags from courseDetails.description
     courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
     // parse hoursCatalogText into object

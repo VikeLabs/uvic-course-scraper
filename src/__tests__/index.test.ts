@@ -4,19 +4,19 @@ import { UVicCourseScraper } from '..';
 import coursesJSON from '../../static/courses/courses-202009.json';
 import { getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
 import { KualiCourseItem } from '../types';
-import { getCatalogForTerm } from '../utils';
+import { getCatalogIdForTerm } from '../utils';
 
 import courseDetailJSON from './static/courseDetail.json';
 
 const nockCourseCatalog = (term: string) => {
   nock('https://uvic.kuali.co')
-    .get(`/api/v1/catalog/courses/${getCatalogForTerm(term)}`)
+    .get(`/api/v1/catalog/courses/${getCatalogIdForTerm(term)}`)
     .reply(200, coursesJSON);
 };
 
 const nockCourseDetails = (term: string, pid: string) => {
   nock('https://uvic.kuali.co')
-    .get(`/api/v1/catalog/course/${getCatalogForTerm(term)}/${pid}`)
+    .get(`/api/v1/catalog/course/${getCatalogIdForTerm(term)}/${pid}`)
     .reply(200, courseDetailJSON);
 };
 

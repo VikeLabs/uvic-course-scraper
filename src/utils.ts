@@ -67,7 +67,7 @@ export function getCurrentTerm(date: dayjs.Dayjs = dayjs()): string {
   return year + month;
 }
 
-export function getCatalogForTerm(term: string): string {
+export function getCatalogIdForTerm(term: string): string {
   switch (term) {
     case '202009':
       return '5d9ccc4eab7506001ae4c225';
