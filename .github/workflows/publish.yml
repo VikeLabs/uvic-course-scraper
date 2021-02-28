@@ -2,13 +2,11 @@ name: Publish
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches: [ master, dev ]
 
 jobs:
   bump-npm-version:
-    if: github.ref == 'refs/heads/master' && github.actor != 'vikelabs-bot'
+    if: github.actor != 'vikelabs-bot'
     needs: [ lint, build, test ]
     environment: deployment
     runs-on: ubuntu-latest
@@ -29,7 +27,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish-npm:
-    if: github.ref == 'refs/heads/master' && github.actor == 'vikelabs-bot'
+    # need conditional so publishing is done after bot commits version bump
+    if: github.actor == 'vikelabs-bot'
     needs: [ lint, build, test ]
     environment: deployment
     runs-on: ubuntu-latest
