@@ -24,8 +24,8 @@ afterEach(() => {
 describe('call getAllCourses()', () => {
   it('should have all expected data for a course', async () => {
     nockCourseCatalog();
-    const parsedData = await UVicCourseScraper.getAllCourses();
-    const allCourses = parsedData.data;
+
+    const allCourses = (await UVicCourseScraper.getAllCourses()).data;
 
     const courseIdx = Math.floor(Math.random() * allCourses.length);
 
@@ -82,8 +82,7 @@ describe('call getCourseDetails()', () => {
     nockCourseDetails(pid);
 
     const client = new UVicCourseScraper();
-    const parsedData = await client.getCourseDetails('SENG', '360');
-    const courseDetails = parsedData.data;
+    const courseDetails = (await client.getCourseDetails('SENG', '360')).data;
 
     expectSENG360(pid, courseDetails);
   });
@@ -93,8 +92,7 @@ describe('call getCourseDetailsByPid()', () => {
   it('has the expected data for a given class', async () => {
     const pid = 'SkMkeY6XV';
     nockCourseDetails(pid);
-    const parsedData = await UVicCourseScraper.getCourseDetailsByPid(pid);
-    const courseDetails = parsedData.data;
+    const courseDetails = (await UVicCourseScraper.getCourseDetailsByPid(pid)).data;
 
     expectSENG360(pid, courseDetails);
   });
@@ -109,8 +107,7 @@ describe('call getCourseSections', () => {
     nock('https://www.uvic.ca')
       .get('/BAN1P/bwckctlg.p_disp_listcrse?term_in=' + term + '&subj_in=' + subject + '&crse_in=' + code + '&schd_in=')
       .reply(200, sectionsResponse);
-    const parsedData = await UVicCourseScraper.getCourseSections(term, subject, code);
-    const courseSections = parsedData.data;
+    const courseSections = (await UVicCourseScraper.getCourseSections(term, subject, code)).data;
 
     expect(courseSections.length).toEqual(4);
 
@@ -142,8 +139,7 @@ describe('call getSectionSeats()', () => {
     nock('https://www.uvic.ca')
       .get('/BAN1P/bwckschd.p_disp_detail_sched?term_in=' + term + '&crn_in=' + crn)
       .reply(200, htmlResponse);
-    const parsedData = await UVicCourseScraper.getSectionSeats(term, crn);
-    const classSeats = parsedData.data;
+    const classSeats = (await UVicCourseScraper.getSectionSeats(term, crn)).data;
 
     const seats = classSeats.seats;
     const waitListSeats = classSeats.waitListSeats;
