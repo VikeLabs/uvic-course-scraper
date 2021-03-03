@@ -25,19 +25,19 @@ describe('call getAllCourses()', () => {
   it('should have all expected data for a course', async () => {
     nockCourseCatalog();
 
-    const { data } = await UVicCourseScraper.getAllCourses();
+    const { data: allCourses } = await UVicCourseScraper.getAllCourses();
 
-    const courseIdx = Math.floor(Math.random() * data.length);
+    const courseIdx = Math.floor(Math.random() * allCourses.length);
 
-    expect(data[courseIdx]).toHaveProperty('__catalogCourseId');
-    expect(data[courseIdx]).toHaveProperty('__passedCatalogQuery');
-    expect(data[courseIdx]).toHaveProperty('_score');
-    expect(data[courseIdx]).toHaveProperty('catalogActivationDate');
-    expect(data[courseIdx]).toHaveProperty('dateStart');
-    expect(data[courseIdx]).toHaveProperty('id');
-    expect(data[courseIdx]).toHaveProperty('pid');
-    expect(data[courseIdx]).toHaveProperty('subjectCode');
-    expect(data[courseIdx]).toHaveProperty('title');
+    expect(allCourses[courseIdx]).toHaveProperty('__catalogCourseId');
+    expect(allCourses[courseIdx]).toHaveProperty('__passedCatalogQuery');
+    expect(allCourses[courseIdx]).toHaveProperty('_score');
+    expect(allCourses[courseIdx]).toHaveProperty('catalogActivationDate');
+    expect(allCourses[courseIdx]).toHaveProperty('dateStart');
+    expect(allCourses[courseIdx]).toHaveProperty('id');
+    expect(allCourses[courseIdx]).toHaveProperty('pid');
+    expect(allCourses[courseIdx]).toHaveProperty('subjectCode');
+    expect(allCourses[courseIdx]).toHaveProperty('title');
   });
 });
 
@@ -82,9 +82,9 @@ describe('call getCourseDetails()', () => {
     nockCourseDetails(pid);
 
     const client = new UVicCourseScraper();
-    const { data } = await client.getCourseDetails('SENG', '360');
+    const { data: courseDetails } = await client.getCourseDetails('SENG', '360');
 
-    expectSENG360(pid, data);
+    expectSENG360(pid, courseDetails);
   });
 });
 
@@ -92,9 +92,9 @@ describe('call getCourseDetailsByPid()', () => {
   it('has the expected data for a given class', async () => {
     const pid = 'SkMkeY6XV';
     nockCourseDetails(pid);
-    const { data } = await UVicCourseScraper.getCourseDetailsByPid(pid);
+    const { data: courseDetails } = await UVicCourseScraper.getCourseDetailsByPid(pid);
 
-    expectSENG360(pid, data);
+    expectSENG360(pid, courseDetails);
   });
 });
 
@@ -107,27 +107,27 @@ describe('call getCourseSections', () => {
     nock('https://www.uvic.ca')
       .get('/BAN1P/bwckctlg.p_disp_listcrse?term_in=' + term + '&subj_in=' + subject + '&crse_in=' + code + '&schd_in=')
       .reply(200, sectionsResponse);
-    const { data } = await UVicCourseScraper.getCourseSections(term, subject, code);
+    const { data: courseSections } = await UVicCourseScraper.getCourseSections(term, subject, code);
 
-    expect(data.length).toEqual(4);
+    expect(courseSections.length).toEqual(4);
 
-    expect(data[0].crn).toEqual('22642');
-    expect(data[0].sectionCode).toEqual('A01');
-    expect(data[0].additionalNotes).toEqual(
+    expect(courseSections[0].crn).toEqual('22642');
+    expect(courseSections[0].sectionCode).toEqual('A01');
+    expect(courseSections[0].additionalNotes).toEqual(
       'Reserved for students in a Computer Science program.  BSENG students should register in A02. This course will be offered fully online and asynchronous (no “real-time” sessions planned or required).'
     );
-    expect(data[0].associatedTerm).toStrictEqual({ start: '202101', end: '202104' });
-    expect(data[0].registrationDates).toStrictEqual({ start: 'Jun 22, 2020', end: 'Jan 22, 2021' });
-    expect(data[0].levels).toStrictEqual(['graduate', 'law', 'undergraduate']);
-    expect(data[0].campus).toEqual('online');
-    expect(data[0].sectionType).toEqual('lecture');
-    expect(data[0].instructionalMethod).toEqual('online');
-    expect(data[0].credits).toEqual('1.500');
-    expect(data[0].meetingTimes[0]).toHaveProperty('dateRange');
-    expect(data[0].meetingTimes[0]).toHaveProperty('days');
-    expect(data[0].meetingTimes[0]).toHaveProperty('instructors');
-    expect(data[0].meetingTimes[0]).toHaveProperty('scheduleType');
-    expect(data[0].meetingTimes[0]).toHaveProperty('time');
+    expect(courseSections[0].associatedTerm).toStrictEqual({ start: '202101', end: '202104' });
+    expect(courseSections[0].registrationDates).toStrictEqual({ start: 'Jun 22, 2020', end: 'Jan 22, 2021' });
+    expect(courseSections[0].levels).toStrictEqual(['graduate', 'law', 'undergraduate']);
+    expect(courseSections[0].campus).toEqual('online');
+    expect(courseSections[0].sectionType).toEqual('lecture');
+    expect(courseSections[0].instructionalMethod).toEqual('online');
+    expect(courseSections[0].credits).toEqual('1.500');
+    expect(courseSections[0].meetingTimes[0]).toHaveProperty('dateRange');
+    expect(courseSections[0].meetingTimes[0]).toHaveProperty('days');
+    expect(courseSections[0].meetingTimes[0]).toHaveProperty('instructors');
+    expect(courseSections[0].meetingTimes[0]).toHaveProperty('scheduleType');
+    expect(courseSections[0].meetingTimes[0]).toHaveProperty('time');
   });
 });
 
@@ -139,10 +139,10 @@ describe('call getSectionSeats()', () => {
     nock('https://www.uvic.ca')
       .get('/BAN1P/bwckschd.p_disp_detail_sched?term_in=' + term + '&crn_in=' + crn)
       .reply(200, htmlResponse);
-    const { data } = await UVicCourseScraper.getSectionSeats(term, crn);
+    const { data: classSeats } = await UVicCourseScraper.getSectionSeats(term, crn);
 
-    const seats = data.seats;
-    const waitListSeats = data.waitListSeats;
+    const seats = classSeats.seats;
+    const waitListSeats = classSeats.waitListSeats;
 
     expect(seats.capacity).toEqual(10);
     expect(seats.actual).toEqual(10);
