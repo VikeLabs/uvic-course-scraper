@@ -25,7 +25,7 @@ export interface KualiCourseCatalog {
 export interface KualiCourseCatalogRes {
   data: KualiCourseCatalog[];
   timestamp: string;
-  URL: string;
+  url: string;
 }
 export interface KualiCourseItem extends KualiCourseCatalog {
   description: string;
@@ -54,7 +54,7 @@ export interface KualiCourseItem extends KualiCourseCatalog {
 export interface KualiCourseItemRes {
   data: KualiCourseItem;
   timestamp: string;
-  URL: string;
+  url: string;
 }
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
@@ -93,7 +93,7 @@ export interface ClassScheduleListing {
 export interface ClassScheduleListingRes {
   data: ClassScheduleListing[];
   timestamp: string;
-  URL: string;
+  url: string;
 }
 export interface Seating {
   capacity: number;
@@ -115,5 +115,5 @@ export interface DetailedClassInformation {
 export interface DetailedClassInformationRes {
   data: DetailedClassInformation;
   timestamp: string;
-  URL: string;
+  url: string;
 }
