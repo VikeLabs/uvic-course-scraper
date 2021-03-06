@@ -22,7 +22,11 @@ export interface KualiCourseCatalog {
   catalogActivationDate: string;
   _score: number;
 }
-
+export interface KualiCourseCatalogRes {
+  data: KualiCourseCatalog[];
+  timestamp: string;
+  URL: string;
+}
 export interface KualiCourseItem extends KualiCourseCatalog {
   description: string;
   supplementalNotes?: string;
@@ -46,6 +50,11 @@ export interface KualiCourseItem extends KualiCourseCatalog {
   //string so we parse it to turn into an object type after the parsing is done.
   hoursCatalogText?: string | { lecture: string; lab: string; tutorial: string };
   repeatableCatalogText?: string;
+}
+export interface KualiCourseItemRes {
+  data: KualiCourseItem;
+  timestamp: string;
+  URL: string;
 }
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
@@ -81,7 +90,11 @@ export interface ClassScheduleListing {
   credits: string;
   meetingTimes: MeetingTimes[];
 }
-
+export interface ClassScheduleListingRes {
+  data: ClassScheduleListing[];
+  timestamp: string;
+  URL: string;
+}
 export interface Seating {
   capacity: number;
   actual: number;
@@ -98,4 +111,9 @@ export interface DetailedClassInformation {
   seats: Seating;
   waitListSeats: Seating;
   requirements?: Requirements;
+}
+export interface DetailedClassInformationRes {
+  data: DetailedClassInformation;
+  timestamp: string;
+  URL: string;
 }
