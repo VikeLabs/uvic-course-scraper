@@ -49,8 +49,8 @@ export class UVicCourseScraper {
       UVicCourseScraper.subjectCodeToPidMapper(courseCatalog);
     }
     const pid = UVicCourseScraper.subjectCodeToPidMap.get(subject.toUpperCase() + code) as string;
-    const courseDetails = await UVicCourseScraper.getCourseDetailsByPid(pid);
-    return { data: courseDetails.data, timestamp: new Date().toISOString(), URL: courseDetails.URL };
+    const { data, URL } = await UVicCourseScraper.getCourseDetailsByPid(pid);
+    return { data, timestamp: new Date().toISOString(), URL };
   }
 
   /**
