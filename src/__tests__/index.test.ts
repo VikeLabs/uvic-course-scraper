@@ -3,8 +3,19 @@ import nock from 'nock';
 import { UVicCourseScraper } from '..';
 import coursesJSON from '../../static/courses/courses.json';
 import { getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
+import { KualiCourseItem } from '../types';
 
 import courseDetailJSON from './static/courseDetail.json';
+
+const nockCourseCatalog = () => {
+  nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0').reply(200, coursesJSON);
+};
+
+const nockCourseDetails = (pid: string) => {
+  nock('https://uvic.kuali.co')
+    .get('/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/' + pid)
+    .reply(200, courseDetailJSON);
+};
 
 afterEach(() => {
   nock.cleanAll();
@@ -12,10 +23,9 @@ afterEach(() => {
 
 describe('call getAllCourses()', () => {
   it('should have all expected data for a course', async () => {
-    nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0').reply(200, coursesJSON);
+    nockCourseCatalog();
 
-    const client = await UVicCourseScraper();
-    const allCourses = await client.getAllCourses();
+    const allCourses = await UVicCourseScraper.getAllCourses();
 
     const courseIdx = Math.floor(Math.random() * allCourses.length);
 
@@ -24,7 +34,6 @@ describe('call getAllCourses()', () => {
     expect(allCourses[courseIdx]).toHaveProperty('_score');
     expect(allCourses[courseIdx]).toHaveProperty('catalogActivationDate');
     expect(allCourses[courseIdx]).toHaveProperty('dateStart');
-    expect(allCourses[courseIdx]).toHaveProperty('getDetails');
     expect(allCourses[courseIdx]).toHaveProperty('id');
     expect(allCourses[courseIdx]).toHaveProperty('pid');
     expect(allCourses[courseIdx]).toHaveProperty('subjectCode');
@@ -32,45 +41,75 @@ describe('call getAllCourses()', () => {
   });
 });
 
-describe('call getSeats()', () => {
-  it('has the expected data for a given section', async () => {
-    const htmlResponse = await getSectionFileByCRN('202101', '20001');
-    nock('https://www.uvic.ca')
-      .get('/BAN1P/bwckschd.p_disp_detail_sched?term_in=202101&crn_in=20001')
-      .reply(200, htmlResponse);
+const expectSENG360 = (pid: string, courseDetails: KualiCourseItem) => {
+  expect(courseDetails.description).toEqual(
+    'Topics include basic cryptography, security protocols, access control, multilevel security, physical and environmental security, network security, application security, e-services security, human aspects and business continuity planning. Discusses applications which need various combinations of confidentiality, availability, integrity and covertness properties; mechanisms to incorporate and test these properties in systems. Policy and legal issues are also covered.'
+  );
+  expect(courseDetails.supplementalNotes).toEqual('');
+  expect(courseDetails.proForma).toEqual('no');
+  expect(courseDetails.credits).toStrictEqual({
+    credits: { min: '1.5', max: '1.5' },
+    value: '1.5',
+    chosen: 'fixed',
+  });
+  expect(courseDetails.crossListedCourses).toBeUndefined();
+  expect(courseDetails.hoursCatalogText).toStrictEqual({
+    lecture: '3',
+    lab: '2',
+    tutorial: '0',
+  });
+  expect(courseDetails.__catalogCourseId).toEqual('SENG360');
+  expect(courseDetails.__passedCatalogQuery).toBeTruthy();
+  expect(courseDetails.dateStart).toEqual('2020-01-01');
+  expect(courseDetails.pid).toEqual(pid);
+  expect(courseDetails.id).toEqual('5cbdf65a56bbef2400c2f0e9');
+  expect(courseDetails.title).toEqual('Security Engineering');
+  expect(courseDetails.subjectCode).toStrictEqual({
+    name: 'SENG',
+    description: 'Software Engineering (SENG)',
+    id: '5c14042b42504f2400e6580b',
+    linkedGroup: '5c3e3006ae5f593258bbf801',
+  });
+  expect(courseDetails.catalogActivationDate).toEqual('2019-11-15');
+  expect(courseDetails._score).toEqual(1);
+};
 
-    const client = await UVicCourseScraper();
-    const classSeats = await client.getSeats('20001', '202101');
+describe('call getCourseDetails()', () => {
+  it('has the expected data for a given class', async () => {
+    nockCourseCatalog();
 
-    const seats = classSeats.seats;
-    const waitListSeats = classSeats.waitListSeats;
+    const pid = 'SkMkeY6XV';
+    nockCourseDetails(pid);
 
-    expect(seats.capacity).toEqual(10);
-    expect(seats.actual).toEqual(10);
-    expect(seats.remaining).toEqual(0);
-    expect(waitListSeats.capacity).toEqual(10);
-    expect(waitListSeats.actual).toEqual(2);
-    expect(waitListSeats.remaining).toEqual(8);
+    const client = new UVicCourseScraper();
+    const courseDetails: KualiCourseItem = await client.getCourseDetails('SENG', '360');
+
+    expectSENG360(pid, courseDetails);
+  });
+});
+
+describe('call getCourseDetailsByPid()', () => {
+  it('has the expected data for a given class', async () => {
+    const pid = 'SkMkeY6XV';
+    nockCourseDetails(pid);
+
+    const courseDetails = await UVicCourseScraper.getCourseDetailsByPid(pid);
+
+    expectSENG360(pid, courseDetails);
   });
 });
 
 describe('call getCourseSections', () => {
   it('has the expected data for a given class', async () => {
-    const crns = ['22642', '22643', '22644', '22645'];
-    const sectionsResponse = await getScheduleFileByCourse('202101', 'SENG', '371');
+    const term = '202101';
+    const subject = 'SENG';
+    const code = '371';
+    const sectionsResponse = await getScheduleFileByCourse(term, subject, code);
     nock('https://www.uvic.ca')
-      .get('/BAN1P/bwckctlg.p_disp_listcrse?term_in=202101&subj_in=SENG&crse_in=371&schd_in=')
+      .get('/BAN1P/bwckctlg.p_disp_listcrse?term_in=' + term + '&subj_in=' + subject + '&crse_in=' + code + '&schd_in=')
       .reply(200, sectionsResponse);
-    // mock each detailed class info page
-    for (const crn of crns) {
-      const detailsResponse = await getSectionFileByCRN('202101', crn);
-      nock('https://www.uvic.ca')
-        .get(`/BAN1P/bwckschd.p_disp_detail_sched?term_in=202101&crn_in=${crn}`)
-        .reply(200, detailsResponse);
-    }
 
-    const client = await UVicCourseScraper();
-    const courseSections = await client.getCourseSections('SENG', '371', '202101');
+    const courseSections = await UVicCourseScraper.getCourseSections(term, subject, code);
 
     expect(courseSections.length).toEqual(4);
 
@@ -91,49 +130,28 @@ describe('call getCourseSections', () => {
     expect(courseSections[0].meetingTimes[0]).toHaveProperty('instructors');
     expect(courseSections[0].meetingTimes[0]).toHaveProperty('scheduleType');
     expect(courseSections[0].meetingTimes[0]).toHaveProperty('time');
-    expect(courseSections[0].seats).toStrictEqual({ capacity: 8, actual: 7, remaining: 1 });
-    expect(courseSections[0].waitListSeats).toStrictEqual({ capacity: 100, actual: 1, remaining: 99 });
-    expect(courseSections[0].requirements).toHaveProperty('level');
-    expect(courseSections[0].requirements).toHaveProperty('fieldOfStudy');
-    expect(courseSections[0].requirements).toHaveProperty('classification');
   });
 });
 
-describe('call getCourseDetails()', () => {
-  it('has the expected data for a given class', async () => {
-    nock('https://uvic.kuali.co').get('/api/v1/catalog/courses/5f21b66d95f09c001ac436a0').reply(200, coursesJSON);
-    nock('https://uvic.kuali.co')
-      .get('/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/SkMkeY6XV')
-      .reply(200, courseDetailJSON);
+describe('call getSectionSeats()', () => {
+  const term = '202101';
+  const crn = '20001';
+  it('has the expected data for a given section', async () => {
+    const htmlResponse = await getSectionFileByCRN(term, crn);
+    nock('https://www.uvic.ca')
+      .get('/BAN1P/bwckschd.p_disp_detail_sched?term_in=' + term + '&crn_in=' + crn)
+      .reply(200, htmlResponse);
 
-    const client = await UVicCourseScraper();
-    const courseDetails = await client.getCourseDetails('SENG', '360');
+    const classSeats = await UVicCourseScraper.getSectionSeats(term, crn);
 
-    expect(courseDetails.description).toEqual(
-      'Topics include basic cryptography, security protocols, access control, multilevel security, physical and environmental security, network security, application security, e-services security, human aspects and business continuity planning. Discusses applications which need various combinations of confidentiality, availability, integrity and covertness properties; mechanisms to incorporate and test these properties in systems. Policy and legal issues are also covered.'
-    );
-    expect(courseDetails.supplementalNotes).toEqual('');
-    expect(courseDetails.proForma).toEqual('no');
-    expect(courseDetails.credits).toStrictEqual({
-      credits: { min: '1.5', max: '1.5' },
-      value: '1.5',
-      chosen: 'fixed',
-    });
-    expect(courseDetails.crossListedCourses).toBeUndefined();
-    expect(courseDetails.hoursCatalogText).toEqual('3-2-0');
-    expect(courseDetails.__catalogCourseId).toEqual('SENG360');
-    expect(courseDetails.__passedCatalogQuery).toBeTruthy();
-    expect(courseDetails.dateStart).toEqual('2020-01-01');
-    expect(courseDetails.pid).toEqual('SkMkeY6XV');
-    expect(courseDetails.id).toEqual('5cbdf65a56bbef2400c2f0e9');
-    expect(courseDetails.title).toEqual('Security Engineering');
-    expect(courseDetails.subjectCode).toStrictEqual({
-      name: 'SENG',
-      description: 'Software Engineering (SENG)',
-      id: '5c14042b42504f2400e6580b',
-      linkedGroup: '5c3e3006ae5f593258bbf801',
-    });
-    expect(courseDetails.catalogActivationDate).toEqual('2019-11-15');
-    expect(courseDetails._score).toEqual(1);
+    const seats = classSeats.seats;
+    const waitListSeats = classSeats.waitListSeats;
+
+    expect(seats.capacity).toEqual(10);
+    expect(seats.actual).toEqual(10);
+    expect(seats.remaining).toEqual(0);
+    expect(waitListSeats.capacity).toEqual(10);
+    expect(waitListSeats.actual).toEqual(2);
+    expect(waitListSeats.remaining).toEqual(8);
   });
 });

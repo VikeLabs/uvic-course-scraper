@@ -2,6 +2,8 @@ export const COURSES_URL_F2020 = 'https://uvic.kuali.co/api/v1/catalog/courses/5
 export const COURSES_URL_W2021 = 'https://uvic.kuali.co/api/v1/catalog/courses/5f21b66d95f09c001ac436a0';
 export const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
 
+export * from './types';
+
 export interface SubjectCode {
   name: string;
   description: string;
@@ -24,6 +26,8 @@ export interface KualiCourseCatalog {
 export interface KualiCourseItem extends KualiCourseCatalog {
   description: string;
   supplementalNotes?: string;
+  formerlyNotesText?: string;
+  allGradingTypes?: { [key: string]: string };
   proForma: string;
   credits: {
     credits: {
@@ -38,7 +42,10 @@ export interface KualiCourseItem extends KualiCourseCatalog {
     pid: string;
     title: string;
   }[];
-  hoursCatalogText?: string;
+  //This has two types because the JSON returned from uvic is a
+  //string so we parse it to turn into an object type after the parsing is done.
+  hoursCatalogText?: string | { lecture: string; lab: string; tutorial: string };
+  repeatableCatalogText?: string;
 }
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
@@ -92,5 +99,3 @@ export interface DetailedClassInformation {
   waitListSeats: Seating;
   requirements?: Requirements;
 }
-
-export type CourseSection = ClassScheduleListing & DetailedClassInformation;
