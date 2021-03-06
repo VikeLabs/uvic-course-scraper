@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import * as qs from 'querystring';
 
 const BASE_URL = 'https://www.uvic.ca/BAN1P';
