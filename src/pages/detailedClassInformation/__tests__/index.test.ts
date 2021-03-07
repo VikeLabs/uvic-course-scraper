@@ -61,9 +61,6 @@ describe('Detailed Class Information', () => {
     expect(classification).toStrictEqual(['YEAR_3', 'YEAR_4', 'YEAR_5']);
   });
 
-
-  //TODO: refactor index.ts to return classifications as undefined
-  // currently classifications is returning empty list
   it('parses ECE260 correctly - case with levels, fields', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '10953'));
     const parsed = await detailedClassInfoExtractor($);
@@ -78,7 +75,7 @@ describe('Detailed Class Information', () => {
 
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
-    //const classification = parsed.requirements?.classification;
+    const classification = parsed.requirements?.classification;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toStrictEqual([
@@ -87,11 +84,10 @@ describe('Detailed Class Information', () => {
       'EN: Electrical Engr',
       'EN: Software Engineering BSENG',
     ]);
-    //expect(classification).toBeUndefined()
+    expect(classification).toBeUndefined()
   });
 
-  //TODO: fails classifications recieved: undefined
-  it.skip('parses CSC 110 correctly - case with levels, classifications', async () => {
+  it('parses CSC 110 correctly - case with levels, classifications', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '10720'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -112,8 +108,7 @@ describe('Detailed Class Information', () => {
     expect(classification).toStrictEqual(['YEAR_1', 'YEAR_2']);
   });
 
-  //TODO: currently does not handle negative classification
-  it.skip('parses GNDR 100 correctly - case with levels, negative classifications', async () => {
+  it('parses GNDR 100 correctly - case with levels, negative classifications', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '11787'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -131,7 +126,7 @@ describe('Detailed Class Information', () => {
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
-    expect(classification).toStrictEqual(['YEAR_1', 'YEAR_2', 'YEAR_3', 'YEAR_5']);
+    expect(classification).toStrictEqual(['unclassified', 'YEAR_1', 'YEAR_2', 'YEAR_3', 'YEAR_5']);
   });
 
   it('parses CSC355 correctly - case with levels', async () => {
@@ -155,11 +150,7 @@ describe('Detailed Class Information', () => {
     expect(classification).toBeUndefined();
   });
 
-  /*********************************************************************/
-  // 'Must be enrolled in one of the following Degrees:'
-
-  //TODO: failed, 'Must be enrolled in one of the following Degrees:' not handled
-  it.skip('parses COM 400 correctly - case with levels, degrees, fields, classifications', async () => {
+  it('parses COM 400 correctly - case with levels, degrees, fields, classifications', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '10673'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -174,16 +165,15 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //TODO add degree type
-    //const degree = parsed.requirements?.degree;
+    const degree = parsed.requirements?.degree;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toStrictEqual(['Non-Specialized']);
     expect(classification).toStrictEqual(['YEAR_4', 'YEAR_5']);
-    //expect(degree).toStrictEqual(['Bachelor of Commerce']);
+    expect(degree).toStrictEqual(['Bachelor of Commerce']);
   });
 
-  it.skip('parses COM 402 correctly - case with levels, degrees, classifications', async () => {
+  it('parses COM 402 correctly - case with levels, degrees, classifications', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '10677'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -198,16 +188,15 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //TODO add degree type
-    //const degree = parsed.requirements?.degree;
+    const degree = parsed.requirements?.degree;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
     expect(classification).toStrictEqual(['YEAR_4', 'YEAR_5']);
-    //expect(degree).toStrictEqual(['Bachelor of Commerce']); 
+    expect(degree).toStrictEqual(['Bachelor of Commerce']);
   });
 
-  it.skip('parses NURS 425 correctly - case with levels, degrees, field', async () => {
+  it('parses NURS 425 correctly - case with levels, degrees, field', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '12359'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -222,16 +211,15 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //TODO add degree type
-    //const degree = parsed.requirements?.degree;
+    const degree = parsed.requirements?.degree;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toStrictEqual(['Continuing Nursing']);
     expect(classification).toBeUndefined();
-    //expect(degree).toStrictEqual(['Bachelor of Sc. in Nursing']); 
+    expect(degree).toStrictEqual(['Bachelor of Sc. in Nursing']);
   });
 
-  it.skip('parses ENGR 112 correctly - case with levels, degrees', async () => {
+  it('parses ENGR 112 correctly - case with levels, degrees', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '11400'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -246,25 +234,16 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //TODO add degree type
-    //const degree = parsed.requirements?.degree;
+    const degree = parsed.requirements?.degree;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
     expect(classification).toBeUndefined();
-    //expect(degree).toStrictEqual(['Bachelor of Engineering'], ['Bachelor of Software Engg']); 
+    expect(degree).toStrictEqual(['Bachelor of Engineering', 'Bachelor of Software Engg']);
   });
 
-  /*********************************************************************/
-
-
-  /*********************************************************************/
-  // '[Must, May not] be enrolled in one of the following Programs:'
-  // '[Must, May not] be enrolled in one of the following Colleges:'
-  // 'Must be enrolled in one of the following Majors:'
-
-  it.skip('parses EDCI 336 correctly - case with programs, levels, fields', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '11400'));
+  it('parses EDCI 336 correctly - case with programs, levels, fields', async () => {
+    const $ = cheerio.load(await getSectionFileByCRN('202009', '11193'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(33);
@@ -278,18 +257,17 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //const degree = parsed.requirements?.degree;
-    //const program = parsed.requirements?.program;
-
+    const degree = parsed.requirements?.degree;
+    const program = parsed.requirements?.program;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toStrictEqual(['ED: Seco Teacher Educ']);
     expect(classification).toBeUndefined();
-    //expect(degree).toBeUndefined(); 
-    //expect(program).toStrictEqual(['Educ: Diploma']);
+    expect(degree).toBeUndefined();
+    expect(program).toStrictEqual(['Educ: Diploma']);
   });
 
-  it.skip('parses EDCI 315 correctly - case with programs, levels', async () => {
+  it('parses EDCI 315 correctly - case with programs, levels', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '11189'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -304,17 +282,17 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //const degree = parsed.requirements?.degree;
-    //const program = parsed.requirements?.program;
+    const degree = parsed.requirements?.degree;
+    const program = parsed.requirements?.program;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
     expect(classification).toBeUndefined();
-    //expect(degree).toBeUndefined(); 
-    //expect(program).toStrictEqual(['Educ: Elem Post Degree']);
+    expect(degree).toBeUndefined();
+    expect(program).toStrictEqual(['Educ: Elem Post Degree']);
   });
 
-  it.skip('parses EDCI 402 correctly - case with programs, levels, classifications', async () => {
+  it('parses EDCI 402 correctly - case with programs, levels, classifications', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '11204'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -329,17 +307,17 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //const degree = parsed.requirements?.degree;
-    //const program = parsed.requirements?.program;
+    const degree = parsed.requirements?.degree;
+    const program = parsed.requirements?.program;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
     expect(classification).toStrictEqual(['YEAR_3', 'YEAR_4']);
-    //expect(degree).toBeUndefined(); 
-    //expect(program).toStrictEqual(['Educ: Elementary Curriculum']);
+    expect(degree).toBeUndefined();
+    expect(program).toStrictEqual(['Educ: Elementary Curriculum']);
   });
 
-  it.skip('parses CSC 111 correctly - case with programs, levels, colleges', async () => {
+  it('parses CSC 111 correctly - case with programs, levels, colleges', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '10728'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -354,19 +332,19 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //const degree = parsed.requirements?.degree;
-    //const program = parsed.requirements?.program;
-    //const college = parsed.requirements?.college;
+    const degree = parsed.requirements?.degree;
+    const program = parsed.requirements?.program;
+    const college = parsed.requirements?.college;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
     expect(classification).toBeUndefined();
-    //expect(degree).toBeUndefined(); 
-    //expect(program).toStrictEqual(['Engineering: BENG','Engineering: BSENG','Engineering: Non-Degree']);
-    //expect(college).toStrictEqual(['Faculty of Engineering']);
+    expect(degree).toBeUndefined();
+    expect(program).toStrictEqual(['Engineering: BENG', 'Engineering: BSENG', 'Engineering: Non-Degree']);
+    expect(college).toStrictEqual(['Faculty of Engineering']);
   });
 
-  it.skip('parses EPHE 310 correctly - case with programs, levels, colleges, negative classifications', async () => {
+  it('parses EPHE 310 correctly - case with programs, levels, colleges, negative classifications', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '11533'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -381,19 +359,19 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //const degree = parsed.requirements?.degree;
-    //const program = parsed.requirements?.program;
-    //const college = parsed.requirements?.college;
+    const degree = parsed.requirements?.degree;
+    const program = parsed.requirements?.program;
+    const college = parsed.requirements?.college;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
-    expect(classification).toStrictEqual(['YEAR_2', 'YEAR_3', 'YEAR_4', 'YEAR_5']);
-    //expect(degree).toBeUndefined(); 
-    //expect(program).toStrictEqual(['Educ: Elementary Curriculum']);
-    //expect(college).toStrictEqual(['Faculty of Education']);
+    expect(classification).toStrictEqual(['unclassified', 'YEAR_2', 'YEAR_3', 'YEAR_4', 'YEAR_5']);
+    expect(degree).toBeUndefined();
+    expect(program).toStrictEqual(['Educ: Elementary Curriculum']);
+    expect(college).toStrictEqual(['Faculty of Education']);
   });
 
-  it.skip('parses EPHE 435 correctly - case with programs, levels, colleges, fields, classifications', async () => {
+  it('parses EPHE 435 correctly - case with programs, levels, colleges, fields, classifications', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '11552'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -408,19 +386,19 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //const degree = parsed.requirements?.degree;
-    //const program = parsed.requirements?.program;
-    //const college = parsed.requirements?.college;
+    const degree = parsed.requirements?.degree;
+    const program = parsed.requirements?.program;
+    const college = parsed.requirements?.college;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toStrictEqual(['ED: Elementary Education Curr']);
     expect(classification).toStrictEqual(['YEAR_3', 'YEAR_4']);
-    //expect(degree).toBeUndefined(); 
-    //expect(program).toStrictEqual(['Educ: Elementary Curriculum']);
-    //expect(college).toStrictEqual(['Faculty of Education']);
+    expect(degree).toBeUndefined();
+    expect(program).toStrictEqual(['Educ: Elementary Curriculum']);
+    expect(college).toStrictEqual(['Faculty of Education']);
   });
 
-  it.skip('parses EPHE 441 correctly - case with levels, colleges, fields, classifications', async () => {
+  it('parses EPHE 441 correctly - case with levels, colleges, fields, classifications', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '11553'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -435,50 +413,50 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //const degree = parsed.requirements?.degree;
-    //const program = parsed.requirements?.program;
-    //const college = parsed.requirements?.college;
+    const degree = parsed.requirements?.degree;
+    const program = parsed.requirements?.program;
+    const college = parsed.requirements?.college;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toStrictEqual(['Co-op Kinesiology', 'ED: Physical Education', 'Kinesiology: KNSH', 'Kinesiology: KNSM', 'Physical and Health Education', 'Recreation & Hlth Educ: RHAH', 'Recreation & Hlth Educ: RHAM']);
     expect(classification).toStrictEqual(['YEAR_3', 'YEAR_4', 'YEAR_5']);
-    //expect(degree).toBeUndefined(); 
-    //expect(program).toBeUndefined();
-    //expect(college).toStrictEqual(['Faculty of Education']);
+    expect(degree).toBeUndefined();
+    expect(program).toBeUndefined();
+    expect(college).toStrictEqual(['Faculty of Education']);
   });
 
-  it.skip('parses CSC 110 correctly - case with negative programs, levels, negative colleges', async () => {
+  it('parses CSC 110 correctly - case with negative programs, levels, negative colleges', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '10714'));
     const parsed = await detailedClassInfoExtractor($);
 
-    expect(parsed.seats.capacity).toBe(60);
-    expect(parsed.seats.actual).toBe(59);
-    expect(parsed.seats.remaining).toBe(1);
+    expect(parsed.seats.capacity).toBe(90);
+    expect(parsed.seats.actual).toBe(95);
+    expect(parsed.seats.remaining).toBe(-5);
 
-    expect(parsed.waitListSeats.capacity).toBe(50);
+    expect(parsed.waitListSeats.capacity).toBe(100);
     expect(parsed.waitListSeats.actual).toBe(0);
-    expect(parsed.waitListSeats.remaining).toBe(50);
+    expect(parsed.waitListSeats.remaining).toBe(100);
 
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //const degree = parsed.requirements?.degree;
-    //const program = parsed.requirements?.program;
-    //const college = parsed.requirements?.college;
-    //const negProgram = parsed.requirements?.negProgram;
-    //const negCollege = parsed.requirements?.negCollege;
+    const degree = parsed.requirements?.degree;
+    const program = parsed.requirements?.program;
+    const college = parsed.requirements?.college;
+    const negProgram = parsed.requirements?.negProgram;
+    const negCollege = parsed.requirements?.negCollege;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
     expect(classification).toBeUndefined();
-    //expect(degree).toBeUndefined(); 
-    //expect(program).toBeUndefined();
-    //expect(college).toBeUndefined();
-    //expect(negProgram).toStrictEqual(['Engineering: BSC', 'Engineering: CMSC Honours', 'Engineering: CMSC Major', 'H&SD: BSc', 'H&SD: BSC Major Combined']);
-    //expect(negCollege).toStrictEqual(['Faculty of Engineering'])
+    expect(degree).toBeUndefined();
+    expect(program).toBeUndefined();
+    expect(college).toBeUndefined();
+    expect(negProgram).toStrictEqual(['Engineering: BSC', 'Engineering: CMSC Honours', 'Engineering: CMSC Major', 'H&SD: BSc', 'H&SD: BSC Major Combined']);
+    expect(negCollege).toStrictEqual(['Faculty of Engineering'])
   });
 
-  it.skip('parses EPHE 344 correctly - case with levels, fields, negative classifications', async () => {
+  it('parses EPHE 344 correctly - case with levels, fields, negative classifications', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '11534'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -493,23 +471,23 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //const degree = parsed.requirements?.degree;
-    //const program = parsed.requirements?.program;
-    //const college = parsed.requirements?.college;
-    //const negProgram = parsed.requirements?.negProgram;
-    //const negCollege = parsed.requirements?.negCollege;
+    const degree = parsed.requirements?.degree;
+    const program = parsed.requirements?.program;
+    const college = parsed.requirements?.college;
+    const negProgram = parsed.requirements?.negProgram;
+    const negCollege = parsed.requirements?.negCollege;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toStrictEqual(['Co-op Kinesiology', 'ED: Physical Education', 'Kinesiology: KNSH', 'Kinesiology: KNSM', 'Physical and Health Education', 'Recreation & Hlth Educ: RHAH', 'Recreation & Hlth Educ: RHAM']);
-    expect(classification).toStrictEqual(['YEAR_2', 'YEAR_3', 'YEAR_4', 'YEAR_5']);
-    //expect(degree).toBeUndefined(); 
-    //expect(program).toBeUndefined();
-    //expect(college).toBeUndefined();
-    //expect(negProgram).toBeUndefined();
-    //expect(negCollege).toBeUndefined();
+    expect(classification).toStrictEqual(['unclassified', 'YEAR_2', 'YEAR_3', 'YEAR_4', 'YEAR_5']);
+    expect(degree).toBeUndefined();
+    expect(program).toBeUndefined();
+    expect(college).toBeUndefined();
+    expect(negProgram).toBeUndefined();
+    expect(negCollege).toBeUndefined();
   });
 
-  it.skip('parses NURS 430 correctly - case with levels, majors', async () => {
+  it('parses NURS 430 correctly - case with levels, majors', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '12367'));
     const parsed = await detailedClassInfoExtractor($);
 
@@ -524,33 +502,30 @@ describe('Detailed Class Information', () => {
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
     const classification = parsed.requirements?.classification;
-    //const degree = parsed.requirements?.degree;
-    //const program = parsed.requirements?.program;
-    //const college = parsed.requirements?.college;
-    //const negProgram = parsed.requirements?.negProgram;
-    //const negCollege = parsed.requirements?.negCollege;
-    //const major = parsed.requirements?.major;
+    const degree = parsed.requirements?.degree;
+    const program = parsed.requirements?.program;
+    const college = parsed.requirements?.college;
+    const negProgram = parsed.requirements?.negProgram;
+    const negCollege = parsed.requirements?.negCollege;
+    const major = parsed.requirements?.major;
 
     expect(level).toStrictEqual(['undergraduate']);
     expect(fieldOfStudy).toBeUndefined();
     expect(classification).toBeUndefined();
-    //expect(degree).toBeUndefined(); 
-    //expect(program).toBeUndefined();
-    //expect(college).toBeUndefined();
-    //expect(negProgram).toBeUndefined();
-    //expect(negCollege).toBeUndefined();
-    //expect(major).toStrictEqual(['Continuing Nursing']);
+    expect(degree).toBeUndefined();
+    expect(program).toBeUndefined();
+    expect(college).toBeUndefined();
+    expect(negProgram).toBeUndefined();
+    expect(negCollege).toBeUndefined();
+    expect(major).toStrictEqual(['Continuing Nursing']);
   });
-
-  /*********************************************************************/
-
 });
 
 describe('Detailed Class Information Parser All', () => {
   describe('202001 term', () => {
     const namePathPairs: string[][] = getDetailPathsByTerm('202009');
 
-    each(namePathPairs).it.skip('%s parses correctly', async (name: string, path: string) => {
+    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });

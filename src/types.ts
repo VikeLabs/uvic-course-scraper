@@ -50,7 +50,7 @@ export interface KualiCourseItem extends KualiCourseCatalog {
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
 export type sectionType = 'lecture' | 'lab' | 'tutorial';
-export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5';
+export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5' | 'unclassified';
 
 export interface MeetingTimes {
   type: string;
@@ -88,11 +88,25 @@ export interface Seating {
   remaining: number;
 }
 
-interface Requirements {
+export interface Requirements {
   level: levelType[];
   fieldOfStudy?: string[];
   classification?: classification[];
+  negClassification?: classification[];
+  degree?: string[];
+  program?: string[];
+  negProgram?: string[];
+  college?: string[];
+  negCollege?: string[];
+  major?: string[];
 }
+
+export interface requirementObject {
+  known: true | false;
+  requirement: string;
+  idx: number;
+}
+
 
 export interface DetailedClassInformation {
   seats: Seating;

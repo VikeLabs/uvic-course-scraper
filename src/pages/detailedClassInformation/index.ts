@@ -1,5 +1,5 @@
 import { assertPageTitle } from '../../common/assertions';
-import { DetailedClassInformation, levelType, classification } from '../../types';
+import { DetailedClassInformation, levelType, classification, Requirements, requirementObject } from '../../types';
 
 const transformSeating = (seatInfo: number[]) => ({
   seats: {
@@ -40,17 +40,52 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     .map((s) => s.trim())
     .filter((e) => e.length);
 
-  const idx = requirementsInfo.findIndex((e) => e === 'Restrictions:');
-  const idxLevel = requirementsInfo.findIndex((e) => e === requirementsInfo[idx + 1]);
-  const idxField = requirementsInfo.findIndex(
-    (e) => e === 'Must be enrolled in one of the following Fields of Study (Major, Minor,  or Concentration):'
-  );
-  const idxClassification = requirementsInfo.findIndex(
-    (e) => e === 'Must be enrolled in one of the following Classifications:'
-  );
-  const idxNegativeClassification = requirementsInfo.findIndex(
-    (e) => e === 'May not be enrolled as the following Classifications:'
-  );
+  // regex statement to grab requirements, ignores "restrictions:" title  
+  const regex = new RegExp('^(?!restrictions).*:$', 'i');
+
+  // list of requirement indeces for parsing 
+  let requirementsIdxList = [] as number[];
+  requirementsIdxList = requirementsInfo.map((el, idx: number) => regex.test(el) ? idx : '').filter(String) as number[];
+
+  // list of requirments for parsing
+  let requirementsList = [] as string[];
+  requirementsIdxList.forEach((el) => requirementsList.push(requirementsInfo[el]));
+
+  // initialize requirements object
+  let requirements = {} as Requirements;
+  let requirementObjectList = [] as requirementObject[];
+
+  // list of known requirements and there strings
+  const knownRequiremnts = {
+    level: "Must be enrolled in one of the following Levels:",
+    fieldOfStudy: "Must be enrolled in one of the following Fields of Study (Major, Minor,  or Concentration):",
+    classification: "Must be enrolled in one of the following Classifications:",
+    negClassification: "May not be enrolled as the following Classifications:",
+    degree: "Must be enrolled in one of the following Degrees:",
+    program: "Must be enrolled in one of the following Programs:",
+    negProgram: "May not be enrolled in one of the following Programs:",
+    college: "Must be enrolled in one of the following Colleges:",
+    negCollege: "May not be enrolled in one of the following Colleges:",
+    major: "Must be enrolled in one of the following Majors:",
+  }
+
+  // classification list for negative classification parsing
+  const classificationList = ['unclassified', 'YEAR_1', 'YEAR_2', 'YEAR_3', 'YEAR_4', 'YEAR_5',];
+
+  // to appease the typescript gods >:()
+  type requirementKey = keyof Requirements;
+
+  // itterate through requirements list and 
+  requirementsList.forEach((req, i) => {
+    let requirementObject = {} as requirementObject;
+    requirementObject.idx = requirementsIdxList[i];
+    if (Object.values(knownRequiremnts).includes(req)) {
+      requirementObject.known = true;
+      requirementObject.requirement = Object.keys(knownRequiremnts).find((key) => knownRequiremnts[key as requirementKey] === req) as string;
+    } else requirementObject.known = false;
+    requirementObjectList.push(requirementObject);
+  });
+
   let idxEnd = requirementsInfo.findIndex(
     (e) => e === 'This course contains prerequisites please see the UVic Calendar for more information'
   );
@@ -60,66 +95,43 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     idxEnd = requirementsInfo.length;
   }
 
-  let numberOfLevels = -1;
+  // adds requirements to requirements object to be returned
+  function addRequirements(requirementType: requirementKey, idx: number, nextIdx: number) {
+    if (requirementType === 'level') {
+      requirements['level'] = requirementsInfo.slice(idx + 1, nextIdx)
+        .map((v) => v.toLowerCase().trim() as levelType);
 
-  if (idxLevel > -1) {
-    if (idxField > -1) {
-      numberOfLevels = idxField - (idxLevel + 1);
-    } else if (idxClassification > -1) {
-      numberOfLevels = idxClassification - (idxLevel + 1);
-    } else if (idxNegativeClassification > -1) {
-      numberOfLevels = idxNegativeClassification - (idxLevel + 1);
+    } else if (requirementType === 'classification') {
+      requirements['classification'] = requirementsInfo.slice(idx + 1, nextIdx)
+        .map((v) => v.trim().toUpperCase().replace(' ', '_') as classification);
+
+    } else if (requirementType === 'negClassification') {
+      const negClassification = requirementsInfo.slice(idx + 1, nextIdx)
+        .map((v) => v.trim().toUpperCase().replace(' ', '_') as classification);
+      requirements['classification'] = classificationList.filter((y) => !negClassification.includes(y as classification)) as classification[];
+
     } else {
-      numberOfLevels = idxEnd - (idxLevel + 1);
+      requirements[requirementType] = requirementsInfo.slice(idx + 1, nextIdx)
+        .map((v) => v.trim() as string);
     }
   }
 
-  // If restrictions can't be found return just seating info.
-  if (idx === -1) {
-    return data;
-  }
+  /**
+   * if the requirement is known (ie. in 'knownRequirements' object) then pass indeces to 'addRequirements' to
+   * add the parsed requirements.
+   * 
+   * if not known do nothing (skips over unknown requirement and will not be returned)
+   */
+  requirementObjectList.forEach((req, i) => {
+    if (req.known) {
+      if (requirementObjectList[i + 1] !== undefined) {
+        addRequirements(req.requirement as requirementKey, req.idx, requirementObjectList[i + 1].idx)
+      } else addRequirements(req.requirement as requirementKey, req.idx, idxEnd)
+    }
+  })
 
-  const level = requirementsInfo
-    .slice(idxLevel + 1, idxLevel + numberOfLevels + 1)
-    .map((v) => v.toLowerCase().trim() as levelType);
-
-  // If fields or the end cannot be found returns undefined for fields
-  if (idxField === -1 || idxEnd === -1) {
-    return {
-      ...data,
-      requirements: {
-        level,
-      },
-    };
-  }
-
-  // requirements/classification parsing
-  const classification: classification[] = [];
-  const fields: string[] = [];
-
-  if (idxClassification === -1) {
-    // no classification entires exist
-
-    requirementsInfo.slice(idxField + 1, idxEnd).forEach((v) => fields.push(v.trim()));
-  } else {
-    // classification entries exist
-
-    requirementsInfo.slice(idxField + 1, idxClassification).forEach((v) => fields.push(v.trim()));
-    const d = requirementsInfo
-      .slice(idxClassification + 1, idxEnd)
-      .map((v) =>
-        v.indexOf('Year') !== -1 ? (v.toUpperCase().replace(' ', '_') as classification) : classification[0]
-      );
-
-    classification.push(...d);
-  }
-
+  // return parsed seating and requirements data
   return {
-    ...data,
-    requirements: {
-      level,
-      fieldOfStudy: fields,
-      classification,
-    },
+    ...data, requirements
   };
 };
