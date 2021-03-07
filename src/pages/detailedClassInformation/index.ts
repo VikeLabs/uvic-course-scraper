@@ -41,14 +41,14 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     .filter((e) => e.length);
 
   // regex statement to grab requirements, ignores "restrictions:" title  
-  const regex = new RegExp('^(?!restrictions).*:$', 'i');
+  const regex = new RegExp(/^(?!restrictions).*:$/, 'i');
 
   // list of requirement indeces for parsing 
-  let requirementsIdxList = [] as number[];
+  let requirementsIdxList: number[] = [];
   requirementsIdxList = requirementsInfo.map((el, idx: number) => regex.test(el) ? idx : '').filter(String) as number[];
 
   // list of requirments for parsing
-  let requirementsList = [] as string[];
+  let requirementsList: string[] = [];
   requirementsIdxList.forEach((el) => requirementsList.push(requirementsInfo[el]));
 
   // initialize requirements object
