@@ -34,6 +34,7 @@ module.exports = {
         },
       },
     ],
+    camelcase: [2, { properties: 'always' }],
   },
   reportUnusedDisableDirectives: true, // Want to make sure the disable directives are always being used
   root: true, // This is the root eslint file (not a nested eslint file)

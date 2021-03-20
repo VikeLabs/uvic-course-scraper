@@ -1,14 +1,13 @@
-export const COURSES_URL_F2020 = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
-export const COURSES_URL_W2021 = 'https://uvic.kuali.co/api/v1/catalog/courses/5f21b66d95f09c001ac436a0';
-export const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
-
-export * from './types';
-
 export interface SubjectCode {
   name: string;
   description: string;
   id: string;
   linkedGroup: string;
+}
+
+export interface KualiSubject {
+  subject: string;
+  title: string;
 }
 
 export interface KualiCourseCatalog {
@@ -59,7 +58,7 @@ export interface KualiCourseItemRes {
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
 export type sectionType = 'lecture' | 'lab' | 'tutorial';
-export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5';
+export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5' | 'unclassified';
 
 export interface MeetingTimes {
   type: string;
@@ -101,11 +100,25 @@ export interface Seating {
   remaining: number;
 }
 
-interface Requirements {
+export interface Requirements {
   level: levelType[];
   fieldOfStudy?: string[];
   classification?: classification[];
+  negClassification?: classification[];
+  degree?: string[];
+  program?: string[];
+  negProgram?: string[];
+  college?: string[];
+  negCollege?: string[];
+  major?: string[];
 }
+
+export interface requirementObject {
+  known: true | false;
+  requirement: string;
+  idx: number;
+}
+
 
 export interface DetailedClassInformation {
   seats: Seating;

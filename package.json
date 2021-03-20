@@ -1,6 +1,6 @@
 {
   "name": "@vikelabs/uvic-course-scraper",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "UVic Course Scrapper",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -49,5 +49,11 @@
   },
   "files": [
     "dist/**/*"
-  ]
+  ],
+  "jest": {
+    "testPathIgnorePatterns": [
+      "src/dev/**",
+      "src/example/**" 
+    ]
+  }
 }
