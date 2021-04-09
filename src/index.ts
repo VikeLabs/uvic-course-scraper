@@ -8,7 +8,7 @@ import {
   detailedClassInformationUrl,
   subjectsUrl,
 } from './common/urls';
-import { KualiCourseCatalogParser } from './kuali/catalog';
+import { KualiCourseItemParser } from './kuali/catalog';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
 import {
@@ -86,7 +86,7 @@ export class UVicCourseScraper {
   ): Promise<Response<KualiCourseItemParsed>> {
     const url = courseDetailUrl(getCatalogIdForTerm(term), pid);
     const courseDetails = await got(url).json<KualiCourseItem>();
-    return { response: KualiCourseCatalogParser(courseDetails), timestamp: new Date(), url };
+    return { response: KualiCourseItemParser(courseDetails), timestamp: new Date(), url };
   }
 
   /**

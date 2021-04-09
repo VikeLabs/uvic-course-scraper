@@ -1,6 +1,6 @@
 import { KualiCourseItem, KualiCourseItemParsed } from '../types';
 
-export function KualiCourseCatalogParser(course: KualiCourseItem): KualiCourseItemParsed {
+export function KualiCourseItemParser(course: KualiCourseItem): KualiCourseItemParsed {
   // strip HTML tags from courseDetails.description
   course.description = course.description.replace(/(<([^>]+)>)/gi, '');
 
