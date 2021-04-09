@@ -5,12 +5,10 @@ import { mocked } from 'ts-jest/utils';
 import coursesJSON from '../../static/courses/courses-202009.json';
 import subjects202009 from '../../static/subjects/subjects-202009.json';
 import subjects202105 from '../../static/subjects/subjects-202105.json';
-import { getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
+import { getCourseDetailByPidSync, getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
 import { UVicCourseScraper } from '../index';
 import { KualiCourseItemParsed } from '../types';
 import { getCatalogIdForTerm, getCurrentTerm } from '../utils';
-
-import courseDetailJSON from './static/courseDetail.json';
 
 const mockGetCurrentTerm = mocked(getCurrentTerm);
 const mockGetCatalogIdForTerm = mocked(getCatalogIdForTerm);
@@ -24,7 +22,7 @@ const nockCourseCatalog = (term: string) => {
 const nockCourseDetails = (term: string, pid: string) => {
   nock('https://uvic.kuali.co')
     .get(`/api/v1/catalog/course/${getCatalogIdForTerm(term)}/${pid}`)
-    .reply(200, courseDetailJSON);
+    .reply(200, getCourseDetailByPidSync(term, pid));
 };
 
 afterEach(() => {
@@ -86,16 +84,19 @@ const expectSENG360 = (pid: string, courseDetails: KualiCourseItemParsed) => {
 
 describe('call getCourseDetails()', () => {
   it('has the expected data for a given class', async () => {
-    const term = '202121';
+    const term = '202101';
     nockCourseCatalog(term);
 
     const pid = 'SkMkeY6XV';
     nockCourseDetails(term, pid);
 
     const client = new UVicCourseScraper();
-    const { response: courseDetails } = await client.getCourseDetails(term, 'SENG', '360');
+    const response = await client.getCourseDetails(term, 'SENG', '360');
 
-    expectSENG360(pid, courseDetails);
+    expect(response).toBeDefined();
+    if (response) {
+      expectSENG360(pid, response.response);
+    }
   });
 });
 
