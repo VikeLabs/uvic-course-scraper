@@ -56,13 +56,18 @@ export class UVicCourseScraper {
     term = getCurrentTerm(),
     subject: string,
     code: string
-  ): Promise<Response<KualiCourseItemParsed>> {
+  ): Promise<Response<KualiCourseItemParsed> | void> {
     if (UVicCourseScraper.subjectCodeToPidMap.size === 0) {
       const { response: courseCatalog } = await UVicCourseScraper.getCourses(term);
       UVicCourseScraper.subjectCodeToPidMapper(term, courseCatalog);
     }
 
-    const pid = UVicCourseScraper.subjectCodeToPidMap.get(`${term}${subject.toUpperCase()}${code}`) as string;
+    const pid = UVicCourseScraper.subjectCodeToPidMap.get(`${term}${subject.toUpperCase()}${code}`);
+
+    if (pid === undefined) {
+      return;
+    }
+
     const { response, url } = await UVicCourseScraper.getCourseDetailsByPid(term, pid);
     return { response, timestamp: new Date(), url };
   }
