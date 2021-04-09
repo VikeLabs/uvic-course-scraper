@@ -84,7 +84,7 @@ describe('Detailed Class Information', () => {
       'EN: Electrical Engr',
       'EN: Software Engineering BSENG',
     ]);
-    expect(classification).toBeUndefined()
+    expect(classification).toBeUndefined();
   });
 
   it('parses CSC 110 correctly - case with levels, classifications', async () => {
@@ -418,7 +418,15 @@ describe('Detailed Class Information', () => {
     const college = parsed.requirements?.college;
 
     expect(level).toStrictEqual(['undergraduate']);
-    expect(fieldOfStudy).toStrictEqual(['Co-op Kinesiology', 'ED: Physical Education', 'Kinesiology: KNSH', 'Kinesiology: KNSM', 'Physical and Health Education', 'Recreation & Hlth Educ: RHAH', 'Recreation & Hlth Educ: RHAM']);
+    expect(fieldOfStudy).toStrictEqual([
+      'Co-op Kinesiology',
+      'ED: Physical Education',
+      'Kinesiology: KNSH',
+      'Kinesiology: KNSM',
+      'Physical and Health Education',
+      'Recreation & Hlth Educ: RHAH',
+      'Recreation & Hlth Educ: RHAM',
+    ]);
     expect(classification).toStrictEqual(['YEAR_3', 'YEAR_4', 'YEAR_5']);
     expect(degree).toBeUndefined();
     expect(program).toBeUndefined();
@@ -452,8 +460,14 @@ describe('Detailed Class Information', () => {
     expect(degree).toBeUndefined();
     expect(program).toBeUndefined();
     expect(college).toBeUndefined();
-    expect(negProgram).toStrictEqual(['Engineering: BSC', 'Engineering: CMSC Honours', 'Engineering: CMSC Major', 'H&SD: BSc', 'H&SD: BSC Major Combined']);
-    expect(negCollege).toStrictEqual(['Faculty of Engineering'])
+    expect(negProgram).toStrictEqual([
+      'Engineering: BSC',
+      'Engineering: CMSC Honours',
+      'Engineering: CMSC Major',
+      'H&SD: BSc',
+      'H&SD: BSC Major Combined',
+    ]);
+    expect(negCollege).toStrictEqual(['Faculty of Engineering']);
   });
 
   it('parses EPHE 344 correctly - case with levels, fields, negative classifications', async () => {
@@ -478,7 +492,15 @@ describe('Detailed Class Information', () => {
     const negCollege = parsed.requirements?.negCollege;
 
     expect(level).toStrictEqual(['undergraduate']);
-    expect(fieldOfStudy).toStrictEqual(['Co-op Kinesiology', 'ED: Physical Education', 'Kinesiology: KNSH', 'Kinesiology: KNSM', 'Physical and Health Education', 'Recreation & Hlth Educ: RHAH', 'Recreation & Hlth Educ: RHAM']);
+    expect(fieldOfStudy).toStrictEqual([
+      'Co-op Kinesiology',
+      'ED: Physical Education',
+      'Kinesiology: KNSH',
+      'Kinesiology: KNSM',
+      'Physical and Health Education',
+      'Recreation & Hlth Educ: RHAH',
+      'Recreation & Hlth Educ: RHAM',
+    ]);
     expect(classification).toStrictEqual(['unclassified', 'YEAR_2', 'YEAR_3', 'YEAR_4', 'YEAR_5']);
     expect(degree).toBeUndefined();
     expect(program).toBeUndefined();
