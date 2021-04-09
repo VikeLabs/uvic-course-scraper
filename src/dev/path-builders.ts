@@ -33,7 +33,7 @@ export const getDetailPathsByTerm = (term: string): string[][] => {
   return paths.map((thisPath) => [path.basename(thisPath).replace('_', ' ').replace('.html', ''), thisPath]);
 };
 
-export const getCourseDetailByPidSync = (term: string, pid: string): KualiCourseItem | undefined => {
+export const getCourseDetailByPidSync = (term: string, pid: string): KualiCourseItem => {
   // to speed up successive uses by caching into global memory. hot jank
   if (!courses[term]) {
     const data = fs.readFileSync(path.join(appRoot.toString(), `static/courses/courses-${term}.json`));
