@@ -8,6 +8,7 @@ import {
   detailedClassInformationUrl,
   subjectsUrl,
 } from './common/urls';
+import { KualiCourseCatalogParser } from './kuali/catalog';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
 import {
@@ -83,23 +84,9 @@ export class UVicCourseScraper {
     term = getCurrentTerm(),
     pid: string
   ): Promise<Response<KualiCourseItemParsed>> {
-    // TODO: we probably don't want to return the Kuali data as-is.
     const url = courseDetailUrl(getCatalogIdForTerm(term), pid);
     const courseDetails = await got(url).json<KualiCourseItem>();
-    // strip HTML tags from courseDetails.description
-
-    courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
-    const hoursCatalogText = courseDetails.hoursCatalogText;
-    const hours = hoursCatalogText?.split('-');
-
-    return {
-      response: {
-        ...courseDetails,
-        hoursCatalog: hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined,
-      },
-      timestamp: new Date(),
-      url,
-    };
+    return { response: KualiCourseCatalogParser(courseDetails), timestamp: new Date(), url };
   }
 
   /**
