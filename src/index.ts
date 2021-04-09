@@ -17,6 +17,7 @@ import {
   ClassScheduleListing,
   KualiSubject,
   Response,
+  KualiCourseItemParsed,
 } from './types';
 import { getCatalogIdForTerm, getCurrentTerm } from './utils';
 
@@ -55,7 +56,7 @@ export class UVicCourseScraper {
     term = getCurrentTerm(),
     subject: string,
     code: string
-  ): Promise<Response<KualiCourseItem>> {
+  ): Promise<Response<KualiCourseItemParsed>> {
     if (UVicCourseScraper.subjectCodeToPidMap.size === 0) {
       const { response: courseCatalog } = await UVicCourseScraper.getCourses(term);
       UVicCourseScraper.subjectCodeToPidMapper(term, courseCatalog);
@@ -73,19 +74,27 @@ export class UVicCourseScraper {
    * @param pid ie. 'ByS23Pp7E'
    */
 
-  public static async getCourseDetailsByPid(term = getCurrentTerm(), pid: string): Promise<Response<KualiCourseItem>> {
+  public static async getCourseDetailsByPid(
+    term = getCurrentTerm(),
+    pid: string
+  ): Promise<Response<KualiCourseItemParsed>> {
     // TODO: we probably don't want to return the Kuali data as-is.
     const url = courseDetailUrl(getCatalogIdForTerm(term), pid);
     const courseDetails = await got(url).json<KualiCourseItem>();
     // strip HTML tags from courseDetails.description
+
     courseDetails.description = courseDetails.description.replace(/(<([^>]+)>)/gi, '');
-    // parse hoursCatalogText into object
-    const hoursCatalogText = courseDetails.hoursCatalogText as string;
-    if (hoursCatalogText) {
-      const hours: string[] = hoursCatalogText.split('-');
-      courseDetails.hoursCatalogText = hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined;
-    }
-    return { response: courseDetails, timestamp: new Date(), url };
+    const hoursCatalogText = courseDetails.hoursCatalogText;
+    const hours = hoursCatalogText?.split('-');
+
+    return {
+      response: {
+        ...courseDetails,
+        hoursCatalog: hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined,
+      },
+      timestamp: new Date(),
+      url,
+    };
   }
 
   /**

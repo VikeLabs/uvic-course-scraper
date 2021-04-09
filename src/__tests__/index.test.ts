@@ -7,7 +7,7 @@ import subjects202009 from '../../static/subjects/subjects-202009.json';
 import subjects202105 from '../../static/subjects/subjects-202105.json';
 import { getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
 import { UVicCourseScraper } from '../index';
-import { KualiCourseItem } from '../types';
+import { KualiCourseItemParsed } from '../types';
 import { getCatalogIdForTerm, getCurrentTerm } from '../utils';
 
 import courseDetailJSON from './static/courseDetail.json';
@@ -51,7 +51,7 @@ describe('call getCourses()', () => {
   });
 });
 
-const expectSENG360 = (pid: string, courseDetails: KualiCourseItem) => {
+const expectSENG360 = (pid: string, courseDetails: KualiCourseItemParsed) => {
   expect(courseDetails.description).toEqual(
     'Topics include basic cryptography, security protocols, access control, multilevel security, physical and environmental security, network security, application security, e-services security, human aspects and business continuity planning. Discusses applications which need various combinations of confidentiality, availability, integrity and covertness properties; mechanisms to incorporate and test these properties in systems. Policy and legal issues are also covered.'
   );
@@ -63,7 +63,7 @@ const expectSENG360 = (pid: string, courseDetails: KualiCourseItem) => {
     chosen: 'fixed',
   });
   expect(courseDetails.crossListedCourses).toBeUndefined();
-  expect(courseDetails.hoursCatalogText).toStrictEqual({
+  expect(courseDetails.hoursCatalog).toStrictEqual({
     lecture: '3',
     lab: '2',
     tutorial: '0',
