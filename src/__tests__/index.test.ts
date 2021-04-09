@@ -35,7 +35,7 @@ describe('call getCourses()', () => {
   it('should have all expected data for a course', async () => {
     nockCourseCatalog('202101');
 
-    const { data: allCourses } = await UVicCourseScraper.getCourses('202101');
+    const { response: allCourses } = await UVicCourseScraper.getCourses('202101');
 
     const courseIdx = Math.floor(Math.random() * allCourses.length);
 
@@ -93,7 +93,7 @@ describe('call getCourseDetails()', () => {
     nockCourseDetails(term, pid);
 
     const client = new UVicCourseScraper();
-    const { data: courseDetails } = await client.getCourseDetails(term, 'SENG', '360');
+    const { response: courseDetails } = await client.getCourseDetails(term, 'SENG', '360');
 
     expectSENG360(pid, courseDetails);
   });
@@ -105,7 +105,7 @@ describe('call getCourseDetailsByPid()', () => {
     const term = '202101';
     nockCourseDetails(term, pid);
 
-    const { data: courseDetails } = await UVicCourseScraper.getCourseDetailsByPid(term, pid);
+    const { response: courseDetails } = await UVicCourseScraper.getCourseDetailsByPid(term, pid);
 
     expectSENG360(pid, courseDetails);
   });
@@ -120,7 +120,7 @@ describe('call getCourseSections', () => {
     nock('https://www.uvic.ca')
       .get('/BAN1P/bwckctlg.p_disp_listcrse?term_in=' + term + '&subj_in=' + subject + '&crse_in=' + code + '&schd_in=')
       .reply(200, sectionsResponse);
-    const { data: courseSections } = await UVicCourseScraper.getCourseSections(term, subject, code);
+    const { response: courseSections } = await UVicCourseScraper.getCourseSections(term, subject, code);
 
     expect(courseSections.length).toEqual(4);
 
@@ -152,7 +152,7 @@ describe('call getSectionSeats()', () => {
     nock('https://www.uvic.ca')
       .get('/BAN1P/bwckschd.p_disp_detail_sched?term_in=' + term + '&crn_in=' + crn)
       .reply(200, htmlResponse);
-    const { data: classSeats } = await UVicCourseScraper.getSectionSeats(term, crn);
+    const { response: classSeats } = await UVicCourseScraper.getSectionSeats(term, crn);
 
     const seats = classSeats.seats;
     const waitListSeats = classSeats.waitListSeats;

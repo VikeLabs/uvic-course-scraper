@@ -1,3 +1,9 @@
+export interface Response<T> {
+  response: T;
+  timestamp: Date;
+  url: string;
+}
+
 export interface SubjectCode {
   name: string;
   description: string;
@@ -10,6 +16,7 @@ export interface KualiSubject {
   title: string;
 }
 
+// KualiCourseCatalog is returned the index of courses from Kuali
 export interface KualiCourseCatalog {
   __catalogCourseId: string;
   __passedCatalogQuery: boolean;
@@ -21,11 +28,9 @@ export interface KualiCourseCatalog {
   catalogActivationDate: string;
   _score: number;
 }
-export interface KualiCourseCatalogRes {
-  data: KualiCourseCatalog[];
-  timestamp: string;
-  url: string;
-}
+
+// KualiCourseItem is the full version of KualiCourseCatalog
+// This is retrieved one-by-one from a Kuali endpoint.
 export interface KualiCourseItem extends KualiCourseCatalog {
   description: string;
   supplementalNotes?: string;
@@ -50,14 +55,9 @@ export interface KualiCourseItem extends KualiCourseCatalog {
   hoursCatalogText?: string | { lecture: string; lab: string; tutorial: string };
   repeatableCatalogText?: string;
 }
-export interface KualiCourseItemRes {
-  data: KualiCourseItem;
-  timestamp: string;
-  url: string;
-}
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
-export type sectionType = 'lecture' | 'lab' | 'tutorial';
+export type sectionType = 'lecture' | 'lab' | 'tutorial' | 'gradable lab' | 'lecture topic';
 export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5' | 'unclassified';
 
 export interface MeetingTimes {
@@ -89,11 +89,7 @@ export interface ClassScheduleListing {
   credits: string;
   meetingTimes: MeetingTimes[];
 }
-export interface ClassScheduleListingRes {
-  data: ClassScheduleListing[];
-  timestamp: string;
-  url: string;
-}
+
 export interface Seating {
   capacity: number;
   actual: number;
@@ -118,7 +114,6 @@ export interface requirementObject {
   requirement: string;
   idx: number;
 }
-
 
 export interface DetailedClassInformation {
   seats: Seating;
