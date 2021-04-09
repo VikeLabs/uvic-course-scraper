@@ -42,7 +42,12 @@ export interface KualiCourseItem extends KualiCourseCatalog {
       min: string;
       max: string;
     };
-    value: string;
+    value:
+      | string
+      | {
+          min: string;
+          max: string;
+        };
     chosen: string;
   };
   crossListedCourses?: {
