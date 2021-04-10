@@ -5,12 +5,10 @@ import { mocked } from 'ts-jest/utils';
 import coursesJSON from '../../static/courses/courses-202009.json';
 import subjects202009 from '../../static/subjects/subjects-202009.json';
 import subjects202105 from '../../static/subjects/subjects-202105.json';
-import { getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
+import { getCourseDetailByPidSync, getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
 import { UVicCourseScraper } from '../index';
-import { KualiCourseItem } from '../types';
+import { KualiCourseItemParsed } from '../types';
 import { getCatalogIdForTerm, getCurrentTerm } from '../utils';
-
-import courseDetailJSON from './static/courseDetail.json';
 
 const mockGetCurrentTerm = mocked(getCurrentTerm);
 const mockGetCatalogIdForTerm = mocked(getCatalogIdForTerm);
@@ -24,7 +22,7 @@ const nockCourseCatalog = (term: string) => {
 const nockCourseDetails = (term: string, pid: string) => {
   nock('https://uvic.kuali.co')
     .get(`/api/v1/catalog/course/${getCatalogIdForTerm(term)}/${pid}`)
-    .reply(200, courseDetailJSON);
+    .reply(200, getCourseDetailByPidSync(term, pid));
 };
 
 afterEach(() => {
@@ -35,7 +33,7 @@ describe('call getCourses()', () => {
   it('should have all expected data for a course', async () => {
     nockCourseCatalog('202101');
 
-    const { data: allCourses } = await UVicCourseScraper.getCourses('202101');
+    const { response: allCourses } = await UVicCourseScraper.getCourses('202101');
 
     const courseIdx = Math.floor(Math.random() * allCourses.length);
 
@@ -51,7 +49,7 @@ describe('call getCourses()', () => {
   });
 });
 
-const expectSENG360 = (pid: string, courseDetails: KualiCourseItem) => {
+const expectSENG360 = (pid: string, courseDetails: KualiCourseItemParsed) => {
   expect(courseDetails.description).toEqual(
     'Topics include basic cryptography, security protocols, access control, multilevel security, physical and environmental security, network security, application security, e-services security, human aspects and business continuity planning. Discusses applications which need various combinations of confidentiality, availability, integrity and covertness properties; mechanisms to incorporate and test these properties in systems. Policy and legal issues are also covered.'
   );
@@ -63,7 +61,7 @@ const expectSENG360 = (pid: string, courseDetails: KualiCourseItem) => {
     chosen: 'fixed',
   });
   expect(courseDetails.crossListedCourses).toBeUndefined();
-  expect(courseDetails.hoursCatalogText).toStrictEqual({
+  expect(courseDetails.hoursCatalog).toStrictEqual({
     lecture: '3',
     lab: '2',
     tutorial: '0',
@@ -86,16 +84,19 @@ const expectSENG360 = (pid: string, courseDetails: KualiCourseItem) => {
 
 describe('call getCourseDetails()', () => {
   it('has the expected data for a given class', async () => {
-    const term = '202121';
+    const term = '202101';
     nockCourseCatalog(term);
 
     const pid = 'SkMkeY6XV';
     nockCourseDetails(term, pid);
 
     const client = new UVicCourseScraper();
-    const { data: courseDetails } = await client.getCourseDetails(term, 'SENG', '360');
+    const response = await client.getCourseDetails(term, 'SENG', '360');
 
-    expectSENG360(pid, courseDetails);
+    expect(response).toBeDefined();
+    if (response) {
+      expectSENG360(pid, response.response);
+    }
   });
 });
 
@@ -105,7 +106,7 @@ describe('call getCourseDetailsByPid()', () => {
     const term = '202101';
     nockCourseDetails(term, pid);
 
-    const { data: courseDetails } = await UVicCourseScraper.getCourseDetailsByPid(term, pid);
+    const { response: courseDetails } = await UVicCourseScraper.getCourseDetailsByPid(term, pid);
 
     expectSENG360(pid, courseDetails);
   });
@@ -120,7 +121,7 @@ describe('call getCourseSections', () => {
     nock('https://www.uvic.ca')
       .get('/BAN1P/bwckctlg.p_disp_listcrse?term_in=' + term + '&subj_in=' + subject + '&crse_in=' + code + '&schd_in=')
       .reply(200, sectionsResponse);
-    const { data: courseSections } = await UVicCourseScraper.getCourseSections(term, subject, code);
+    const { response: courseSections } = await UVicCourseScraper.getCourseSections(term, subject, code);
 
     expect(courseSections.length).toEqual(4);
 
@@ -152,7 +153,7 @@ describe('call getSectionSeats()', () => {
     nock('https://www.uvic.ca')
       .get('/BAN1P/bwckschd.p_disp_detail_sched?term_in=' + term + '&crn_in=' + crn)
       .reply(200, htmlResponse);
-    const { data: classSeats } = await UVicCourseScraper.getSectionSeats(term, crn);
+    const { response: classSeats } = await UVicCourseScraper.getSectionSeats(term, crn);
 
     const seats = classSeats.seats;
     const waitListSeats = classSeats.waitListSeats;
