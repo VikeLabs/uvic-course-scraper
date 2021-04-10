@@ -39,5 +39,10 @@ export const getCourseDetailByPidSync = (term: string, pid: string): KualiCourse
     const data = fs.readFileSync(path.join(appRoot.toString(), `static/courses/courses-${term}.json`));
     courses[term] = JSON.parse(data.toString()) as KualiCourseItem[];
   }
-  return courses[term].find((c) => c.pid === pid);
+
+  const course = courses[term].find((c) => c.pid === pid);
+  if (course === undefined) {
+    throw new Error(`Unable to find course details for pid: ${pid}`);
+  }
+  return course;
 };
