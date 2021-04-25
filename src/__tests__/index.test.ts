@@ -94,6 +94,7 @@ describe('call getCourseDetailsByPid()', () => {
     nockCourseDetails(pid);
 
     const courseDetails = await UVicCourseScraper.getCourseDetailsByPid(pid);
+    // console.log(courseDetails);
 
     expectSENG360(pid, courseDetails);
   });

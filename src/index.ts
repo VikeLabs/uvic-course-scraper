@@ -11,8 +11,60 @@ import {
   COURSES_URL_W2021 as COURSES_URL,
   COURSE_DETAIL_URL,
   ClassScheduleListing,
+  NestedType,
 } from './types';
 import { getCurrentTerm } from './utils';
+
+const quantityRegex = /(Complete|(?<coreq>Completed or concurrently enrolled in)) *(?<quantity>all|\d)* (of|(?<units>units from))/;
+const earnMinimumRegex = /Earn(ed)? a minimum (?<unit>grade|GPA) of (?<min>[^ ]+) (in (?<quantity>\d+))?/;
+
+const parsePreCoReqs = (courseDetails: string): Array<NestedType | string> => {
+  const reqs: Array<NestedType | string> = [];
+
+  const $ = cheerio.load(courseDetails);
+  console.log(courseDetails);
+  $('ul')
+    .find('li')
+    .each((i, el) => {
+      const item = $(el);
+      const quantityMatch = quantityRegex.exec(item.text());
+      const earnMinMatch = earnMinimumRegex.exec(item.text());
+      if (item.find('ul').length) {
+        // console.log('has ul');
+        const nestedReq: NestedType = {};
+        if (quantityRegex.test(item.text()) && quantityMatch?.groups) {
+          // console.log(quantityMatch?.groups!.quantity);
+          nestedReq.quantity = quantityMatch.groups.quantity;
+          if (quantityMatch.groups.coreq) {
+            nestedReq.coreq = true;
+          }
+          if (quantityMatch.groups.units) {
+            nestedReq.units = true;
+          }
+        } else if (earnMinimumRegex.test(item.text()) && earnMinMatch?.groups) {
+          if (earnMinMatch.groups.quantity) {
+            nestedReq.quantity = earnMinMatch.groups.quantity;
+          } else {
+            nestedReq.quantity = 'all';
+          }
+          // this is so cheese lol could easily be if statements but waddup
+          nestedReq[earnMinMatch.groups.unit.toLowerCase() as 'grade' | 'gpa'];
+        } else {
+          nestedReq.unparsed = item.text();
+        }
+        nestedReq.reqList = parsePreCoReqs(item.find('ul').html()!);
+        reqs.push(nestedReq);
+      } else {
+        if (item.find('a').length) {
+          reqs.push(item.find('a').text());
+        } else {
+          reqs.push(item.text());
+        }
+      }
+    });
+  // console.log(reqs);
+  return reqs;
+};
 
 export class UVicCourseScraper {
   private static subjectCodeToPidMap: Map<string, string> = new Map();
@@ -66,6 +118,8 @@ export class UVicCourseScraper {
       const hours: string[] = hoursCatalogText.split('-');
       courseDetails.hoursCatalogText = hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined;
     }
+    if (courseDetails.preAndCorequisites)
+      courseDetails.preAndCorequisites = parsePreCoReqs(courseDetails.preAndCorequisites as string);
     return courseDetails;
   }
 
@@ -98,3 +152,11 @@ export class UVicCourseScraper {
     return detailedClassInfoExtractor($);
   }
 }
+
+const main = async () => {
+  const client = new UVicCourseScraper();
+  const yo = await client.getCourseDetails('CHEM', '101');
+  console.log(yo.preAndCorequisites);
+};
+
+main();

@@ -46,7 +46,22 @@ export interface KualiCourseItem extends KualiCourseCatalog {
   //string so we parse it to turn into an object type after the parsing is done.
   hoursCatalogText?: string | { lecture: string; lab: string; tutorial: string };
   repeatableCatalogText?: string;
+  preAndCorequisites?: string | Array<NestedType | string>;
 }
+
+// Pre and Co Requisites
+export type PreCoReq = Array<string>;
+type AnyPreCoReq = Array<AnyPreCoReq | string>;
+
+export type NestedType = {
+  quantity?: string;
+  coreq?: boolean;
+  units?: boolean;
+  grade?: string;
+  gpa?: string;
+  unparsed?: string;
+  reqList?: Array<NestedType | string>;
+};
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
 export type sectionType = 'lecture' | 'lab' | 'tutorial';
