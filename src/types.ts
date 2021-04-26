@@ -49,10 +49,6 @@ export interface KualiCourseItem extends KualiCourseCatalog {
   preAndCorequisites?: string | Array<NestedType | string>;
 }
 
-// Pre and Co Requisites
-export type PreCoReq = Array<string>;
-type AnyPreCoReq = Array<AnyPreCoReq | string>;
-
 export type NestedType = {
   quantity?: string;
   coreq?: boolean;

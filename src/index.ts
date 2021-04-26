@@ -18,22 +18,27 @@ import { getCurrentTerm } from './utils';
 const quantityRegex = /(Complete|(?<coreq>Completed or concurrently enrolled in)) *(?<quantity>all|\d)* (of|(?<units>units from))/;
 const earnMinimumRegex = /Earn(ed)? a minimum (?<unit>grade|GPA) of (?<min>[^ ]+) (in (?<quantity>\d+))?/;
 
-const parsePreCoReqs = (courseDetails: string): Array<NestedType | string> => {
+const parsePreCoReqs = (preCoReqs: string): Array<NestedType | string> => {
   const reqs: Array<NestedType | string> = [];
 
-  const $ = cheerio.load(courseDetails);
-  console.log(courseDetails);
+  // console.log(preCoReqs, 'yo');
+  const $ = cheerio.load(preCoReqs);
+  console.log('UL\n', $('ul').html(), '\n');
   $('ul')
-    .find('li')
+    .children('li,div')
     .each((i, el) => {
       const item = $(el);
       const quantityMatch = quantityRegex.exec(item.text());
       const earnMinMatch = earnMinimumRegex.exec(item.text());
+      console.log('ITEM\n', item.html(), '\n');
+
+      // If the current target has nested information
       if (item.find('ul').length) {
-        // console.log('has ul');
         const nestedReq: NestedType = {};
+
+        // If the nested requisites require a certain quantity
+        // i.e. "Complete X of the following:"
         if (quantityRegex.test(item.text()) && quantityMatch?.groups) {
-          // console.log(quantityMatch?.groups!.quantity);
           nestedReq.quantity = quantityMatch.groups.quantity;
           if (quantityMatch.groups.coreq) {
             nestedReq.coreq = true;
@@ -41,18 +46,21 @@ const parsePreCoReqs = (courseDetails: string): Array<NestedType | string> => {
           if (quantityMatch.groups.units) {
             nestedReq.units = true;
           }
-        } else if (earnMinimumRegex.test(item.text()) && earnMinMatch?.groups) {
+        }
+        // Else if the nested requisites require a minimum
+        // i.e. "Earned a minimum GPA of X in Y"
+        else if (earnMinimumRegex.test(item.text()) && earnMinMatch?.groups) {
           if (earnMinMatch.groups.quantity) {
             nestedReq.quantity = earnMinMatch.groups.quantity;
           } else {
             nestedReq.quantity = 'all';
           }
-          // this is so cheese lol could easily be if statements but waddup
+          // add grade or gpa values to nestedReq object
           nestedReq[earnMinMatch.groups.unit.toLowerCase() as 'grade' | 'gpa'];
         } else {
           nestedReq.unparsed = item.text();
         }
-        nestedReq.reqList = parsePreCoReqs(item.find('ul').html()!);
+        nestedReq.reqList = parsePreCoReqs(item.html()!);
         reqs.push(nestedReq);
       } else {
         if (item.find('a').length) {
@@ -156,7 +164,7 @@ export class UVicCourseScraper {
 const main = async () => {
   const client = new UVicCourseScraper();
   const yo = await client.getCourseDetails('CHEM', '101');
-  console.log(yo.preAndCorequisites);
+  console.log(JSON.stringify(yo.preAndCorequisites, null, ' '));
 };
 
 main();
