@@ -11,10 +11,78 @@ import {
   COURSES_URL_W2021 as COURSES_URL,
   COURSE_DETAIL_URL,
   ClassScheduleListing,
+  NestedType,
 } from './types';
-import { getCurrentTerm, parsePreCoReqs } from './utils';
+import { getCurrentTerm } from './utils';
 
 export class UVicCourseScraper {
+  /**
+   * Parses the pre and co-reqs from the Kuali data into a usable format.
+   *
+   * @param preCoReqs HTML from the Kuali attribute
+   * @returns parsed pre and co-reqs in JSON format
+   */
+  private static parsePreCoReqs(preCoReqs: string): Array<NestedType | string> {
+    const reqs: Array<NestedType | string> = [];
+
+    const quantityRegex = /(Complete|(?<coreq>Completed or concurrently enrolled in)) *(?<quantity>all|\d)* (of|(?<units>units from))/;
+    const earnMinimumRegex = /Earn(ed)? a minimum (?<unit>grade|GPA) of (?<min>[^ ]+) (in (?<quantity>\d+))?/;
+
+    const $ = cheerio.load(preCoReqs);
+
+    // Iterate through each unordered list in the HTML
+    $('ul')
+      .first()
+      .children('li,div')
+
+      .each((_i, el) => {
+        const item = $(el);
+
+        const quantityMatch = quantityRegex.exec(item.text());
+        const earnMinMatch = earnMinimumRegex.exec(item.text());
+
+        // If the current target has nested information
+        if (item.find('ul').length) {
+          const nestedReq: NestedType = {};
+
+          // If the nested requisites require a certain quantity
+          // i.e. "Complete X of the following:"
+          if (quantityRegex.test(item.text()) && quantityMatch?.groups) {
+            nestedReq.quantity = quantityMatch.groups.quantity;
+            if (quantityMatch.groups.coreq) {
+              nestedReq.coreq = true;
+            }
+            if (quantityMatch.groups.units) {
+              nestedReq.units = true;
+            }
+          }
+          // Else if the nested requisites require a minimum
+          // i.e. "Earned a minimum GPA of X in Y"
+          else if (earnMinimumRegex.test(item.text()) && earnMinMatch?.groups) {
+            if (earnMinMatch.groups.quantity) {
+              nestedReq.quantity = earnMinMatch.groups.quantity;
+            } else {
+              nestedReq.quantity = 'all';
+            }
+            // add grade or gpa values to nestedReq object
+            nestedReq[earnMinMatch.groups.unit.toLowerCase() as 'grade' | 'gpa'];
+          } else {
+            nestedReq.unparsed = item.text();
+          }
+          nestedReq.reqList = UVicCourseScraper.parsePreCoReqs(item.html()!);
+          reqs.push(nestedReq);
+        } else {
+          if (item.find('a').length) {
+            reqs.push(item.find('a').text());
+          } else {
+            reqs.push(item.text());
+          }
+        }
+      });
+
+    return reqs;
+  }
+
   private static subjectCodeToPidMap: Map<string, string> = new Map();
 
   /**
@@ -70,10 +138,10 @@ export class UVicCourseScraper {
       courseDetails.hoursCatalogText = hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined;
     }
     if (preAndCorequisites) {
-      courseDetails.preAndCorequisites = parsePreCoReqs(preAndCorequisites);
+      courseDetails.preAndCorequisites = UVicCourseScraper.parsePreCoReqs(preAndCorequisites);
     }
     if (preOrCorequisites) {
-      courseDetails.preOrCorequisites = parsePreCoReqs(preOrCorequisites);
+      courseDetails.preOrCorequisites = UVicCourseScraper.parsePreCoReqs(preOrCorequisites);
     }
     return courseDetails;
   }

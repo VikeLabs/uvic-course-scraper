@@ -72,6 +72,19 @@ const expectSENG360 = (pid: string, courseDetails: KualiCourseItem) => {
   });
   expect(courseDetails.catalogActivationDate).toEqual('2019-11-15');
   expect(courseDetails._score).toEqual(1);
+  expect(courseDetails.preAndCorequisites).toStrictEqual([
+    {
+      quantity: 'all',
+      reqList: [
+        {
+          quantity: 'all',
+          reqList: ['SENG265'],
+        },
+        'minimum third-year standing in the Software Engineering or Computer Engineering or Computer Science program.',
+      ],
+    },
+  ]);
+  expect(courseDetails.preOrCorequisites).toBeUndefined();
 };
 
 describe('call getCourseDetails()', () => {
