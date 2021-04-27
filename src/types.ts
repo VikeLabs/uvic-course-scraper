@@ -1,8 +1,8 @@
-export const COURSES_URL_F2020 = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
-export const COURSES_URL_W2021 = 'https://uvic.kuali.co/api/v1/catalog/courses/5f21b66d95f09c001ac436a0';
-export const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
-
-export * from './types';
+export interface Response<T> {
+  response: T;
+  timestamp: Date;
+  url: string;
+}
 
 export interface SubjectCode {
   name: string;
@@ -11,6 +11,12 @@ export interface SubjectCode {
   linkedGroup: string;
 }
 
+export interface KualiSubject {
+  subject: string;
+  title: string;
+}
+
+// KualiCourseCatalog is returned the index of courses from Kuali
 export interface KualiCourseCatalog {
   __catalogCourseId: string;
   __passedCatalogQuery: boolean;
@@ -23,6 +29,8 @@ export interface KualiCourseCatalog {
   _score: number;
 }
 
+// KualiCourseItem is the full version of KualiCourseCatalog
+// This is retrieved one-by-one from a Kuali endpoint.
 export interface KualiCourseItem extends KualiCourseCatalog {
   description: string;
   supplementalNotes?: string;
@@ -34,7 +42,12 @@ export interface KualiCourseItem extends KualiCourseCatalog {
       min: string;
       max: string;
     };
-    value: string;
+    value:
+      | string
+      | {
+          min: string;
+          max: string;
+        };
     chosen: string;
   };
   crossListedCourses?: {
@@ -42,9 +55,7 @@ export interface KualiCourseItem extends KualiCourseCatalog {
     pid: string;
     title: string;
   }[];
-  //This has two types because the JSON returned from uvic is a
-  //string so we parse it to turn into an object type after the parsing is done.
-  hoursCatalogText?: string | { lecture: string; lab: string; tutorial: string };
+  hoursCatalogText?: string;
   repeatableCatalogText?: string;
   preAndCorequisites?: string | Array<NestedType | string>;
   preOrCorequisites?: string | Array<NestedType | string>;
@@ -58,11 +69,19 @@ export type NestedType = {
   gpa?: string;
   unparsed?: string;
   reqList?: Array<NestedType | string>;
+}
+
+export type KualiCourseItemParsed = Omit<KualiCourseItem, 'hoursCatalogText'> & {
+  hoursCatalog?: {
+    lecture: string;
+    tutorial: string;
+    lab: string;
+  };
 };
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
-export type sectionType = 'lecture' | 'lab' | 'tutorial';
-export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5';
+export type sectionType = 'lecture' | 'lab' | 'tutorial' | 'gradable lab' | 'lecture topic';
+export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5' | 'unclassified';
 
 export interface MeetingTimes {
   type: string;
@@ -100,14 +119,32 @@ export interface Seating {
   remaining: number;
 }
 
-interface Requirements {
+export interface Requirements {
   level: levelType[];
   fieldOfStudy?: string[];
   classification?: classification[];
+  negClassification?: classification[];
+  degree?: string[];
+  program?: string[];
+  negProgram?: string[];
+  college?: string[];
+  negCollege?: string[];
+  major?: string[];
+}
+
+export interface requirementObject {
+  known: true | false;
+  requirement: string;
+  idx: number;
 }
 
 export interface DetailedClassInformation {
   seats: Seating;
   waitListSeats: Seating;
   requirements?: Requirements;
+}
+export interface DetailedClassInformationRes {
+  data: DetailedClassInformation;
+  timestamp: string;
+  url: string;
 }

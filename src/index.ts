@@ -1,19 +1,29 @@
 import * as cheerio from 'cheerio';
 import got from 'got';
 
-import { classScheduleListingUrl, detailedClassInformationUrl } from './common/urls';
+import {
+  classScheduleListingUrl,
+  courseDetailUrl,
+  coursesUrl,
+  detailedClassInformationUrl,
+  subjectsUrl,
+} from './common/urls';
+import { KualiCourseItemParser } from './kuali/catalog';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
 import {
-  DetailedClassInformation,
   KualiCourseCatalog,
   KualiCourseItem,
-  COURSES_URL_W2021 as COURSES_URL,
-  COURSE_DETAIL_URL,
+  DetailedClassInformation,
   ClassScheduleListing,
   NestedType,
+  KualiSubject,
+  Response,
+  KualiCourseItemParsed,
 } from './types';
-import { getCurrentTerm } from './utils';
+import { getCatalogIdForTerm, getCurrentTerm } from './utils';
+
+export * from './types';
 
 export class UVicCourseScraper {
   /**
@@ -86,16 +96,19 @@ export class UVicCourseScraper {
   private static subjectCodeToPidMap: Map<string, string> = new Map();
 
   /**
-   * Gets all courses from the Kuali catalog
+   * Gets all courses from the Kuali catalog. Automatically uses the current term if not defined.
+   * @param term i.e. '202009', '202101'
    */
-  public static async getAllCourses(): Promise<KualiCourseCatalog[]> {
-    const courseCatalog = await got(COURSES_URL).json<KualiCourseCatalog[]>();
-    return courseCatalog;
+
+  public static async getCourses(term = getCurrentTerm()): Promise<Response<KualiCourseCatalog[]>> {
+    const url = coursesUrl(getCatalogIdForTerm(term));
+    const courseCatalog = await got(url).json<KualiCourseCatalog[]>();
+    return { response: courseCatalog, timestamp: new Date(), url };
   }
 
-  private static subjectCodeToPidMapper = (kuali: KualiCourseCatalog[]) => {
+  private static subjectCodeToPidMapper = (term: string, kuali: KualiCourseCatalog[]) => {
     kuali.forEach((v) => {
-      UVicCourseScraper.subjectCodeToPidMap.set(v.__catalogCourseId, v.pid);
+      UVicCourseScraper.subjectCodeToPidMap.set(`${term}${v.__catalogCourseId}`, v.pid);
     });
     return UVicCourseScraper.subjectCodeToPidMap;
   };
@@ -103,24 +116,35 @@ export class UVicCourseScraper {
   /**
    * Maps a subject and code to pid then gets course details from Kuali
    *
+   * @param term i.e. '202009', '202101'
    * @param subject ie. 'CSC'
    * @param code ie. '111'
    */
-  // TODO: support get course details by term
-  public async getCourseDetails(subject: string, code: string): Promise<KualiCourseItem> {
-    if (UVicCourseScraper.subjectCodeToPidMap.size == 0) {
-      const courseCatalog = await UVicCourseScraper.getAllCourses();
-      UVicCourseScraper.subjectCodeToPidMapper(courseCatalog);
+
+  public async getCourseDetails(
+    term = getCurrentTerm(),
+    subject: string,
+    code: string
+  ): Promise<Response<KualiCourseItemParsed> | void> {
+    if (UVicCourseScraper.subjectCodeToPidMap.size === 0) {
+      const { response: courseCatalog } = await UVicCourseScraper.getCourses(term);
+      UVicCourseScraper.subjectCodeToPidMapper(term, courseCatalog);
     }
 
-    const pid = UVicCourseScraper.subjectCodeToPidMap.get(subject.toUpperCase() + code) as string;
-    const courseDetails = await UVicCourseScraper.getCourseDetailsByPid(pid);
-    return courseDetails;
+    const pid = UVicCourseScraper.subjectCodeToPidMap.get(`${term}${subject.toUpperCase()}${code}`);
+
+    if (pid === undefined) {
+      return;
+    }
+
+    const { response, url } = await UVicCourseScraper.getCourseDetailsByPid(term, pid);
+    return { response, timestamp: new Date(), url };
   }
 
   /**
    * Gets details of a single course from Kuali by pid
    *
+   * @param term i.e. '202009', '202101'
    * @param pid ie. 'ByS23Pp7E'
    */
   public static async getCourseDetailsByPid(pid: string): Promise<KualiCourseItem> {
@@ -157,10 +181,14 @@ export class UVicCourseScraper {
     term: string = getCurrentTerm(),
     subject: string,
     code: string
-  ): Promise<ClassScheduleListing[]> {
-    const res = await got(classScheduleListingUrl(term, subject.toUpperCase(), code));
-    const $ = cheerio.load(res.body);
-    return classScheduleListingExtractor($);
+  ): Promise<Response<ClassScheduleListing[]>> {
+    const url = classScheduleListingUrl(term, subject.toUpperCase(), code);
+    const res = await got(url);
+    return {
+      response: await classScheduleListingExtractor(cheerio.load(res.body)),
+      timestamp: new Date(),
+      url,
+    };
   }
 
   /**
@@ -169,9 +197,18 @@ export class UVicCourseScraper {
    * @param term i.e. '202009', '202101'
    * @param crn ie. '12345', '20001'
    */
-  public static async getSectionSeats(term: string, crn: string): Promise<DetailedClassInformation> {
-    const res = await got(detailedClassInformationUrl(term, crn));
-    const $ = cheerio.load(res.body);
-    return detailedClassInfoExtractor($);
+
+  public static async getSectionSeats(term: string, crn: string): Promise<Response<DetailedClassInformation>> {
+    const url = detailedClassInformationUrl(term, crn);
+    const res = await got(url);
+    return { response: detailedClassInfoExtractor(cheerio.load(res.body)), timestamp: new Date(), url };
+  }
+
+  /**
+   * Gets all subjects from the BAN1P. Automatically uses the current term if not defined.
+   * @param term i.e. '202009', '202101'
+   */
+  public static async getSubjects(term = getCurrentTerm()): Promise<KualiSubject[]> {
+    return await got(subjectsUrl(getCatalogIdForTerm(term))).json<KualiSubject[]>();
   }
 }
