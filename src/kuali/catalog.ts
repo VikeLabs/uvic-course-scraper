@@ -51,7 +51,7 @@ function parsePreCoReqs(preCoReqs: string): Array<NestedType | string> {
             nestedReq.quantity = 'all';
           }
           // add grade or gpa values to nestedReq object
-          nestedReq[earnMinMatch.groups.unit.toLowerCase() as 'grade' | 'gpa'];
+          nestedReq[earnMinMatch.groups.unit.toLowerCase() as 'grade' | 'gpa'] = earnMinMatch.groups.min;
         } else {
           nestedReq.unparsed = item.text();
         }

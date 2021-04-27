@@ -122,5 +122,52 @@ describe('KualiCatalogItemParser', () => {
         expect(response.preOrCorequisites).toBeUndefined();
       });
     });
+
+    describe('ANTH380 (example with min. GPA required)', () => {
+      it('gets parsed correctly', () => {
+        const details = getCourseDetailByPidSync('202101', 'ry-KpwT7V');
+
+        const response = KualiCourseItemParser(details);
+        expect(response.preAndCorequisites).toStrictEqual([
+          {
+            quantity: 'all',
+            reqList: [
+              {
+                gpa: '4.0',
+                quantity: 'all',
+                reqList: ['ANTH200', 'ANTH240', 'ANTH250'],
+              },
+              'minimum fourth-year standing',
+            ],
+          },
+        ]);
+        expect(response.preOrCorequisites).toBeUndefined();
+      });
+    });
+
+    describe('BIOL248 (example with min. grade required)', () => {
+      it('gets parsed correctly', () => {
+        const details = getCourseDetailByPidSync('202101', 'B1xqmRwpQV');
+
+        const response = KualiCourseItemParser(details);
+        expect(response.preAndCorequisites).toStrictEqual([
+          {
+            quantity: 'all',
+            reqList: [
+              {
+                grade: 'C+',
+                quantity: '1',
+                reqList: ['BIOL186', 'BIOL190A'],
+              },
+              {
+                quantity: '1',
+                reqList: ['BIOL184', 'BIOL190B', 'MICR200A'],
+              },
+            ],
+          },
+        ]);
+        expect(response.preOrCorequisites).toBeUndefined();
+      });
+    });
   });
 });
