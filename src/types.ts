@@ -47,6 +47,7 @@ export interface KualiCourseItem extends KualiCourseCatalog {
   hoursCatalogText?: string | { lecture: string; lab: string; tutorial: string };
   repeatableCatalogText?: string;
   preAndCorequisites?: string | Array<NestedType | string>;
+  preOrCorequisites?: string | Array<NestedType | string>;
 }
 
 export type NestedType = {
