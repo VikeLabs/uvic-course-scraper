@@ -57,14 +57,31 @@ export interface KualiCourseItem extends KualiCourseCatalog {
   }[];
   hoursCatalogText?: string;
   repeatableCatalogText?: string;
+  preAndCorequisites?: string;
+  preOrCorequisites?: string;
 }
 
-export type KualiCourseItemParsed = Omit<KualiCourseItem, 'hoursCatalogText'> & {
+export type KualiCourseItemParsed = Omit<
+  KualiCourseItem,
+  'hoursCatalogText' | 'preAndCorequisites' | 'preOrCorequisites'
+> & {
   hoursCatalog?: {
     lecture: string;
     tutorial: string;
     lab: string;
   };
+  preAndCorequisites?: Array<NestedType | string>;
+  preOrCorequisites?: Array<NestedType | string>;
+};
+
+export type NestedType = {
+  quantity?: string;
+  coreq?: boolean;
+  units?: boolean;
+  grade?: string;
+  gpa?: string;
+  unparsed?: string;
+  reqList?: Array<NestedType | string>;
 };
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
