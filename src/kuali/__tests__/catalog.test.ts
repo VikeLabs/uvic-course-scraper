@@ -113,7 +113,7 @@ describe('KualiCatalogItemParser', () => {
       });
     });
 
-    describe('HDCC490 (preOrCo and preAndCo)', () => {
+    describe('HDCC490', () => {
       it('gets parsed correctly', () => {
         const details = getCourseDetailByPidSync('202101', 'r1KjwO6QV');
 
