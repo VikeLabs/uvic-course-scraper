@@ -21,16 +21,18 @@ const earnMinimumRegex = /Earn(ed)? a minimum (?<unit>grade|GPA) of (?<min>[^ ]+
 const parsePreCoReqs = (preCoReqs: string): Array<NestedType | string> => {
   const reqs: Array<NestedType | string> = [];
 
-  // console.log(preCoReqs, 'yo');
   const $ = cheerio.load(preCoReqs);
-  console.log('UL\n', $('ul').html(), '\n');
+
+  // Iterate through each unordered list in the HTML
   $('ul')
+    .first()
     .children('li,div')
-    .each((i, el) => {
+
+    .each((_i, el) => {
       const item = $(el);
+
       const quantityMatch = quantityRegex.exec(item.text());
       const earnMinMatch = earnMinimumRegex.exec(item.text());
-      console.log('ITEM\n', item.html(), '\n');
 
       // If the current target has nested information
       if (item.find('ul').length) {
@@ -70,7 +72,7 @@ const parsePreCoReqs = (preCoReqs: string): Array<NestedType | string> => {
         }
       }
     });
-  // console.log(reqs);
+
   return reqs;
 };
 
