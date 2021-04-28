@@ -36,7 +36,7 @@ function parsePreCoReqs(preCoReqs: string): Array<NestedPreCoRequisites | Course
         // i.e. "Complete X of the following:"
         if (quantityRegex.test(item.text()) && quantityMatch?.groups) {
           if (quantityMatch.groups.quantity === 'all') {
-            nestedReq.quantity = quantityMatch.groups.quantity;
+            nestedReq.quantity = 'ALL';
           } else {
             nestedReq.quantity = Number(quantityMatch.groups.quantity);
           }
@@ -52,12 +52,12 @@ function parsePreCoReqs(preCoReqs: string): Array<NestedPreCoRequisites | Course
         else if (earnMinimumRegex.test(item.text()) && earnMinMatch?.groups) {
           if (earnMinMatch.groups.quantity) {
             if (earnMinMatch.groups.quantity === 'all') {
-              nestedReq.quantity = earnMinMatch.groups.quantity;
+              nestedReq.quantity = 'ALL';
             } else {
               nestedReq.quantity = Number(earnMinMatch.groups.quantity);
             }
           } else {
-            nestedReq.quantity = 'all';
+            nestedReq.quantity = 'ALL';
           }
           // add grade or gpa values to nestedReq object
           nestedReq[earnMinMatch.groups.unit.toLowerCase() as 'grade' | 'gpa'] = earnMinMatch.groups.min;

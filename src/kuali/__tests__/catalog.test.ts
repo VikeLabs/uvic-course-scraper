@@ -44,14 +44,14 @@ describe('KualiCatalogItemParser', () => {
         const response = KualiCourseItemParser(details);
         expect(response.preAndCorequisites).toStrictEqual([
           {
-            quantity: 'all',
+            quantity: 'ALL',
             reqList: [
               {
                 quantity: 1,
                 reqList: [
                   'Chemistry 12',
                   {
-                    quantity: 'all',
+                    quantity: 'ALL',
                     reqList: [{ subject: 'CHEM', code: '091' }],
                   },
                 ],
@@ -97,10 +97,10 @@ describe('KualiCatalogItemParser', () => {
         const response = KualiCourseItemParser(details);
         expect(response.preAndCorequisites).toStrictEqual([
           {
-            quantity: 'all',
+            quantity: 'ALL',
             reqList: [
               {
-                quantity: 'all',
+                quantity: 'ALL',
                 reqList: [{ subject: 'SENG', code: '265' }],
               },
               {
@@ -116,7 +116,7 @@ describe('KualiCatalogItemParser', () => {
         ]);
         expect(response.preOrCorequisites).toStrictEqual([
           {
-            quantity: 'all',
+            quantity: 'ALL',
             coreq: true,
             reqList: [{ subject: 'CSC', code: '226' }],
           },
@@ -141,11 +141,11 @@ describe('KualiCatalogItemParser', () => {
         const response = KualiCourseItemParser(details);
         expect(response.preAndCorequisites).toStrictEqual([
           {
-            quantity: 'all',
+            quantity: 'ALL',
             reqList: [
               {
                 gpa: '4.0',
-                quantity: 'all',
+                quantity: 'ALL',
                 reqList: [
                   { subject: 'ANTH', code: '200' },
                   { subject: 'ANTH', code: '240' },
@@ -167,7 +167,7 @@ describe('KualiCatalogItemParser', () => {
         const response = KualiCourseItemParser(details);
         expect(response.preAndCorequisites).toStrictEqual([
           {
-            quantity: 'all',
+            quantity: 'ALL',
             reqList: [
               {
                 grade: 'C+',

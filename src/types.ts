@@ -82,7 +82,7 @@ export type Course = {
 
 export type NestedPreCoRequisites = {
   // How many of the reqs need to be completed
-  quantity?: number | 'all';
+  quantity?: number | 'ALL';
   // Is a coreq or not
   coreq?: boolean;
   // How many accumulative units of the given reqs are needed

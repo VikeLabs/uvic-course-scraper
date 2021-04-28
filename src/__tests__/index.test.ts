@@ -82,10 +82,10 @@ const expectSENG360 = (pid: string, courseDetails: KualiCourseItemParsed) => {
   expect(courseDetails._score).toEqual(1);
   expect(courseDetails.preAndCorequisites).toStrictEqual([
     {
-      quantity: 'all',
+      quantity: 'ALL',
       reqList: [
         {
-          quantity: 'all',
+          quantity: 'ALL',
           reqList: [{ subject: 'SENG', code: '265' }],
         },
         'minimum third-year standing in the Software Engineering or Computer Engineering or Computer Science program.',
