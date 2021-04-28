@@ -47,18 +47,21 @@ describe('KualiCatalogItemParser', () => {
             quantity: 'all',
             reqList: [
               {
-                quantity: '1',
+                quantity: 1,
                 reqList: [
                   'Chemistry 12',
                   {
                     quantity: 'all',
-                    reqList: ['CHEM091'],
+                    reqList: [{ subject: 'CHEM', code: '091' }],
                   },
                 ],
               },
               {
-                quantity: '1',
-                reqList: ['CHEM101', 'CHEM150'],
+                quantity: 1,
+                reqList: [
+                  { subject: 'CHEM', code: '101' },
+                  { subject: 'CHEM', code: '150' },
+                ],
               },
             ],
           },
@@ -75,9 +78,13 @@ describe('KualiCatalogItemParser', () => {
         expect(response.preAndCorequisites).toBeUndefined();
         expect(response.preOrCorequisites).toStrictEqual([
           {
-            quantity: '1',
+            quantity: 1,
             coreq: true,
-            reqList: ['MATH100', 'MATH102', 'MATH109'],
+            reqList: [
+              { subject: 'MATH', code: '100' },
+              { subject: 'MATH', code: '102' },
+              { subject: 'MATH', code: '109' },
+            ],
           },
         ]);
       });
@@ -94,11 +101,15 @@ describe('KualiCatalogItemParser', () => {
             reqList: [
               {
                 quantity: 'all',
-                reqList: ['SENG265'],
+                reqList: [{ subject: 'SENG', code: '265' }],
               },
               {
-                quantity: '1',
-                reqList: ['CSC230', 'CENG255', 'ECE255'],
+                quantity: 1,
+                reqList: [
+                  { subject: 'CSC', code: '230' },
+                  { subject: 'CENG', code: '255' },
+                  { subject: 'ECE', code: '255' },
+                ],
               },
             ],
           },
@@ -107,7 +118,7 @@ describe('KualiCatalogItemParser', () => {
           {
             quantity: 'all',
             coreq: true,
-            reqList: ['CSC226'],
+            reqList: [{ subject: 'CSC', code: '226' }],
           },
         ]);
       });
@@ -135,7 +146,11 @@ describe('KualiCatalogItemParser', () => {
               {
                 gpa: '4.0',
                 quantity: 'all',
-                reqList: ['ANTH200', 'ANTH240', 'ANTH250'],
+                reqList: [
+                  { subject: 'ANTH', code: '200' },
+                  { subject: 'ANTH', code: '240' },
+                  { subject: 'ANTH', code: '250' },
+                ],
               },
               'minimum fourth-year standing',
             ],
@@ -156,12 +171,19 @@ describe('KualiCatalogItemParser', () => {
             reqList: [
               {
                 grade: 'C+',
-                quantity: '1',
-                reqList: ['BIOL186', 'BIOL190A'],
+                quantity: 1,
+                reqList: [
+                  { subject: 'BIOL', code: '186' },
+                  { subject: 'BIOL', code: '190A' },
+                ],
               },
               {
-                quantity: '1',
-                reqList: ['BIOL184', 'BIOL190B', 'MICR200A'],
+                quantity: 1,
+                reqList: [
+                  { subject: 'BIOL', code: '184' },
+                  { subject: 'BIOL', code: '190B' },
+                  { subject: 'MICR', code: '200A' },
+                ],
               },
             ],
           },

@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 
-import { KualiCourseItem, KualiCourseItemParsed, NestedType } from '../types';
+import { Course, KualiCourseItem, KualiCourseItemParsed, NestedPreCoRequisites } from '../types';
 
 /**
  * Parses the pre and co-reqs from the Kuali data into a usable format.
@@ -8,11 +8,12 @@ import { KualiCourseItem, KualiCourseItemParsed, NestedType } from '../types';
  * @param preCoReqs HTML from the Kuali attribute
  * @returns parsed pre and co-reqs in JSON format
  */
-function parsePreCoReqs(preCoReqs: string): Array<NestedType | string> {
-  const reqs: Array<NestedType | string> = [];
+function parsePreCoReqs(preCoReqs: string): Array<NestedPreCoRequisites | Course | string> {
+  const reqs: Array<NestedPreCoRequisites | Course | string> = [];
 
   const quantityRegex = /(Complete|(?<coreq>Completed or concurrently enrolled in)) *(?<quantity>all|\d)* (of|(?<units>units from))/;
   const earnMinimumRegex = /Earn(ed)? a minimum (?<unit>grade|GPA) of (?<min>[^ ]+) (in (?<quantity>\d+))?/;
+  const courseRegex = /(?<subject>\w{2,4})(?<code>\d{3}\w?)/;
 
   const $ = cheerio.load(preCoReqs);
 
@@ -29,12 +30,16 @@ function parsePreCoReqs(preCoReqs: string): Array<NestedType | string> {
 
       // If the current target has nested information
       if (item.find('ul').length) {
-        const nestedReq: NestedType = {};
+        const nestedReq: NestedPreCoRequisites = {};
 
         // If the nested requisites require a certain quantity
         // i.e. "Complete X of the following:"
         if (quantityRegex.test(item.text()) && quantityMatch?.groups) {
-          nestedReq.quantity = quantityMatch.groups.quantity;
+          if (quantityMatch.groups.quantity === 'all') {
+            nestedReq.quantity = quantityMatch.groups.quantity;
+          } else {
+            nestedReq.quantity = Number(quantityMatch.groups.quantity);
+          }
           if (quantityMatch.groups.coreq) {
             nestedReq.coreq = true;
           }
@@ -46,7 +51,11 @@ function parsePreCoReqs(preCoReqs: string): Array<NestedType | string> {
         // i.e. "Earned a minimum GPA of X in Y"
         else if (earnMinimumRegex.test(item.text()) && earnMinMatch?.groups) {
           if (earnMinMatch.groups.quantity) {
-            nestedReq.quantity = earnMinMatch.groups.quantity;
+            if (earnMinMatch.groups.quantity === 'all') {
+              nestedReq.quantity = earnMinMatch.groups.quantity;
+            } else {
+              nestedReq.quantity = Number(earnMinMatch.groups.quantity);
+            }
           } else {
             nestedReq.quantity = 'all';
           }
@@ -55,12 +64,25 @@ function parsePreCoReqs(preCoReqs: string): Array<NestedType | string> {
         } else {
           nestedReq.unparsed = item.text();
         }
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         nestedReq.reqList = parsePreCoReqs(item.html()!);
         reqs.push(nestedReq);
       } else {
+        // If it finds a UVic course as the req
         if (item.find('a').length) {
-          reqs.push(item.find('a').text());
-        } else {
+          const course: Course = { subject: '', code: '' };
+
+          const courseText = item.find('a').text();
+          const courseMatch = courseRegex.exec(courseText);
+
+          if (courseRegex.test(courseText) && courseMatch?.groups) {
+            course.subject = courseMatch.groups.subject;
+            course.code = courseMatch.groups.code;
+            reqs.push(course);
+          }
+        }
+        // Any other possible reqs
+        else {
           reqs.push(item.text());
         }
       }
@@ -73,15 +95,13 @@ export function KualiCourseItemParser(course: KualiCourseItem): KualiCourseItemP
   // strip HTML tags from courseDetails.description
   course.description = course.description.replace(/(<([^>]+)>)/gi, '');
 
-  const hoursCatalogText = course.hoursCatalogText;
+  const { hoursCatalogText, preAndCorequisites, preOrCorequisites } = course;
   const hours = hoursCatalogText?.split('-');
-  const preAndCorequisitesText = course.preAndCorequisites;
-  const preOrCorequisitesText = course.preOrCorequisites;
 
   return {
     ...course,
     hoursCatalog: hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined,
-    preAndCorequisites: preAndCorequisitesText ? parsePreCoReqs(preAndCorequisitesText) : undefined,
-    preOrCorequisites: preOrCorequisitesText ? parsePreCoReqs(preOrCorequisitesText) : undefined,
+    preAndCorequisites: preAndCorequisites ? parsePreCoReqs(preAndCorequisites) : undefined,
+    preOrCorequisites: preOrCorequisites ? parsePreCoReqs(preOrCorequisites) : undefined,
   };
 }

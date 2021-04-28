@@ -70,18 +70,31 @@ export type KualiCourseItemParsed = Omit<
     tutorial: string;
     lab: string;
   };
-  preAndCorequisites?: Array<NestedType | string>;
-  preOrCorequisites?: Array<NestedType | string>;
+  preAndCorequisites?: Array<NestedPreCoRequisites | Course | string>;
+  preOrCorequisites?: Array<NestedPreCoRequisites | Course | string>;
 };
 
-export type NestedType = {
-  quantity?: string;
+export type Course = {
+  subject: string;
+  code: string;
+  pid?: string;
+};
+
+export type NestedPreCoRequisites = {
+  // How many of the reqs need to be completed
+  quantity?: number | 'all';
+  // Is a coreq or not
   coreq?: boolean;
+  // How many accumulative units of the given reqs are needed
   units?: boolean;
+  // Minimum grade needed from the following reqs
   grade?: string;
+  // Minimum GPA needed from the following reqs
   gpa?: string;
+  // Data the function fails to parse
   unparsed?: string;
-  reqList?: Array<NestedType | string>;
+  // Array of reqs
+  reqList?: Array<NestedPreCoRequisites | Course | string>;
 };
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';

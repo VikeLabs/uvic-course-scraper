@@ -86,7 +86,7 @@ const expectSENG360 = (pid: string, courseDetails: KualiCourseItemParsed) => {
       reqList: [
         {
           quantity: 'all',
-          reqList: ['SENG265'],
+          reqList: [{ subject: 'SENG', code: '265' }],
         },
         'minimum third-year standing in the Software Engineering or Computer Engineering or Computer Science program.',
       ],
