@@ -57,14 +57,44 @@ export interface KualiCourseItem extends KualiCourseCatalog {
   }[];
   hoursCatalogText?: string;
   repeatableCatalogText?: string;
+  preAndCorequisites?: string;
+  preOrCorequisites?: string;
 }
 
-export type KualiCourseItemParsed = Omit<KualiCourseItem, 'hoursCatalogText'> & {
+export type KualiCourseItemParsed = Omit<
+  KualiCourseItem,
+  'hoursCatalogText' | 'preAndCorequisites' | 'preOrCorequisites'
+> & {
   hoursCatalog?: {
     lecture: string;
     tutorial: string;
     lab: string;
   };
+  preAndCorequisites?: Array<NestedPreCoRequisites | Course | string>;
+  preOrCorequisites?: Array<NestedPreCoRequisites | Course | string>;
+};
+
+export type Course = {
+  subject: string;
+  code: string;
+  pid?: string;
+};
+
+export type NestedPreCoRequisites = {
+  // How many of the reqs need to be completed
+  quantity?: number | 'ALL';
+  // Is a coreq or not
+  coreq?: boolean;
+  // How many accumulative units of the given reqs are needed
+  units?: boolean;
+  // Minimum grade needed from the following reqs
+  grade?: string;
+  // Minimum GPA needed from the following reqs
+  gpa?: string;
+  // Data the function fails to parse
+  unparsed?: string;
+  // Array of reqs
+  reqList?: Array<NestedPreCoRequisites | Course | string>;
 };
 
 export type levelType = 'law' | 'undergraduate' | 'graduate';
