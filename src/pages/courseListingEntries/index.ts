@@ -144,7 +144,8 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Cl
         where: scheduleEntries[3],
         dateRange: scheduleEntries[4],
         scheduleType: scheduleEntries[5],
-        instructors: scheduleEntries[6].split(/\s*,\s*/),
+        // normalize the whitespace
+        instructors: scheduleEntries[6].split(/\s*,\s*/).map((instructor) => instructor.replace(/\s+/g, ' ').trim()),
       });
     }
     classSchedule.meetingTimes = meetingTimes;
