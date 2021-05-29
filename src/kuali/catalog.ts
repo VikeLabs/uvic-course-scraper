@@ -11,7 +11,8 @@ import { Course, KualiCourseItem, KualiCourseItemParsed, NestedPreCoRequisites }
 function parsePreCoReqs(preCoReqs: string): Array<NestedPreCoRequisites | Course | string> {
   const reqs: Array<NestedPreCoRequisites | Course | string> = [];
 
-  const quantityRegex = /(Complete|(?<coreq>Completed or concurrently enrolled in)) *(?<quantity>all|\d)* (of|(?<units>units from))/;
+  const quantityRegex =
+    /(Complete|(?<coreq>Completed or concurrently enrolled in)) *(?<quantity>all|\d)* (of|(?<units>units from))/;
   const earnMinimumRegex = /Earn(ed)? a minimum (?<unit>grade|GPA) of (?<min>[^ ]+) (in (?<quantity>\d+))?/;
   const courseRegex = /(?<subject>\w{2,4})(?<code>\d{3}\w?)/;
 
