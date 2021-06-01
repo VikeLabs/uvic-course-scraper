@@ -69,7 +69,7 @@ export type KualiCourseItemParsed = Omit<
     lecture: string;
     tutorial: string;
     lab: string;
-  };
+  }[];
   preAndCorequisites?: Array<NestedPreCoRequisites | Course | string>;
   preOrCorequisites?: Array<NestedPreCoRequisites | Course | string>;
 };

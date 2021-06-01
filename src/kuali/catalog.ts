@@ -1,6 +1,7 @@
 import * as cheerio from 'cheerio';
 
 import { Course, KualiCourseItem, KualiCourseItemParsed, NestedPreCoRequisites } from '../types';
+import { each } from 'async';
 
 /**
  * Parses the pre and co-reqs from the Kuali data into a usable format.
@@ -11,8 +12,7 @@ import { Course, KualiCourseItem, KualiCourseItemParsed, NestedPreCoRequisites }
 function parsePreCoReqs(preCoReqs: string): Array<NestedPreCoRequisites | Course | string> {
   const reqs: Array<NestedPreCoRequisites | Course | string> = [];
 
-  const quantityRegex =
-    /(Complete|(?<coreq>Completed or concurrently enrolled in)) *(?<quantity>all|\d)* (of|(?<units>units from))/;
+  const quantityRegex = /(Complete|(?<coreq>Completed or concurrently enrolled in)) *(?<quantity>all|\d)* (of|(?<units>units from))/;
   const earnMinimumRegex = /Earn(ed)? a minimum (?<unit>grade|GPA) of (?<min>[^ ]+) (in (?<quantity>\d+))?/;
   const courseRegex = /(?<subject>\w{2,4})(?<code>\d{3}\w?)/;
 
@@ -92,16 +92,32 @@ function parsePreCoReqs(preCoReqs: string): Array<NestedPreCoRequisites | Course
   return reqs;
 }
 
+function set_hoursCatalog(hours: string[]){
+  var each_hour: {lecture: string, lab: string, tutorial: string}[];
+  each_hour=[];
+  
+  //store the hours in a new array.
+  hours.forEach(element => {
+    let temp=element.split('-');
+    let JSON_value = {lecture: temp[0], lab: temp[1], tutorial: temp[2]};
+    each_hour= each_hour.concat(JSON_value);
+  });
+
+  return each_hour; 
+}
+
 export function KualiCourseItemParser(course: KualiCourseItem): KualiCourseItemParsed {
   // strip HTML tags from courseDetails.description
   course.description = course.description.replace(/(<([^>]+)>)/gi, '');
 
   const { hoursCatalogText, preAndCorequisites, preOrCorequisites } = course;
-  const hours = hoursCatalogText?.split('-');
+  
+  //split the hours if we have more than one. 
+  let hours = hoursCatalogText?.split(' or ');
 
   return {
     ...course,
-    hoursCatalog: hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined,
+    hoursCatalog: hours ?  set_hoursCatalog(hours) : undefined,
     preAndCorequisites: preAndCorequisites ? parsePreCoReqs(preAndCorequisites) : undefined,
     preOrCorequisites: preOrCorequisites ? parsePreCoReqs(preOrCorequisites) : undefined,
   };

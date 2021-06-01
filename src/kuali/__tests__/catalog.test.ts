@@ -14,6 +14,24 @@ describe('KualiCatalogItemParser', () => {
     });
   });
 
+  describe('hourscatalog test', () => {
+    describe('PHIL207A', () => {
+      it('gets parsed correctly', () => {
+        const details = getCourseDetailByPidSync('202101', 'HkxKERd67E');
+       
+        const response = KualiCourseItemParser(details);
+       // let values = response.hoursCatalog;
+        // if(values!=undefined){
+        //   console.log(values[0]);
+        // }
+        
+        expect(response.hoursCatalog).toStrictEqual([{ lecture: '3', lab: '0', tutorial: '0' },{ lecture: '2', lab: '1', tutorial: '0' }]);
+        expect(response.credits.credits).toStrictEqual({ min: '1.5', max: '1.5' });
+        expect(response.credits.value).toEqual('1.5');
+        expect(response.credits.chosen).toEqual('fixed');
+      });
+    })});
+
   describe('ASTR490 (when credits value are a range)', () => {
     it('gets parsed correctly', () => {
       const details = getCourseDetailByPidSync('202101', 'Sye6yAwTQV');
