@@ -1,7 +1,6 @@
 import * as cheerio from 'cheerio';
 
 import { Course, KualiCourseItem, KualiCourseItemParsed, NestedPreCoRequisites } from '../types';
-import { each } from 'async';
 
 /**
  * Parses the pre and co-reqs from the Kuali data into a usable format.
@@ -92,18 +91,18 @@ function parsePreCoReqs(preCoReqs: string): Array<NestedPreCoRequisites | Course
   return reqs;
 }
 
-function set_hoursCatalog(hours: string[]){
-  var each_hour: {lecture: string, lab: string, tutorial: string}[];
-  each_hour=[];
+function hoursCatalog(hours: string[]){
+  let eachHour: {lecture: string, lab: string, tutorial: string}[];
+  eachHour=[];
   
   //store the hours in a new array.
   hours.forEach(element => {
     let temp=element.split('-');
-    let JSON_value = {lecture: temp[0], lab: temp[1], tutorial: temp[2]};
-    each_hour= each_hour.concat(JSON_value);
+    let JSONvalue = {lecture: temp[0], lab: temp[1], tutorial: temp[2]};
+    eachHour= eachHour.concat(JSONvalue);
   });
 
-  return each_hour; 
+  return eachHour; 
 }
 
 export function KualiCourseItemParser(course: KualiCourseItem): KualiCourseItemParsed {
@@ -117,7 +116,7 @@ export function KualiCourseItemParser(course: KualiCourseItem): KualiCourseItemP
 
   return {
     ...course,
-    hoursCatalog: hours ?  set_hoursCatalog(hours) : undefined,
+    hoursCatalog: hours ?  hoursCatalog(hours) : undefined,
     preAndCorequisites: preAndCorequisites ? parsePreCoReqs(preAndCorequisites) : undefined,
     preOrCorequisites: preOrCorequisites ? parsePreCoReqs(preOrCorequisites) : undefined,
   };

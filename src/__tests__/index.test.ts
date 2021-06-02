@@ -61,11 +61,11 @@ const expectSENG360 = (pid: string, courseDetails: KualiCourseItemParsed) => {
     chosen: 'fixed',
   });
   expect(courseDetails.crossListedCourses).toBeUndefined();
-  expect(courseDetails.hoursCatalog).toStrictEqual({
+  expect(courseDetails.hoursCatalog).toStrictEqual([{
     lecture: '3',
     lab: '2',
     tutorial: '0',
-  });
+  }]);
   expect(courseDetails.__catalogCourseId).toEqual('SENG360');
   expect(courseDetails.__passedCatalogQuery).toBeTruthy();
   expect(courseDetails.dateStart).toEqual('2020-01-01');
