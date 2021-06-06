@@ -11,7 +11,8 @@ import { Course, KualiCourseItem, KualiCourseItemParsed, NestedPreCoRequisites }
 function parsePreCoReqs(preCoReqs: string): Array<NestedPreCoRequisites | Course | string> {
   const reqs: Array<NestedPreCoRequisites | Course | string> = [];
 
-  const quantityRegex = /(Complete|(?<coreq>Completed or concurrently enrolled in)) *(?<quantity>all|\d)* (of|(?<units>units from))/;
+  const quantityRegex =
+    /(Complete|(?<coreq>Completed or concurrently enrolled in)) *(?<quantity>all|\d)* (of|(?<units>units from))/;
   const earnMinimumRegex = /Earn(ed)? a minimum (?<unit>grade|GPA) of (?<min>[^ ]+) (in (?<quantity>\d+))?/;
   const courseRegex = /(?<subject>\w{2,4})(?<code>\d{3}\w?)/;
 
@@ -91,18 +92,18 @@ function parsePreCoReqs(preCoReqs: string): Array<NestedPreCoRequisites | Course
   return reqs;
 }
 
-function hoursCatalog(hours: string[]){
-  let eachHour: {lecture: string, lab: string, tutorial: string}[];
-  eachHour=[];
-  
+function hoursCatalog(hours: string[]) {
+  let eachHour: { lecture: string; lab: string; tutorial: string }[];
+  eachHour = [];
+
   //store the hours in a new array.
-  hours.forEach(element => {
-    let temp=element.split('-');
-    let JSONvalue = {lecture: temp[0], lab: temp[1], tutorial: temp[2]};
-    eachHour= eachHour.concat(JSONvalue);
+  hours.forEach((element) => {
+    const temp = element.split('-');
+    const JSONvalue = { lecture: temp[0], lab: temp[1], tutorial: temp[2] };
+    eachHour = eachHour.concat(JSONvalue);
   });
 
-  return eachHour; 
+  return eachHour;
 }
 
 export function KualiCourseItemParser(course: KualiCourseItem): KualiCourseItemParsed {
@@ -110,13 +111,13 @@ export function KualiCourseItemParser(course: KualiCourseItem): KualiCourseItemP
   course.description = course.description.replace(/(<([^>]+)>)/gi, '');
 
   const { hoursCatalogText, preAndCorequisites, preOrCorequisites } = course;
-  
-  //split the hours if we have more than one. 
-  let hours = hoursCatalogText?.split(' or ');
+
+  //split the hours if we have more than one.
+  const hours = hoursCatalogText?.split(' or ');
 
   return {
     ...course,
-    hoursCatalog: hours ?  hoursCatalog(hours) : undefined,
+    hoursCatalog: hours ? hoursCatalog(hours) : undefined,
     preAndCorequisites: preAndCorequisites ? parsePreCoReqs(preAndCorequisites) : undefined,
     preOrCorequisites: preOrCorequisites ? parsePreCoReqs(preOrCorequisites) : undefined,
   };
