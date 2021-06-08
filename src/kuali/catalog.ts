@@ -92,16 +92,30 @@ function parsePreCoReqs(preCoReqs: string): Array<NestedPreCoRequisites | Course
   return reqs;
 }
 
+function hoursCatalog(hours: string[]) {
+  const eachHour: { lecture: string; lab: string; tutorial: string }[] = [];
+
+  //store the hours in a new array.
+  hours.forEach((element) => {
+    const temp = element.split('-');
+    eachHour.push({ lecture: temp[0], lab: temp[1], tutorial: temp[2] });
+  });
+
+  return eachHour;
+}
+
 export function KualiCourseItemParser(course: KualiCourseItem): KualiCourseItemParsed {
   // strip HTML tags from courseDetails.description
   course.description = course.description.replace(/(<([^>]+)>)/gi, '');
 
   const { hoursCatalogText, preAndCorequisites, preOrCorequisites } = course;
-  const hours = hoursCatalogText?.split('-');
+
+  //split the hours if we have more than one.
+  const hours = hoursCatalogText?.split(' or ');
 
   return {
     ...course,
-    hoursCatalog: hours ? { lecture: hours[0], lab: hours[1], tutorial: hours[2] } : undefined,
+    hoursCatalog: hours ? hoursCatalog(hours) : undefined,
     preAndCorequisites: preAndCorequisites ? parsePreCoReqs(preAndCorequisites) : undefined,
     preOrCorequisites: preOrCorequisites ? parsePreCoReqs(preOrCorequisites) : undefined,
   };
