@@ -93,14 +93,12 @@ function parsePreCoReqs(preCoReqs: string): Array<NestedPreCoRequisites | Course
 }
 
 function hoursCatalog(hours: string[]) {
-  let eachHour: { lecture: string; lab: string; tutorial: string }[];
-  eachHour = [];
+  const eachHour: { lecture: string; lab: string; tutorial: string }[] = [];
 
   //store the hours in a new array.
   hours.forEach((element) => {
     const temp = element.split('-');
-    const JSONvalue = { lecture: temp[0], lab: temp[1], tutorial: temp[2] };
-    eachHour = eachHour.concat(JSONvalue);
+    eachHour.push({ lecture: temp[0], lab: temp[1], tutorial: temp[2] });
   });
 
   return eachHour;
