@@ -3,6 +3,7 @@ import {
   courseListingsEntriesUrl,
   detailedClassInformationUrl,
   courseListingTermUrl,
+  subjectsUrl,
 } from '../urls';
 
 describe('classScheduleListingUrl', () => {
@@ -36,5 +37,12 @@ describe('courseListingTermUrl', () => {
     expect(url).toBe(
       'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_cat_term_date?call_proc_in=bwckctlg.p_disp_dyn_ctlg&cat_term_in=202001'
     );
+  });
+});
+
+describe('subjectsUrl', () => {
+  it('builds the URL correctly', () => {
+    const url = subjectsUrl('5d9ccc4eab7506001ae4c225');
+    expect(url).toBe('https://www.uvic.ca/BAN1P/pkg_kuali_api.pr_get_catalog?p_catalog=5d9ccc4eab7506001ae4c225');
   });
 });

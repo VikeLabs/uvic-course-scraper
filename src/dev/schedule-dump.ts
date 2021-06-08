@@ -3,13 +3,12 @@ import { performance } from 'perf_hooks';
 
 import got from 'got';
 
-import coursesJSON from '../../static/courses/courses.json';
 import { classScheduleListingUrl } from '../common/urls';
 import { KualiCourseItem } from '../types';
 
 import { forEachHelper } from './utils';
 
-export const scheduleUtil = async (term: string) => {
+export const scheduleUtil = async (term: string): Promise<void> => {
   const writeCourseScheduleToFS = async (kualiCourseItem: KualiCourseItem) => {
     const subject = kualiCourseItem.subjectCode.name;
     const code = kualiCourseItem.__catalogCourseId.slice(subject.length);
@@ -33,7 +32,10 @@ export const scheduleUtil = async (term: string) => {
   console.log('Starting schedule dump\n');
   const start = performance.now();
 
-  const kualiCourseItems = coursesJSON as KualiCourseItem[];
+  const kualiCourseItems = JSON.parse(
+    fs.readFileSync(`static/courses/courses-${term}.json`, 'utf-8')
+  ) as KualiCourseItem[];
+
   await forEachHelper(kualiCourseItems, writeCourseScheduleToFS, 10);
 
   const finish = performance.now();

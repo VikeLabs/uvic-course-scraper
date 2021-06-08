@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import * as qs from 'querystring';
 
 const BASE_URL = 'https://www.uvic.ca/BAN1P';
@@ -58,5 +59,18 @@ export const courseListingTermUrl = (term: string): string => {
   return `${BASE_URL}/bwckctlg.p_disp_cat_term_date?${params}`;
 };
 
+// construct subjects endpoint
+export function subjectsUrl(catalogId: string): string {
+  return `https://www.uvic.ca/BAN1P/pkg_kuali_api.pr_get_catalog?p_catalog=${catalogId}`;
+}
+
 // UVic Legacy Calendar
 // const LEGACY_BASE_URL = (year: string, month: string) => `https://web.uvic.ca/calendar${year}-${month}/CDs/`;
+
+export function coursesUrl(catalogId: string): string {
+  return `https://uvic.kuali.co/api/v1/catalog/courses/${catalogId}`;
+}
+
+export function courseDetailUrl(catalogId: string, pid: string): string {
+  return `https://uvic.kuali.co/api/v1/catalog/course/${catalogId}/${pid}`;
+}

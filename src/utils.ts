@@ -66,3 +66,21 @@ export function getCurrentTerm(date: dayjs.Dayjs = dayjs()): string {
 
   return year + month;
 }
+
+export function getCatalogIdForTerm(term: string): string {
+  switch (term) {
+    case '202009':
+      return '5d9ccc4eab7506001ae4c225';
+    case '202101':
+      return '5f21b66d95f09c001ac436a0';
+    case '202105':
+      return '5ff357f8d30280001b0c26dd';
+    case '202109':
+      return '6092db6ebae543001bc23ca1';
+    case '202201':
+      // TODO: cannot find a separate calendar for Winter 2022
+      return '6092db6ebae543001bc23ca1';
+    default:
+      return '';
+  }
+}
