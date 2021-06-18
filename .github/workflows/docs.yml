@@ -1,7 +1,7 @@
 name: Generate and Publish Documentation
 on:
   push:
-    branches: [ 'dev/*' ]
+    branches: [ 'dev/**' ]
 jobs:
   lint:
     name: lint
