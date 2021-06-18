@@ -2,6 +2,8 @@ name: Generate and Publish Documentation
 on:
   push:
     branches: [ 'dev/**' ]
+  pull_request:
+    branches: [ 'dev/**' ]
 jobs:
   lint:
     name: lint
