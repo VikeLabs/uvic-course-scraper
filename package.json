@@ -1,6 +1,6 @@
 {
   "name": "@vikelabs/uvic-course-scraper",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "UVic Course Scrapper",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -16,7 +16,7 @@
   "author": "VikeLabs",
   "license": "GPL-3.0",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.9",
+    "cheerio": "^1.0.0-rc.10",
     "dayjs": "^1.10.5",
     "got": "^11.8.2"
   },
@@ -44,7 +44,8 @@
     "prettier": "^2.3.0",
     "progress": "^2.0.3",
     "ts-jest": "^27.0.1",
-    "ts-node-dev": "^1.1.6",
+    "ts-node": "^10.0.0",
+    "typedoc": "^0.21.0",
     "typescript": "^4.3.2",
     "yargs": "^17.0.1"
   },
