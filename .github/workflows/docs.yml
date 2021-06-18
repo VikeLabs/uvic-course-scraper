@@ -1,9 +1,11 @@
 name: Generate and Publish Documentation
 on:
   push:
-    branches: [ 'dev/**' ]
+    branches-ignore:
+      - master
   pull_request:
-    branches: [ 'dev/**' ]
+    branches-ignore:
+      - master
 jobs:
   lint:
     name: lint
