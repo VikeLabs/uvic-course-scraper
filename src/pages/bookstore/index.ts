@@ -32,6 +32,7 @@ export const textbookExtractor = async (subject: string, code: string): Promise<
   const materials: { textbooks: Textbook[]; section: string }[] = [];
 
   const sectionRegex = /(A\d{2}|B\d{2}|T\d{2})/;
+  const multipleSectionRegex = /((?:A\d{2}|B\d{2}|T\d{2})\/?){2,}/;
   const authorRegex = /Author: (.*)$/;
   const digitalAccessRegex = /^Digital Access: (\$.*$)/;
   const newBookRegex = /^New Book: (\$.*$)/;
@@ -40,8 +41,6 @@ export const textbookExtractor = async (subject: string, code: string): Promise<
 
   courseDiv.map((_, el) => {
     const sectionDiv = $(el);
-
-    const section = sectionRegex.exec(sectionDiv.find(`h3:contains("${subject} ${code}")`).text().trim())?.[0];
 
     const textbooks: Textbook[] = [];
 
@@ -76,7 +75,15 @@ export const textbookExtractor = async (subject: string, code: string): Promise<
       textbooks.push({ bookstoreUrl, image, title, authors, required, price, isbn });
     });
 
-    materials.push({ section: section ?? '', textbooks });
+    if (multipleSectionRegex.test(sectionDiv.find(`h3:contains("${subject} ${code}")`).text().trim())) {
+      const sections = multipleSectionRegex.exec(
+        sectionDiv.find(`h3:contains("${subject} ${code}")`).text().trim()
+      )?.[0];
+      sections?.split('/').forEach((section) => materials.push({ section, textbooks }));
+    } else {
+      const section = sectionRegex.exec(sectionDiv.find(`h3:contains("${subject} ${code}")`).text().trim())?.[0];
+      materials.push({ section: section ?? '', textbooks });
+    }
   });
 
   return { subject, code, materials };
