@@ -26,71 +26,86 @@ type CourseTextbooks = {
   }[];
 };
 
-export const textbookExtractor = async (subject: string, code: string): Promise<CourseTextbooks> => {
-  const $ = cheerio.load(await fs.promises.readFile(`src/pages/bookstore/textbooks.html`));
-  const courseDiv = $(`div[class="row course"]:contains("${subject} ${code}")`);
-  const materials: { textbooks: Textbook[]; section: string }[] = [];
+export const textbookExtractor = async ($: cheerio.Root): Promise<CourseTextbooks[]> => {
+  const courseTextbooks: CourseTextbooks[] = [];
+  const courseDivs = $('div[class="row course"]');
+  courseDivs.map((_, el) => {
+    const courseDiv = $(el);
 
-  const sectionRegex = /(A\d{2}|B\d{2}|T\d{2})/;
-  const multipleSectionRegex = /((?:A\d{2}|B\d{2}|T\d{2})\/?){2,}/;
-  const authorRegex = /Author: (.*)$/;
-  const digitalAccessRegex = /^Digital Access: (\$.*$)/;
-  const newBookRegex = /^New Book: (\$.*$)/;
-  const usedBookRegex = /^Used Book: (\$.*$)/;
-  const newAndDigitalAccessRegex = /^New Book \+ Digital Access: (\$.*$)/;
+    const materials: { textbooks: Textbook[]; section: string }[] = [];
 
-  courseDiv.map((_, el) => {
-    const sectionDiv = $(el);
+    const subjectAndCodeRegex = /(.*) (A\d{2}|B\d{2}|T\d{2})/;
+    const sectionRegex = /(A\d{2}|B\d{2}|T\d{2})/;
+    const multipleSectionRegex = /((?:A\d{2}|B\d{2}|T\d{2})\/?){2,}/;
+    const authorRegex = /Author: (.*)$/;
+    const digitalAccessRegex = /^Digital Access: (\$.*$)/;
+    const newBookRegex = /^New Book: (\$.*$)/;
+    const usedBookRegex = /^Used Book: (\$.*$)/;
+    const newAndDigitalAccessRegex = /^New Book \+ Digital Access: (\$.*$)/;
 
-    const textbooks: Textbook[] = [];
+    const subjectAndCode = subjectAndCodeRegex.exec(courseDiv.find('div[class="six columns"]').text().trim())?.[0];
+    const subjectAndCodeArray = subjectAndCode?.split(' ');
 
-    const textbooksDiv = sectionDiv.find('.textbook-item');
-    textbooksDiv.map((_, el) => {
-      const textbookDiv = $(el);
+    const subject = subjectAndCodeArray?.[0] ?? '';
+    const code = subjectAndCodeArray?.[1] ?? '';
 
-      const bookstoreUrl = textbookDiv.find('.textbook-image-container').find('a').attr('href');
-      const image = textbookDiv.find('.textbook-image-container').find('a > img').attr('src');
-      const title = textbookDiv.find('.textbook-results-title').text().trim();
+    courseDiv.map((_, el) => {
+      const sectionDiv = $(el);
 
-      const authorsText = authorRegex.exec(textbookDiv.find('span.textbook-results-author').text().trim())?.[1];
-      const authors = authorsText?.split(',').map((author) => author.trim());
+      const textbooks: Textbook[] = [];
 
-      const required = textbookDiv.find('.required-tag').text() ? true : false;
-      const isbn = textbookDiv.find('.textbook-results-skew').text().trim();
+      const textbooksDiv = sectionDiv.find('.textbook-item');
+      textbooksDiv.map((_, el) => {
+        const textbookDiv = $(el);
 
-      const prices = textbookDiv.find('.textbook-results-price');
-      const price: { new?: string; used?: string; digitalAccess?: string; newAndDigitalAccess?: string } = {};
-      prices.map((_, el) => {
-        const priceSpan = $(el);
-        if (newBookRegex.exec(priceSpan.text().trim())?.[1])
-          price.new = newBookRegex.exec(priceSpan.text().trim())?.[1];
-        if (digitalAccessRegex.exec(priceSpan.text().trim())?.[1])
-          price.digitalAccess = digitalAccessRegex.exec(priceSpan.text().trim())?.[1];
-        if (usedBookRegex.exec(priceSpan.text().trim())?.[1])
-          price.used = usedBookRegex.exec(priceSpan.text().trim())?.[1];
-        if (newAndDigitalAccessRegex.exec(priceSpan.text().trim())?.[1])
-          price.newAndDigitalAccess = newAndDigitalAccessRegex.exec(priceSpan.text().trim())?.[1];
+        const bookstoreUrl = textbookDiv.find('.textbook-image-container').find('a').attr('href');
+        const image = textbookDiv.find('.textbook-image-container').find('a > img').attr('src');
+        const title = textbookDiv.find('.textbook-results-title').text().trim();
+
+        const authorsText = authorRegex.exec(textbookDiv.find('span.textbook-results-author').text().trim())?.[1];
+        const authors = authorsText?.split(',').map((author) => author.trim());
+
+        const required = textbookDiv.find('.required-tag').text() ? true : false;
+        const isbn = textbookDiv.find('.textbook-results-skew').text().trim();
+
+        const prices = textbookDiv.find('.textbook-results-price');
+        const price: { new?: string; used?: string; digitalAccess?: string; newAndDigitalAccess?: string } = {};
+        prices.map((_, el) => {
+          const priceSpan = $(el);
+          if (newBookRegex.exec(priceSpan.text().trim())?.[1])
+            price.new = newBookRegex.exec(priceSpan.text().trim())?.[1];
+          if (digitalAccessRegex.exec(priceSpan.text().trim())?.[1])
+            price.digitalAccess = digitalAccessRegex.exec(priceSpan.text().trim())?.[1];
+          if (usedBookRegex.exec(priceSpan.text().trim())?.[1])
+            price.used = usedBookRegex.exec(priceSpan.text().trim())?.[1];
+          if (newAndDigitalAccessRegex.exec(priceSpan.text().trim())?.[1])
+            price.newAndDigitalAccess = newAndDigitalAccessRegex.exec(priceSpan.text().trim())?.[1];
+        });
+
+        textbooks.push({ bookstoreUrl, image, title, authors, required, price, isbn });
       });
 
-      textbooks.push({ bookstoreUrl, image, title, authors, required, price, isbn });
+      if (multipleSectionRegex.test(sectionDiv.find(`h3:contains("${subject} ${code}")`).text().trim())) {
+        const sections = multipleSectionRegex.exec(
+          sectionDiv.find(`h3:contains("${subject} ${code}")`).text().trim()
+        )?.[0];
+        sections?.split('/').forEach((section) => materials.push({ section, textbooks }));
+      } else {
+        const section =
+          sectionRegex.exec(sectionDiv.find(`h3:contains("${subject} ${code}")`).text().trim())?.[0] ?? '';
+        materials.push({ section, textbooks });
+      }
     });
 
-    if (multipleSectionRegex.test(sectionDiv.find(`h3:contains("${subject} ${code}")`).text().trim())) {
-      const sections = multipleSectionRegex.exec(
-        sectionDiv.find(`h3:contains("${subject} ${code}")`).text().trim()
-      )?.[0];
-      sections?.split('/').forEach((section) => materials.push({ section, textbooks }));
-    } else {
-      const section = sectionRegex.exec(sectionDiv.find(`h3:contains("${subject} ${code}")`).text().trim())?.[0];
-      materials.push({ section: section ?? '', textbooks });
-    }
+    courseTextbooks.push({ subject, code, materials });
   });
 
-  return { subject, code, materials };
+  return courseTextbooks;
 };
 
 const main = async () => {
-  console.log(JSON.stringify(await textbookExtractor('CSC', '111'), null, 2));
+  const $ = cheerio.load(await fs.promises.readFile(`src/pages/bookstore/textbooks.html`));
+  console.log(JSON.stringify(await textbookExtractor($), null, 2));
 };
 
 main();
