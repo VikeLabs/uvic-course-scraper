@@ -175,6 +175,7 @@ export type Textbook = {
   authors?: string[];
   required: boolean;
   // prices stored in the following format '$78.95'
+  // TODO: format these in cents and store as number
   price: {
     newCad?: string;
     usedCad?: string;
