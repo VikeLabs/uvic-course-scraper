@@ -166,3 +166,26 @@ export interface DetailedClassInformationRes {
   timestamp: string;
   url: string;
 }
+
+// BOOKSTORE TYPES
+export type Textbook = {
+  bookstoreUrl?: string;
+  image?: string;
+  title: string;
+  authors?: string[];
+  required: boolean;
+  price: {
+    new?: string;
+    used?: string;
+    digitalAccess?: string;
+    newAndDigitalAccess?: string;
+  };
+  isbn: string;
+};
+
+export type CourseTextbooks = {
+  subject: string;
+  code: string;
+  section: string;
+  textbooks: Textbook[];
+};
