@@ -170,17 +170,18 @@ export interface DetailedClassInformationRes {
 // BOOKSTORE TYPES
 export type Textbook = {
   bookstoreUrl?: string;
-  image?: string;
+  imageUrl?: string;
   title: string;
   authors?: string[];
   required: boolean;
+  // prices stored in the following format '$78.95'
   price: {
-    new?: string;
-    used?: string;
-    digitalAccess?: string;
-    newAndDigitalAccess?: string;
+    newCad?: string;
+    usedCad?: string;
+    digitalAccessCad?: string;
+    newAndDigitalAccessCad?: string;
   };
-  isbn: string;
+  isbn?: string;
 };
 
 export type CourseTextbooks = {
