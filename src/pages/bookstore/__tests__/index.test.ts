@@ -36,6 +36,8 @@ describe('bookstore parser', () => {
       expect(csc111?.textbooks[0].required).toBeFalsy();
       expect(csc111?.textbooks[0].price).toStrictEqual({ newCad: '$74.95', usedCad: '$56.95' });
       expect(csc111?.textbooks[0].isbn).toStrictEqual('9780321928429');
+      expect(csc111?.instructor).toStrictEqual('William Bird');
+      expect(csc111?.additionalInfo).toStrictEqual(['e-text free @ McPherson Library']);
     });
   });
 
@@ -86,6 +88,12 @@ describe('bookstore parser', () => {
       expect(csc226?.textbooks[2].required).toBeFalsy();
       expect(csc226?.textbooks[2].price).toStrictEqual({ newCad: '$189.95' });
       expect(csc226?.textbooks[2].isbn).toStrictEqual('9780321295354');
+
+      expect(csc226?.instructor).toStrictEqual('Nishant Mehta');
+      expect(csc226?.additionalInfo).toStrictEqual([
+        'e-text of Intro to Algorithms available free@McPherson Library',
+        'This course contains book(s) that come in multiple formats (E-Text, Physical, Loose, etc.). You only need one format of each book.',
+      ]);
     });
   });
 
@@ -124,6 +132,27 @@ describe('bookstore parser', () => {
       expect(cyc152?.textbooks[1].required).toBeFalsy();
       expect(cyc152?.textbooks[1].price).toStrictEqual({ digitalAccessCad: '$59.95' });
       expect(cyc152?.textbooks[1].isbn).toStrictEqual('9780135222072');
+
+      expect(cyc152?.instructor).toStrictEqual('TO BE ADVISED');
+      expect(cyc152?.additionalInfo).toStrictEqual([
+        'This course contains book(s) that come in multiple formats (E-Text, Physical, Loose, etc.). You only need one format of each book.',
+      ]);
+    });
+  });
+
+  // Multiple additional info elements
+  describe('CIVE 351 A01', () => {
+    it('should have the correct data', async () => {
+      const $ = cheerio.load(await fs.promises.readFile(`static/misc/textbooks.html`));
+      const textbooks = textbookExtractor($);
+
+      const cive351 = textbooks.find(
+        (textbook) => textbook.subject === 'CIVE' && textbook.code === '351' && textbook.section === 'A01'
+      );
+
+      expect(cive351?.additionalInfo).toHaveLength(2);
+      expect(cive351?.additionalInfo?.[0]).toStrictEqual('Please see professor for course material info.');
+      expect(cive351?.additionalInfo?.[1]).toStrictEqual('Texts available from www.cisc-icca.ca');
     });
   });
 });

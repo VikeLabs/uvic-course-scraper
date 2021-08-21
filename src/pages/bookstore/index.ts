@@ -11,6 +11,7 @@ const digitalAccessRegex = /^Digital Access: (\$.*$)/;
 const newBookRegex = /^New Book: (\$.*$)/;
 const usedBookRegex = /^Used Book: (\$.*$)/;
 const newAndDigitalAccessRegex = /^New Book \+ Digital Access: (\$.*$)/;
+const instructorRegex = /Instructor: (.*)$/;
 
 export const textbookExtractor = ($: cheerio.Root): CourseTextbooks[] => {
   const courseTextbooks: CourseTextbooks[] = [];
@@ -63,15 +64,26 @@ export const textbookExtractor = ($: cheerio.Root): CourseTextbooks[] => {
       textbooks.push({ bookstoreUrl, imageUrl, title, authors, required, price, isbn });
     });
 
+    const additionalInfo: string[] = [];
+    const additionalInfoHtml = courseDiv.find('.course-comment');
+    additionalInfoHtml.each((_, el) => {
+      const infoHtml = $(el);
+      additionalInfo.push(infoHtml.text().trim());
+    });
+
+    const instructor = instructorRegex.exec(courseDiv.find('.textbook-results-instructor').text().trim())?.[1];
+
     if (multipleSectionRegex.test(courseDiv.find(`h3:contains("${subject} ${code}")`).text().trim())) {
       const sections = multipleSectionRegex.exec(
         courseDiv.find(`h3:contains("${subject} ${code}")`).text().trim()
       )?.[0];
-      sections?.split('/').forEach((section) => courseTextbooks.push({ subject, code, section, textbooks }));
+      sections
+        ?.split('/')
+        .forEach((section) => courseTextbooks.push({ subject, code, section, textbooks, additionalInfo, instructor }));
     } else {
       const section = sectionRegex.exec(courseDiv.find(`h3:contains("${subject} ${code}")`).text().trim())?.[0] ?? '';
 
-      courseTextbooks.push({ subject, code, section, textbooks });
+      courseTextbooks.push({ subject, code, section, textbooks, additionalInfo, instructor });
     }
   });
 

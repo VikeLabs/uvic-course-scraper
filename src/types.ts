@@ -183,11 +183,14 @@ export type Textbook = {
     newAndDigitalAccessCad?: string;
   };
   isbn?: string;
+  instructor?: string;
 };
 
 export type CourseTextbooks = {
   subject: string;
   code: string;
   section: string;
+  additionalInfo?: string[];
+  instructor?: string;
   textbooks: Textbook[];
 };
