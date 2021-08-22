@@ -3,7 +3,7 @@ import * as cheerio from 'cheerio';
 import { CourseTextbooks, Textbook } from '../../types';
 
 const BASE_URL = 'https://www.uvicbookstore.ca';
-const subjectAndCodeRegex = /(.*) (A\d{2}|B\d{2}|T\d{2})/;
+const subjectAndCodeRegex = /(.*) (A\d{2}|B\d{2}|T\d{2})?/;
 const sectionRegex = /(A\d{2}|B\d{2}|T\d{2})/;
 const multipleSectionRegex = /((?:A\d{2}|B\d{2}|T\d{2})\/?){2,}/;
 const authorRegex = /Author: (.*)$/;

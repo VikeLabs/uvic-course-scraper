@@ -155,4 +155,28 @@ describe('bookstore parser', () => {
       expect(cive351?.additionalInfo?.[1]).toStrictEqual('Texts available from www.cisc-icca.ca');
     });
   });
+
+  // No section listed
+  describe('CHEM 362', () => {
+    it('should have the correct data', async () => {
+      const $ = cheerio.load(await fs.promises.readFile(`static/misc/textbooks.html`));
+      const textbooks = textbookExtractor($);
+
+      const chem362 = textbooks.find((textbook) => textbook.subject === 'CHEM' && textbook.code === '362');
+
+      expect(chem362).not.toBeUndefined();
+      expect(chem362?.section).toStrictEqual('');
+      expect(chem362?.textbooks.length).toStrictEqual(1);
+
+      expect(chem362?.textbooks[0].authors).toStrictEqual(['Chem']);
+      expect(chem362?.textbooks[0].bookstoreUrl).toStrictEqual(
+        'https://www.uvicbookstore.ca/text/book/40064007635?course_id=117297'
+      );
+      expect(chem362?.textbooks[0].imageUrl).toStrictEqual('https://www.uvicbookstore.ca/images/image_na_book.jpg');
+      expect(chem362?.textbooks[0].title).toStrictEqual('Chem 362 Lab Manual');
+      expect(chem362?.textbooks[0].required).toBeTruthy();
+      expect(chem362?.textbooks[0].price).toStrictEqual({ newCad: '$22.95' });
+      expect(chem362?.textbooks[0].isbn).toStrictEqual('40064007635');
+    });
+  });
 });
