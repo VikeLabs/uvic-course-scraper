@@ -165,7 +165,7 @@ describe('bookstore parser', () => {
       const chem362 = textbooks.find((textbook) => textbook.subject === 'CHEM' && textbook.code === '362');
 
       expect(chem362).not.toBeUndefined();
-      expect(chem362?.section).toStrictEqual('');
+      expect(chem362?.section).toBeUndefined();
       expect(chem362?.textbooks.length).toStrictEqual(1);
 
       expect(chem362?.textbooks[0].authors).toStrictEqual(['Chem']);
