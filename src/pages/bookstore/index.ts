@@ -3,7 +3,7 @@ import * as cheerio from 'cheerio';
 import { CourseTextbooks, Textbook } from '../../types';
 
 const BASE_URL = 'https://www.uvicbookstore.ca';
-const subjectAndCodeRegex = /(.*) (A\d{2}|B\d{2}|T\d{2})/;
+const subjectAndCodeRegex = /(.*) (\w\d{2})?/;
 const sectionRegex = /(A\d{2}|B\d{2}|T\d{2})/;
 const multipleSectionRegex = /((?:A\d{2}|B\d{2}|T\d{2})\/?){2,}/;
 const authorRegex = /Author: (.*)$/;
@@ -81,7 +81,7 @@ export const textbookExtractor = ($: cheerio.Root): CourseTextbooks[] => {
         ?.split('/')
         .forEach((section) => courseTextbooks.push({ subject, code, section, textbooks, additionalInfo, instructor }));
     } else {
-      const section = sectionRegex.exec(courseDiv.find(`h3:contains("${subject} ${code}")`).text().trim())?.[0] ?? '';
+      const section = sectionRegex.exec(courseDiv.find(`h3:contains("${subject} ${code}")`).text().trim())?.[0];
 
       courseTextbooks.push({ subject, code, section, textbooks, additionalInfo, instructor });
     }

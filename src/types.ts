@@ -189,7 +189,7 @@ export type Textbook = {
 export type CourseTextbooks = {
   subject: string;
   code: string;
-  section: string;
+  section?: string;
   additionalInfo?: string[];
   instructor?: string;
   textbooks: Textbook[];
