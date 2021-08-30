@@ -194,3 +194,5 @@ export type CourseTextbooks = {
   instructor?: string;
   textbooks: Textbook[];
 };
+
+export type BuildingInfo = { title: string; long?: string; short?: string; url?: string };
