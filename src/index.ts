@@ -11,6 +11,7 @@ import {
 import { KualiCourseItemParser } from './kuali/catalog';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
+import { mapsAndBuildingsExtractor } from './pages/uvic.ca/mapsAndBuildings';
 import {
   KualiCourseCatalog,
   KualiCourseItem,
@@ -19,6 +20,7 @@ import {
   KualiSubject,
   Response,
   KualiCourseItemParsed,
+  BuildingInfo,
 } from './types';
 import { getCatalogIdForTerm, getCurrentTerm } from './utils';
 
@@ -129,5 +131,16 @@ export class UVicCourseScraper {
    */
   public static async getSubjects(term = getCurrentTerm()): Promise<KualiSubject[]> {
     return await got(subjectsUrl(getCatalogIdForTerm(term))).json<KualiSubject[]>();
+  }
+
+  /**
+   * Gets all the buildings on the UVic campus along with their full form and short form (abbreviation) and URL for more details.
+   * @returns an array of BuildingInfo
+   */
+  public static async getBuildings(): Promise<Response<BuildingInfo[]>> {
+    const url = 'https://www.uvic.ca/search/maps-buildings/index.php';
+    const res = await got(url);
+
+    return { response: mapsAndBuildingsExtractor(cheerio.load(res.body)), timestamp: new Date(), url };
   }
 }
