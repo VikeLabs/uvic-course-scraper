@@ -5,7 +5,12 @@ import { mocked } from 'ts-jest/utils';
 import coursesJSON from '../../static/courses/courses-202009.json';
 import subjects202009 from '../../static/subjects/subjects-202009.json';
 import subjects202105 from '../../static/subjects/subjects-202105.json';
-import { getCourseDetailByPidSync, getScheduleFileByCourse, getSectionFileByCRN } from '../dev/path-builders';
+import {
+  getCourseDetailByPidSync,
+  getMapsAndBuildings,
+  getScheduleFileByCourse,
+  getSectionFileByCRN,
+} from '../dev/path-builders';
 import { UVicCourseScraper } from '../index';
 import { KualiCourseItemParsed } from '../types';
 import { getCatalogIdForTerm, getCurrentTerm } from '../utils';
@@ -209,5 +214,14 @@ describe('call getSubjects()', () => {
         .reply(200, subjects202009);
       expect((await UVicCourseScraper.getSubjects()).length).toBeGreaterThan(0);
     });
+  });
+});
+
+describe('call getBuildings()', () => {
+  it('calls the expected URL and returns an array of building info', async () => {
+    nock('https://www.uvic.ca')
+      .get('/search/maps-buildings/index.php')
+      .reply(200, await getMapsAndBuildings());
+    expect((await UVicCourseScraper.getBuildings()).response.length).toBeGreaterThan(0);
   });
 });
