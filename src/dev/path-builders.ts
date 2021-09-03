@@ -46,3 +46,7 @@ export const getCourseDetailByPidSync = (term: string, pid: string): KualiCourse
   }
   return course;
 };
+
+export const getMapsAndBuildings = (): Promise<Buffer> => {
+  return fs.promises.readFile(path.join(appRoot.toString(), `static/uvic.ca/maps-buildings.html`));
+};
