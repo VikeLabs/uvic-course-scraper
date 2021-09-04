@@ -36,6 +36,24 @@ describe('Class Schedule Listing Parser', () => {
       expect(parsed[0].meetingTimes[0].instructors).toStrictEqual(['Michael David Adams (P)']);
     });
 
+    it('parses SENG480B correctly', async () => {
+      const f = await getScheduleFileByCourse('202009', 'SENG', '480B');
+      const $ = cheerio.load(f);
+      const parsed = await classScheduleListingExtractor($);
+      expect(parsed[0].title).toStrictEqual('TOPICS:SOFTWARE ENGINEER: Music Retrieval Techniques');
+      expect(parsed[0].crn).toBe('13660');
+      expect(parsed[0].associatedTerm).toStrictEqual({ start: '202009', end: '202012' });
+      expect(parsed[0].registrationDates).toStrictEqual({ start: 'Jun 22, 2020', end: 'Sep 25, 2020' });
+      expect(parsed[0].campus).toBe('online');
+      expect(parsed[0].instructionalMethod).toBe('online');
+      expect(parsed[0].sectionType).toBe('lecture topic');
+      expect(parsed[0].credits).toBe('1.500');
+      expect(parsed[0].levels).toStrictEqual(['graduate','law', 'undergraduate']);
+      expect(parsed[0].meetingTimes[0].type).toBe('Every Week');
+      expect(parsed[0].meetingTimes[0].time).toBe('8:30 am - 9:50 am');
+      expect(parsed[0].meetingTimes[0].instructors).toStrictEqual(['Jordan Mitchell Shier (P)']);
+    });
+
     it('parses CHEM101 correctly', async () => {
       const f = await getScheduleFileByCourse('202009', 'CHEM', '101');
       const $ = cheerio.load(f);

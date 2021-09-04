@@ -112,7 +112,7 @@ export interface MeetingTimes {
 }
 
 export interface ClassScheduleListing {
- // title: string;
+  title: string;
   crn: string;
   sectionCode: string;
   additionalNotes?: string;
