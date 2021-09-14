@@ -19,6 +19,25 @@ describe('Detailed Class Information', () => {
     await expect(async () => detailedClassInfoExtractor($)).rejects.toThrowError('wrong page type for parser');
   });
 
+  it('parses SENG480B correctly', async () => {
+    const $ = cheerio.load(await getSectionFileByCRN('202009', '13660'));
+    const parsed = await detailedClassInfoExtractor($);
+
+    expect(parsed.title).toStrictEqual('TOPICS:SOFTWARE ENGINEER: Music Retrieval Techniques');
+    expect(parsed.seats.capacity).toBe(10);
+    expect(parsed.seats.actual).toBe(20);
+    expect(parsed.seats.remaining).toBe(-10);
+
+    expect(parsed.waitListSeats.capacity).toBe(100);
+    expect(parsed.waitListSeats.actual).toBe(0);
+    expect(parsed.waitListSeats.remaining).toBe(100);
+    
+    const level = parsed.requirements?.level;
+    const fieldOfStudy = parsed.requirements?.fieldOfStudy;
+
+    expect(level).toStrictEqual(['undergraduate']);
+  });
+  
   it('parses AHVS 430 correctly - case with levels, fields, classifications', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '10076'));
     const parsed = await detailedClassInfoExtractor($);

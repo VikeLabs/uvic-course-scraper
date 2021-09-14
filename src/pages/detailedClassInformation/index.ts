@@ -21,6 +21,7 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
   assertPageTitle('Detailed Class Information', $);
 
   const seatElement = $(`table[summary="This layout table is used to present the seating numbers."]>tbody>tr`);
+  const titleElement = $(`table[summary="This table is used to present the detailed class information."]>tbody>tr>th`);
 
   const seatInfo = seatElement
     .text()
@@ -28,8 +29,14 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     .map((e) => parseInt(e, 10))
     .filter((e) => !Number.isNaN(e));
 
+  const titleRegex = /(.*) - \d{5}/;
+  const titleInfo = titleRegex.exec(titleElement.text())![1].trim();
+
   // initialize data to return
-  const data: DetailedClassInformation = { ...transformSeating(seatInfo) };
+  const data: DetailedClassInformation = {
+    title: titleInfo,  
+    ...transformSeating(seatInfo),
+  };
 
   // parse requirements
   const requirementsInfo = $(

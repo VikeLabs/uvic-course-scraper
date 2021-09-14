@@ -24,6 +24,10 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Cl
       classSchedule.sectionCode = m[4];
     }
 
+    const titleRegex = /(.*) - \d{5}/;
+    const titleInfo = titleRegex.exec(title.text())![1].trim();
+    classSchedule.title = titleInfo;
+
     // Section info is divided into 2 table rows, here we get the second one
     const sectionEntry = sectionEntries[sectionIdx + 1];
 

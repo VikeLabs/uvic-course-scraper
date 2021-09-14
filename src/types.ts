@@ -112,6 +112,7 @@ export interface MeetingTimes {
 }
 
 export interface ClassScheduleListing {
+  title: string;
   crn: string;
   sectionCode: string;
   additionalNotes?: string;
@@ -157,6 +158,7 @@ export interface requirementObject {
 }
 
 export interface DetailedClassInformation {
+  title: string;
   seats: Seating;
   waitListSeats: Seating;
   requirements?: Requirements;
