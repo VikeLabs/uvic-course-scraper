@@ -30,14 +30,12 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
     .filter((e) => !Number.isNaN(e));
 
   const titleRegex = /(.*) - \d{5}/;
-
   const titleInfo = titleRegex.exec(titleElement.text())![1].trim();
 
   // initialize data to return
   const data: DetailedClassInformation = {
-    ... {
-      title: titleInfo
-    }, ...transformSeating(seatInfo)
+    title: titleInfo,  
+    ...transformSeating(seatInfo),
   };
 
   // parse requirements
