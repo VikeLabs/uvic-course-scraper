@@ -8,6 +8,7 @@ import {
   detailedClassInformationUrl,
   subjectsUrl,
 } from './common/urls';
+import { getCatalogIdForTerm, getCurrentTerm } from './common/utils';
 import { KualiCourseItemParser } from './kuali/catalog';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
@@ -22,7 +23,6 @@ import {
   KualiCourseItemParsed,
   BuildingInfo,
 } from './types';
-import { getCatalogIdForTerm, getCurrentTerm } from './utils';
 
 export * from './types';
 
