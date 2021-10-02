@@ -4,8 +4,8 @@ import { performance } from 'perf_hooks';
 import got from 'got';
 
 import { courseDetailUrl, coursesUrl } from '../common/urls';
+import { getCatalogIdForTerm } from '../common/utils';
 import { KualiCourseItem } from '../types';
-import { getCatalogIdForTerm } from '../utils';
 
 import { forEachHelper } from './utils';
 
