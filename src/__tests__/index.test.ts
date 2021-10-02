@@ -2,18 +2,18 @@ jest.mock('../utils');
 import nock from 'nock';
 import { mocked } from 'ts-jest/utils';
 
+import { UVicCourseScraper } from '..';
 import coursesJSON from '../../static/courses/courses-202009.json';
 import subjects202009 from '../../static/subjects/subjects-202009.json';
 import subjects202105 from '../../static/subjects/subjects-202105.json';
+import { getCatalogIdForTerm, getCurrentTerm } from '../common/utils';
 import {
   getCourseDetailByPidSync,
   getMapsAndBuildings,
   getScheduleFileByCourse,
   getSectionFileByCRN,
 } from '../dev/path-builders';
-import { UVicCourseScraper } from '../index';
 import { KualiCourseItemParsed } from '../types';
-import { getCatalogIdForTerm, getCurrentTerm } from '../utils';
 
 const mockGetCurrentTerm = mocked(getCurrentTerm);
 const mockGetCatalogIdForTerm = mocked(getCatalogIdForTerm);
