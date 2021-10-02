@@ -151,7 +151,10 @@ describe('call getCourseSections', () => {
       'Reserved for students in a Computer Science program.  BSENG students should register in A02. This course will be offered fully online and asynchronous (no “real-time” sessions planned or required).'
     );
     expect(courseSections[0].associatedTerm).toStrictEqual({ start: '202101', end: '202104' });
-    expect(courseSections[0].registrationDates).toStrictEqual({ start: 'Jun 22, 2020', end: 'Jan 22, 2021' });
+    expect(courseSections[0].registrationDates).toStrictEqual({
+      start: 'Jun 22, 2020',
+      end: 'Jan 22, 2021',
+    });
     expect(courseSections[0].levels).toStrictEqual(['graduate', 'law', 'undergraduate']);
     expect(courseSections[0].campus).toEqual('online');
     expect(courseSections[0].sectionType).toEqual('lecture');

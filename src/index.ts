@@ -122,7 +122,11 @@ export class UVicCourseScraper {
   public static async getSectionSeats(term: string, crn: string): Promise<Response<DetailedClassInformation>> {
     const url = detailedClassInformationUrl(term, crn);
     const res = await got(url);
-    return { response: detailedClassInfoExtractor(cheerio.load(res.body)), timestamp: new Date(), url };
+    return {
+      response: detailedClassInfoExtractor(cheerio.load(res.body)),
+      timestamp: new Date(),
+      url,
+    };
   }
 
   /**
@@ -141,6 +145,10 @@ export class UVicCourseScraper {
     const url = 'https://www.uvic.ca/search/maps-buildings/index.php';
     const res = await got(url);
 
-    return { response: mapsAndBuildingsExtractor(cheerio.load(res.body)), timestamp: new Date(), url };
+    return {
+      response: mapsAndBuildingsExtractor(cheerio.load(res.body)),
+      timestamp: new Date(),
+      url,
+    };
   }
 }
