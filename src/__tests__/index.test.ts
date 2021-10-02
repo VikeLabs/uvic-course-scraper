@@ -1,4 +1,4 @@
-jest.mock('../utils');
+jest.mock('../common/utils');
 import nock from 'nock';
 import { mocked } from 'ts-jest/utils';
 
