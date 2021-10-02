@@ -1,8 +1,8 @@
-import * as cheerio from 'cheerio';
+import { CheerioAPI } from 'cheerio';
 
 import { BuildingInfo } from '../../../types';
 
-export const mapsAndBuildingsExtractor = ($: cheerio.Root): BuildingInfo[] => {
+export const mapsAndBuildingsExtractor = ($: CheerioAPI): BuildingInfo[] => {
   const buildingElements = $('.filtered__item');
   const buildings: BuildingInfo[] = [];
 

@@ -1,6 +1,6 @@
-import cheerio from 'cheerio';
+import { CheerioAPI } from 'cheerio';
 
-export const assertPageTitle = (expectedPageTitle: string, $: cheerio.Root): void => {
+export const assertPageTitle = (expectedPageTitle: string, $: CheerioAPI): void => {
   const actualPageTitle: string = $('title').first().text();
 
   if (expectedPageTitle != actualPageTitle) {

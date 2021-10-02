@@ -1,3 +1,5 @@
+import { CheerioAPI } from 'cheerio';
+
 import { assertPageTitle } from '../../common/assertions';
 import { DetailedClassInformation, levelType, classification, Requirements, requirementObject } from '../../types';
 
@@ -17,7 +19,7 @@ const transformSeating = (seatInfo: number[]) => ({
 /**
  * Get more details for a section. Most importantly, the section capacities
  */
-export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInformation => {
+export const detailedClassInfoExtractor = ($: CheerioAPI): DetailedClassInformation => {
   assertPageTitle('Detailed Class Information', $);
 
   const seatElement = $(`table[summary="This layout table is used to present the seating numbers."]>tbody>tr`);
@@ -34,7 +36,7 @@ export const detailedClassInfoExtractor = ($: cheerio.Root): DetailedClassInform
 
   // initialize data to return
   const data: DetailedClassInformation = {
-    title: titleInfo,  
+    title: titleInfo,
     ...transformSeating(seatInfo),
   };
 

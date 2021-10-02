@@ -1,4 +1,4 @@
-import * as cheerio from 'cheerio';
+import { CheerioAPI } from 'cheerio';
 
 import { CourseTextbooks, Textbook } from '../../types';
 
@@ -13,7 +13,7 @@ const usedBookRegex = /^Used Book: (\$.*$)/;
 const newAndDigitalAccessRegex = /^New Book \+ Digital Access: (\$.*$)/;
 const instructorRegex = /Instructor: (.*)$/;
 
-export const textbookExtractor = ($: cheerio.Root): CourseTextbooks[] => {
+export const textbookExtractor = ($: CheerioAPI): CourseTextbooks[] => {
   const courseTextbooks: CourseTextbooks[] = [];
   const courseDivs = $('div[class="row course"]');
 
