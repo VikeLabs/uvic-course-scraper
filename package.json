@@ -24,7 +24,7 @@
     "@types/app-root-path": "^1.2.4",
     "@types/async": "^3.2.8",
     "@types/glob": "^7.1.4",
-    "@types/jest": "^26.0.24",
+    "@types/jest": "^27.0.2",
     "@types/progress": "^2.0.5",
     "@types/yargs": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.32.0",
