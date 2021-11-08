@@ -1,4 +1,4 @@
-import cheerio from 'cheerio';
+import { CheerioAPI } from 'cheerio';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
@@ -7,7 +7,7 @@ import { ClassScheduleListing, MeetingTimes, levelType, sectionType } from '../.
 
 dayjs.extend(customParseFormat);
 
-export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<ClassScheduleListing[]> => {
+export const classScheduleListingExtractor = async ($: CheerioAPI): Promise<ClassScheduleListing[]> => {
   assertPageTitle('Class Schedule Listing', $);
 
   const regex = /(.+) - (\d+) - ([\w|-]{0,4} \w?\d+\w?) - ([A|B|T]\d+)/;

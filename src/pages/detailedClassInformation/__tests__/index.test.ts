@@ -31,13 +31,13 @@ describe('Detailed Class Information', () => {
     expect(parsed.waitListSeats.capacity).toBe(100);
     expect(parsed.waitListSeats.actual).toBe(0);
     expect(parsed.waitListSeats.remaining).toBe(100);
-    
+
     const level = parsed.requirements?.level;
     const fieldOfStudy = parsed.requirements?.fieldOfStudy;
 
     expect(level).toStrictEqual(['undergraduate']);
   });
-  
+
   it('parses AHVS 430 correctly - case with levels, fields, classifications', async () => {
     const $ = cheerio.load(await getSectionFileByCRN('202009', '10076'));
     const parsed = await detailedClassInfoExtractor($);

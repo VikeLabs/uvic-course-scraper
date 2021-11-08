@@ -26,7 +26,10 @@ describe('Class Schedule Listing Parser', () => {
 
       expect(parsed[0].crn).toBe('10953');
       expect(parsed[0].associatedTerm).toStrictEqual({ start: '202009', end: '202012' });
-      expect(parsed[0].registrationDates).toStrictEqual({ start: 'Jun 22, 2020', end: 'Sep 25, 2020' });
+      expect(parsed[0].registrationDates).toStrictEqual({
+        start: 'Jun 22, 2020',
+        end: 'Sep 25, 2020',
+      });
       expect(parsed[0].campus).toBe('online');
       expect(parsed[0].instructionalMethod).toBe('online');
       expect(parsed[0].sectionType).toBe('lecture');
@@ -43,12 +46,15 @@ describe('Class Schedule Listing Parser', () => {
       expect(parsed[0].title).toStrictEqual('TOPICS:SOFTWARE ENGINEER: Music Retrieval Techniques');
       expect(parsed[0].crn).toBe('13660');
       expect(parsed[0].associatedTerm).toStrictEqual({ start: '202009', end: '202012' });
-      expect(parsed[0].registrationDates).toStrictEqual({ start: 'Jun 22, 2020', end: 'Sep 25, 2020' });
+      expect(parsed[0].registrationDates).toStrictEqual({
+        start: 'Jun 22, 2020',
+        end: 'Sep 25, 2020',
+      });
       expect(parsed[0].campus).toBe('online');
       expect(parsed[0].instructionalMethod).toBe('online');
       expect(parsed[0].sectionType).toBe('lecture topic');
       expect(parsed[0].credits).toBe('1.500');
-      expect(parsed[0].levels).toStrictEqual(['graduate','law', 'undergraduate']);
+      expect(parsed[0].levels).toStrictEqual(['graduate', 'law', 'undergraduate']);
       expect(parsed[0].meetingTimes[0].type).toBe('Every Week');
       expect(parsed[0].meetingTimes[0].time).toBe('8:30 am - 9:50 am');
       expect(parsed[0].meetingTimes[0].instructors).toStrictEqual(['Jordan Mitchell Shier (P)']);
@@ -61,7 +67,10 @@ describe('Class Schedule Listing Parser', () => {
 
       expect(parsed[0].crn).toBe('10487');
       expect(parsed[0].associatedTerm).toStrictEqual({ start: '202009', end: '202012' });
-      expect(parsed[0].registrationDates).toStrictEqual({ start: 'Jun 22, 2020', end: 'Sep 25, 2020' });
+      expect(parsed[0].registrationDates).toStrictEqual({
+        start: 'Jun 22, 2020',
+        end: 'Sep 25, 2020',
+      });
       expect(parsed[0].campus).toBe('online');
       expect(parsed[0].instructionalMethod).toBe('online');
       expect(parsed[0].sectionType).toBe('lecture');
@@ -85,7 +94,10 @@ describe('Class Schedule Listing Parser', () => {
 
       expect(parsed[0].crn).toBe('10485');
       expect(parsed[0].associatedTerm).toStrictEqual({ start: '202109', end: '202112' });
-      expect(parsed[0].registrationDates).toStrictEqual({ start: 'Jun 14, 2021', end: 'Sep 24, 2021' });
+      expect(parsed[0].registrationDates).toStrictEqual({
+        start: 'Jun 14, 2021',
+        end: 'Sep 24, 2021',
+      });
       expect(parsed[0].campus).toBe('in-person');
       expect(parsed[0].instructionalMethod).toBe('face to face');
       expect(parsed[0].sectionType).toBe('lecture');
@@ -110,7 +122,10 @@ describe('Class Schedule Listing Parser', () => {
 
       expect(parsed[0].crn).toBe('10971');
       expect(parsed[0].associatedTerm).toStrictEqual({ start: '202109', end: '202112' });
-      expect(parsed[0].registrationDates).toStrictEqual({ start: 'Jun 14, 2021', end: 'Sep 24, 2021' });
+      expect(parsed[0].registrationDates).toStrictEqual({
+        start: 'Jun 14, 2021',
+        end: 'Sep 24, 2021',
+      });
       expect(parsed[0].campus).toBe('in-person');
       expect(parsed[0].additionalNotes).toBe('Reserved for BME, BSEN, CENG, ELEC students');
       expect(parsed[0].instructionalMethod).toBe('face to face');
@@ -132,7 +147,10 @@ describe('Class Schedule Listing Parser', () => {
 
       expect(parsed[2].crn).toBe('10973');
       expect(parsed[2].associatedTerm).toStrictEqual({ start: '202109', end: '202112' });
-      expect(parsed[2].registrationDates).toStrictEqual({ start: 'Jun 14, 2021', end: 'Sep 24, 2021' });
+      expect(parsed[2].registrationDates).toStrictEqual({
+        start: 'Jun 14, 2021',
+        end: 'Sep 24, 2021',
+      });
       expect(parsed[2].campus).toBe('in-person');
       expect(parsed[2].instructionalMethod).toBe('face to face');
       expect(parsed[2].sectionType).toBe('tutorial');
