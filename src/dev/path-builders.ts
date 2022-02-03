@@ -1,52 +1,60 @@
 import fs from 'fs';
-import path from 'path';
+import { join, basename } from 'path';
 
-import appRoot from 'app-root-path';
 import { glob } from 'glob';
 
-import { KualiCourseItem } from '../types';
+import { CalendarLevel, KualiCourseItem } from '../types';
 
 const courses: { [term: string]: KualiCourseItem[] } = {};
 
+const relPath = (p: string) => join(__dirname, `../../${p}`);
+
 export const getSchedulePathsByTerm = (term: string): string[][] => {
-  const paths = glob.sync(path.join(appRoot.toString(), `static/schedule/${term}/*/*.html`));
-  return paths.map((thisPath) => [path.basename(thisPath).replace('_', ' ').replace('.html', ''), thisPath]);
+  const paths = glob.sync(relPath(`static/schedule/${term}/*/*.html`));
+  return paths.map((p) => [basename(p).replace('_', ' ').replace('.html', ''), p]);
 };
 
 export const getSchedulePathsBySubject = (term: string, subject: string): string[][] => {
-  const paths = glob.sync(path.join(appRoot.toString(), `static/schedule/${term}/${subject}/*.html`));
-  return paths.map((thisPath) => [path.basename(thisPath).replace('_', ' ').replace('.html', ''), thisPath]);
+  const paths = glob.sync(relPath(`static/schedule/${term}/${subject}/*.html`));
+  return paths.map((p) => [basename(p).replace('_', ' ').replace('.html', ''), p]);
 };
 
 export const getScheduleFileByCourse = async (term: string, subject: string, code: string): Promise<Buffer> => {
-  return fs.promises.readFile(
-    path.join(appRoot.toString(), `static/schedule/${term}/${subject}/${subject}_${code}.html`)
-  );
+  return fs.promises.readFile(relPath(`static/schedule/${term}/${subject}/${subject}_${code}.html`));
 };
 
 export const getSectionFileByCRN = (term: string, crn: string): Promise<Buffer> => {
-  return fs.promises.readFile(path.join(appRoot.toString(), `static/sections/${term}/${crn}.html`));
+  return fs.promises.readFile(relPath(`static/sections/${term}/${crn}.html`));
 };
 
 export const getDetailPathsByTerm = (term: string): string[][] => {
-  const paths = glob.sync(path.join(appRoot.toString(), `static/sections/${term}/*.html`));
-  return paths.map((thisPath) => [path.basename(thisPath).replace('_', ' ').replace('.html', ''), thisPath]);
+  const paths = glob.sync(relPath(`static/sections/${term}/*.html`));
+  return paths.map((p) => [basename(p).replace('_', ' ').replace('.html', ''), p]);
 };
 
-export const getCourseDetailByPidSync = (term: string, pid: string): KualiCourseItem => {
-  // to speed up successive uses by caching into global memory. hot jank
+export const getCoursesByTerm = async (term: string, level: CalendarLevel): Promise<KualiCourseItem[]> => {
   if (!courses[term]) {
-    const data = fs.readFileSync(path.join(appRoot.toString(), `static/courses/courses-${term}.json`));
+    const data = fs.readFileSync(relPath(`static/courses/courses-${level}-${term}.json`));
     courses[term] = JSON.parse(data.toString()) as KualiCourseItem[];
   }
+  return courses[term];
+};
 
-  const course = courses[term].find((c) => c.pid === pid);
+export const getCourseDetailByPidSync = (term: string, pid: string, level: CalendarLevel): KualiCourseItem => {
+  // to speed up successive uses by caching into global memory. hot jank
+  const key = term + level;
+  if (!courses[key]) {
+    const data = fs.readFileSync(relPath(`static/courses/courses-${level}-${term}.json`));
+    courses[key] = JSON.parse(data.toString()) as KualiCourseItem[];
+  }
+
+  const course = courses[key].find((c) => c.pid === pid);
   if (course === undefined) {
     throw new Error(`Unable to find course details for pid: ${pid}`);
   }
   return course;
 };
 
-export const getMapsAndBuildings = (): Promise<Buffer> => {
-  return fs.promises.readFile(path.join(appRoot.toString(), `static/uvic.ca/maps-buildings.html`));
+export const getMapsAndBuildings = async (): Promise<Buffer> => {
+  return fs.promises.readFile(relPath(`static/uvic.ca/maps-buildings.html`));
 };
