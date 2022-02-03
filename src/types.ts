@@ -97,7 +97,7 @@ export type NestedPreCoRequisites = {
   reqList?: Array<NestedPreCoRequisites | Course | string>;
 };
 
-export type levelType = 'law' | 'undergraduate' | 'graduate';
+export type levelType = CalendarLevel & 'law';
 export type sectionType = 'lecture' | 'lab' | 'tutorial' | 'gradable lab' | 'lecture topic';
 export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5' | 'unclassified';
 
@@ -198,3 +198,5 @@ export type CourseTextbooks = {
 };
 
 export type BuildingInfo = { title: string; long?: string; short?: string; url?: string };
+
+export type CalendarLevel = 'undergraduate' | 'graduate';
