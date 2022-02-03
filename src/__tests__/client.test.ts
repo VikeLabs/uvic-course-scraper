@@ -1,11 +1,10 @@
 jest.mock('../common/utils');
 import nock from 'nock';
-import { mocked } from 'ts-jest/utils';
 
 import { UVicCourseScraper } from '..';
-import coursesJSON from '../../static/courses/courses-202009.json';
 import subjects202009 from '../../static/subjects/subjects-202009.json';
 import subjects202105 from '../../static/subjects/subjects-202105.json';
+import { nockCourseCatalog } from '../common/nocks';
 import { getCatalogIdForTerm, getCurrentTerm } from '../common/utils';
 import {
   getCourseDetailByPidSync,
@@ -15,19 +14,13 @@ import {
 } from '../dev/path-builders';
 import { KualiCourseItemParsed } from '../types';
 
-const mockGetCurrentTerm = mocked(getCurrentTerm);
-const mockGetCatalogIdForTerm = mocked(getCatalogIdForTerm);
-
-const nockCourseCatalog = (term: string) => {
-  nock('https://uvic.kuali.co')
-    .get(`/api/v1/catalog/courses/${getCatalogIdForTerm(term)}`)
-    .reply(200, coursesJSON);
-};
+const mockGetCurrentTerm = jest.mocked(getCurrentTerm);
+const mockGetCatalogIdForTerm = jest.mocked(getCatalogIdForTerm);
 
 const nockCourseDetails = (term: string, pid: string) => {
   nock('https://uvic.kuali.co')
     .get(`/api/v1/catalog/course/${getCatalogIdForTerm(term)}/${pid}`)
-    .reply(200, getCourseDetailByPidSync(term, pid));
+    .reply(200, getCourseDetailByPidSync(term, pid, 'undergraduate'));
 };
 
 afterEach(() => {
@@ -36,8 +29,7 @@ afterEach(() => {
 
 describe('call getCourses()', () => {
   it('should have all expected data for a course', async () => {
-    nockCourseCatalog('202101');
-
+    nockCourseCatalog('202101', 'undergraduate');
     const { response: allCourses } = await UVicCourseScraper.getCourses('202101');
 
     const courseIdx = Math.floor(Math.random() * allCourses.length);
@@ -105,7 +97,7 @@ const expectSENG360 = (pid: string, courseDetails: KualiCourseItemParsed) => {
 describe('call getCourseDetails()', () => {
   it('has the expected data for a given class', async () => {
     const term = '202101';
-    nockCourseCatalog(term);
+    nockCourseCatalog('202101', 'undergraduate');
 
     const pid = 'SkMkeY6XV';
     nockCourseDetails(term, pid);
