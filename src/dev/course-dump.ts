@@ -4,51 +4,58 @@ import { performance } from 'perf_hooks';
 import got from 'got';
 
 import { courseDetailUrl, coursesUrl } from '../common/urls';
-import { getCatalogIdForTerm } from '../common/utils';
-import { KualiCourseItem } from '../types';
+import { getCatalogIdByTerm } from '../common/utils';
+import { CalendarLevel, KualiCourseItem } from '../types';
 
-import { forEachHelper } from './utils';
+import { mapLimitProgressBar } from './utils';
 
-const writeCoursesToFS = (term: string, kualiCourseItem: KualiCourseItem[]) => {
-  fs.writeFileSync(`static/courses/courses-${term}.json`, JSON.stringify(kualiCourseItem));
+async function writeCoursesToFS(term: string, level: CalendarLevel, kualiCourseItem: KualiCourseItem[]) {
+  await fs.promises.writeFile(`static/courses/courses-${level}-${term}.json`, JSON.stringify(kualiCourseItem));
 
   // gets the catalog course id for a given.
-  const catalogId = getCatalogIdForTerm(term);
+  const catalogId = getCatalogIdByTerm(term, level);
   const coursesMetadata = JSON.stringify({
-    path: coursesUrl(catalogId),
-    courseDetailPath: courseDetailUrl(catalogId, ''),
+    path: catalogId ? coursesUrl(catalogId) : null,
+    courseDetailPath: catalogId ? courseDetailUrl(catalogId, '') : null,
     // TODO this may contain links that don't work. should remove them
-    pids: kualiCourseItem.map((kualiCourseItem: KualiCourseItem) => kualiCourseItem.pid),
+    pids: kualiCourseItem.filter((c) => !!c?.pid).map((kualiCourseItem: KualiCourseItem) => kualiCourseItem.pid),
     datetime: Date.now(),
   });
 
-  fs.writeFileSync(`static/courses/courses-${term}.metadata.json`, coursesMetadata);
-};
+  await fs.promises.writeFile(`static/courses/courses-${level}-${term}.metadata.json`, coursesMetadata);
+}
 
 /**
  * Downloads all courses. Saves this to courses.json and courses.metadata.json.
  */
-export const coursesUtil = async (term: string): Promise<void> => {
+export async function calendarDownloader(term: string, level: CalendarLevel): Promise<void> {
   // gets the catalog course id for a given.
-  const catalogId = getCatalogIdForTerm(term);
-  const courseMapper = async (kualiCourseItem: KualiCourseItem) => {
-    Object.assign(kualiCourseItem, await got(courseDetailUrl(catalogId, kualiCourseItem.pid)).json());
-  };
+  const catalogId = getCatalogIdByTerm(term, level);
+  if (!catalogId) {
+    console.error(`No catalog id found for term ${term} and level ${level}`);
+    return;
+  }
 
   // Start timer
   const start = performance.now();
 
-  console.log('Downloading all courses');
-  const kualiCourseItems: KualiCourseItem[] = await got(coursesUrl(catalogId)).json();
+  console.log('Downloading all courses for', level, term);
+  const kualiCourseItems = await got(coursesUrl(catalogId)).json<KualiCourseItem[]>();
 
   console.log('Downloading details for each course');
-  await forEachHelper(kualiCourseItems, courseMapper, 35);
+  const kualiCourseItemsWithDetails = await mapLimitProgressBar(
+    kualiCourseItems,
+    async (item) => {
+      return await got(courseDetailUrl(catalogId, item.pid)).json<KualiCourseItem>();
+    },
+    35
+  );
 
   // Stop timer
   const finish = performance.now();
 
   console.log(`Getting course data took ${(finish - start) / 60000} minutes`);
-  console.log(`${(finish - start) / kualiCourseItems.length} ms/course`);
+  console.log(`${(finish - start) / kualiCourseItemsWithDetails.length} ms/course`);
 
-  writeCoursesToFS(term, kualiCourseItems);
-};
+  await writeCoursesToFS(term, level, kualiCourseItemsWithDetails);
+}

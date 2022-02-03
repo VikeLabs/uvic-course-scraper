@@ -4,12 +4,13 @@ import got from 'got';
 import yargs from 'yargs/yargs';
 
 import { detailedClassInformationUrl } from '../common/urls';
+import { CalendarLevel } from '../types';
 
-import { coursesUtil } from './course-dump';
-import { scheduleUtil } from './schedule-dump';
-import { sectionsUtil } from './section-dump';
+import { calendarDownloader } from './course-dump';
+import { schedulesDownloader } from './schedule-dump';
+import { sectionsDownloader } from './section-dump';
 
-const argv = yargs(process.argv.slice(2)).options({
+const { argv } = yargs(process.argv.slice(2)).options({
   term: { type: 'string', demandOption: true, description: 'term eg. 202009' },
   type: {
     alias: 't',
@@ -22,7 +23,11 @@ const argv = yargs(process.argv.slice(2)).options({
     alias: 'c',
     type: 'string',
   },
-}).argv;
+  level: {
+    alias: 'l',
+    choices: ['undergrad', 'graduate'],
+  },
+});
 
 const handleClass = async (term: string, crn: string) => {
   const response = await got(detailedClassInformationUrl(term, crn));
@@ -34,21 +39,31 @@ const main = async () => {
 
   switch (args.type) {
     case 'courses':
-      await coursesUtil(args.term);
-      break;
+      if (!args.level) {
+        console.error('require level flag for class ');
+        return;
+      }
+      return await calendarDownloader(args.term, args.level as CalendarLevel);
     case 'schedules':
-      await scheduleUtil(args.term);
+      if (!args.level) {
+        console.error('require level flag for class ');
+        return;
+      }
+      return await schedulesDownloader(args.term, args.level as CalendarLevel);
       break;
     case 'class':
       if (!args.crn) {
         console.error('require CRN flag for class ');
         return;
       }
-      await handleClass(args.term, args.crn);
-      break;
+      return await handleClass(args.term, args.crn);
+
     case 'sections':
-      await sectionsUtil(args.term);
-      break;
+      if (!args.level) {
+        console.error('require level flag for sections');
+        return;
+      }
+      return await sectionsDownloader(args.term);
   }
 };
 
