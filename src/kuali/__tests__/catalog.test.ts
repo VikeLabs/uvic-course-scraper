@@ -4,7 +4,7 @@ import { KualiCourseItemParser } from '../catalog';
 describe('KualiCatalogItemParser', () => {
   describe('ADMN 311', () => {
     it('gets parsed correctly', () => {
-      const details = getCourseDetailByPidSync('202101', 'r1F2hDT7E');
+      const details = getCourseDetailByPidSync('202101', 'r1F2hDT7E', 'undergraduate');
 
       const response = KualiCourseItemParser(details);
       expect(response.hoursCatalog).toBeUndefined();
@@ -17,7 +17,7 @@ describe('KualiCatalogItemParser', () => {
   describe('hourscatalog test (multiple hours)', () => {
     describe('PHIL207A', () => {
       it('gets parsed correctly', () => {
-        const details = getCourseDetailByPidSync('202101', 'HkxKERd67E');
+        const details = getCourseDetailByPidSync('202101', 'HkxKERd67E', 'undergraduate');
 
         const response = KualiCourseItemParser(details);
         expect(response.hoursCatalog).toStrictEqual([
@@ -34,7 +34,7 @@ describe('KualiCatalogItemParser', () => {
   describe('hourscatalog test (single hour)', () => {
     describe('AE103B', () => {
       it('gets parsed correctly', () => {
-        const details = getCourseDetailByPidSync('202101', 'HJagTwaQN');
+        const details = getCourseDetailByPidSync('202101', 'HJagTwaQN', 'undergraduate');
 
         const response = KualiCourseItemParser(details);
         expect(response.hoursCatalog).toStrictEqual([{ lecture: '3', lab: '0', tutorial: '0' }]);
@@ -47,7 +47,7 @@ describe('KualiCatalogItemParser', () => {
 
   describe('ASTR490 (when credits value are a range)', () => {
     it('gets parsed correctly', () => {
-      const details = getCourseDetailByPidSync('202101', 'Sye6yAwTQV');
+      const details = getCourseDetailByPidSync('202101', 'Sye6yAwTQV', 'undergraduate');
 
       const response = KualiCourseItemParser(details);
       expect(response.hoursCatalog).toBeUndefined();
@@ -60,7 +60,7 @@ describe('KualiCatalogItemParser', () => {
   describe('parsePreCoReqs', () => {
     describe('ATQP135 (no preAndCo or preOrCo)', () => {
       it('gets parsed correctly', () => {
-        const details = getCourseDetailByPidSync('202101', 'HJsvjl1TB');
+        const details = getCourseDetailByPidSync('202101', 'HJsvjl1TB', 'undergraduate');
 
         const response = KualiCourseItemParser(details);
         expect(response.preAndCorequisites).toBeUndefined();
@@ -70,7 +70,7 @@ describe('KualiCatalogItemParser', () => {
 
     describe('CHEM102 (preAndCo and no preOrCo)', () => {
       it('gets parsed correctly', () => {
-        const details = getCourseDetailByPidSync('202101', 'r11A0D6XN');
+        const details = getCourseDetailByPidSync('202101', 'r11A0D6XN', 'undergraduate');
 
         const response = KualiCourseItemParser(details);
         expect(response.preAndCorequisites).toStrictEqual([
@@ -103,7 +103,7 @@ describe('KualiCatalogItemParser', () => {
 
     describe('PHYS110 (preOrCo and no preAndCo)', () => {
       it('gets parsed correctly', () => {
-        const details = getCourseDetailByPidSync('202101', 'r1SYRd67V');
+        const details = getCourseDetailByPidSync('202101', 'r1SYRd67V', 'undergraduate');
 
         const response = KualiCourseItemParser(details);
         expect(response.preAndCorequisites).toBeUndefined();
@@ -123,7 +123,7 @@ describe('KualiCatalogItemParser', () => {
 
     describe('CSC360 (preOrCo and preAndCo)', () => {
       it('gets parsed correctly', () => {
-        const details = getCourseDetailByPidSync('202101', 'SkWiJ_6mE');
+        const details = getCourseDetailByPidSync('202101', 'SkWiJ_6mE', 'undergraduate');
 
         const response = KualiCourseItemParser(details);
         expect(response.preAndCorequisites).toStrictEqual([
@@ -157,7 +157,7 @@ describe('KualiCatalogItemParser', () => {
 
     describe('HDCC490', () => {
       it('gets parsed correctly', () => {
-        const details = getCourseDetailByPidSync('202101', 'r1KjwO6QV');
+        const details = getCourseDetailByPidSync('202101', 'r1KjwO6QV', 'undergraduate');
 
         const response = KualiCourseItemParser(details);
         expect(response.preAndCorequisites).toStrictEqual(['Permission of the program.']);
@@ -167,7 +167,7 @@ describe('KualiCatalogItemParser', () => {
 
     describe('ANTH380 (example with min. GPA required)', () => {
       it('gets parsed correctly', () => {
-        const details = getCourseDetailByPidSync('202101', 'ry-KpwT7V');
+        const details = getCourseDetailByPidSync('202101', 'ry-KpwT7V', 'undergraduate');
 
         const response = KualiCourseItemParser(details);
         expect(response.preAndCorequisites).toStrictEqual([
@@ -193,7 +193,7 @@ describe('KualiCatalogItemParser', () => {
 
     describe('BIOL248 (example with min. grade required)', () => {
       it('gets parsed correctly', () => {
-        const details = getCourseDetailByPidSync('202101', 'B1xqmRwpQV');
+        const details = getCourseDetailByPidSync('202101', 'B1xqmRwpQV', 'undergraduate');
 
         const response = KualiCourseItemParser(details);
         expect(response.preAndCorequisites).toStrictEqual([
