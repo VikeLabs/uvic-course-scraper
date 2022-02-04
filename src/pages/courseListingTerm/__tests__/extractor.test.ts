@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 
-import appRoot from 'app-root-path';
 import * as cheerio from 'cheerio';
 
 import { getScheduleFileByCourse } from '../../../dev/path-builders';
@@ -11,7 +10,7 @@ import { extractCourseListingTerm } from '../extractor';
 // https://www.uvic.ca/BAN1P/bwckctlg.p_disp_cat_term_date
 
 const getFilePath = (file: string) => {
-  return path.join(appRoot.toString(), `static/${file}`);
+  return path.join(__dirname, `../../../../static/${file}`);
 };
 
 describe('page extractor: Course Listing Term', (): void => {
