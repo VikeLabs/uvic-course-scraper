@@ -25,7 +25,7 @@ const { argv } = yargs(process.argv.slice(2)).options({
   },
   level: {
     alias: 'l',
-    choices: ['undergrad', 'graduate'],
+    choices: ['undergraduate', 'graduate'],
   },
 });
 

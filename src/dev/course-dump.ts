@@ -3,6 +3,7 @@ import { performance } from 'perf_hooks';
 
 import got from 'got';
 
+import { KualiCourseCatalog } from '..';
 import { courseDetailUrl, coursesUrl } from '../common/urls';
 import { getCatalogIdByTerm } from '../common/utils';
 import { CalendarLevel, KualiCourseItem } from '../types';
@@ -40,7 +41,7 @@ export async function calendarDownloader(term: string, level: CalendarLevel): Pr
   const start = performance.now();
 
   console.log('Downloading all courses for', level, term);
-  const kualiCourseItems = await got(coursesUrl(catalogId)).json<KualiCourseItem[]>();
+  const kualiCourseItems = await got(coursesUrl(catalogId)).json<KualiCourseCatalog[]>();
 
   console.log('Downloading details for each course');
   const kualiCourseItemsWithDetails = await mapLimitProgressBar(

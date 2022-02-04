@@ -1,4 +1,4 @@
-import { forEachOfLimit, mapLimit } from 'async';
+import { asyncify, forEachOfLimit, mapLimit } from 'async';
 import ProgressBar from 'progress';
 
 /**
@@ -33,16 +33,17 @@ export async function mapLimitProgressBar<T, R>(
   rateLimit: number
 ): Promise<R[]> {
   const bar = new ProgressBar(':bar :current/:total', { total: items.length });
-  return await mapLimit(items, rateLimit, async (item, callback) => {
+
+  const iterator = async (item: T) => {
     try {
-      return await asyncfn(item);
+      const data = await asyncfn(item);
+      bar.tick();
+      return data;
     } catch (error) {
       console.error(error);
       bar.interrupt(`failed on ${JSON.stringify(item)} at iteration ${item}\n`);
-    } finally {
-      bar.tick();
-      callback();
-      return;
     }
-  });
+  };
+
+  return await mapLimit(items, rateLimit, asyncify(iterator));
 }
