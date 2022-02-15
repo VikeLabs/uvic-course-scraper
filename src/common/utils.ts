@@ -67,6 +67,7 @@ export function getCurrentTerm(date: dayjs.Dayjs = dayjs()): string {
   return year + month;
 }
 
+// https://uvic.kuali.co/api/v1/catalog/public/catalogs/
 export function getCatalogIdForTerm(term: string): string {
   switch (term) {
     case '202009':
@@ -78,8 +79,9 @@ export function getCatalogIdForTerm(term: string): string {
     case '202109':
       return '6092db6ebae543001bc23ca1';
     case '202201':
-      // TODO: cannot find a separate calendar for Winter 2022
-      return '6092db6ebae543001bc23ca1';
+      return '61325cd1a7d5ec3519bf62a0';
+    case '202205':
+      return '61a51d59910ba59a0464f787';
     default:
       return '';
   }

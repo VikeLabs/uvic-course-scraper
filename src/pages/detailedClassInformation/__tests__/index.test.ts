@@ -602,4 +602,12 @@ describe('Detailed Class Information Parser All', () => {
       await assertFields(path);
     });
   });
+
+  describe('202205 term', () => {
+    const namePathPairs: string[][] = getDetailPathsByTerm('202105');
+
+    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+      await assertFields(path);
+    });
+  });
 });
