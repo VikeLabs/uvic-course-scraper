@@ -225,4 +225,12 @@ describe('Class Schedule Listing Parser All', () => {
       await assertFields(path);
     });
   });
+
+  describe('202205 term', () => {
+    const namePathPairs: string[][] = getSchedulePathsByTerm('202105');
+
+    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+      await assertFields(path);
+    });
+  });
 });
