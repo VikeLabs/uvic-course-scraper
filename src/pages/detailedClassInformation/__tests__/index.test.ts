@@ -610,4 +610,20 @@ describe('Detailed Class Information Parser All', () => {
       await assertFields(path);
     });
   });
+
+  describe('202209 term', () => {
+    const namePathPairs: string[][] = getDetailPathsByTerm('202109');
+
+    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+      await assertFields(path);
+    });
+  });
+
+  describe('202301 term', () => {
+    const namePathPairs: string[][] = getDetailPathsByTerm('202301');
+
+    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+      await assertFields(path);
+    });
+  });
 });

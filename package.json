@@ -1,6 +1,6 @@
 {
   "name": "@vikelabs/uvic-course-scraper",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.6",
   "description": "UVic Course Scrapper",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
