@@ -115,9 +115,9 @@ export class UVicCourseScraper {
    */
   public static async getSectionSeats(term: string, crn: string): Promise<Response<DetailedClassInformation>> {
     const url = detailedClassInformationUrl(term, crn);
-    const res = await got(url);
+    const res = await axios.get(url);
     return {
-      response: detailedClassInfoExtractor(load(res.body)),
+      response: detailedClassInfoExtractor(load(res.data)),
       timestamp: new Date(),
       url,
     };
@@ -128,7 +128,8 @@ export class UVicCourseScraper {
    * @param term i.e. '202009', '202101'
    */
   public static async getSubjects(term = getCurrentTerm()): Promise<KualiSubject[]> {
-    return await got(subjectsUrl(getCatalogIdForTerm(term))).json<KualiSubject[]>();
+    const res = await axios.get<KualiSubject[]>(subjectsUrl(getCatalogIdForTerm(term)));
+    return res.data;
   }
 
   /**
@@ -137,10 +138,10 @@ export class UVicCourseScraper {
    */
   public static async getBuildings(): Promise<Response<BuildingInfo[]>> {
     const url = 'https://www.uvic.ca/search/maps-buildings/index.php';
-    const res = await got(url);
+    const res = await axios.get(url);
 
     return {
-      response: mapsAndBuildingsExtractor(load(res.body)),
+      response: mapsAndBuildingsExtractor(load(res.data)),
       timestamp: new Date(),
       url,
     };
