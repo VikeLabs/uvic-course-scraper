@@ -1,6 +1,5 @@
 jest.mock('../common/utils');
 import nock from 'nock';
-import { mocked } from 'ts-jest/utils';
 
 import { UVicCourseScraper } from '..';
 import coursesJSON from '../../static/courses/courses-202009.json';
@@ -15,8 +14,8 @@ import {
 } from '../dev/path-builders';
 import { KualiCourseItemParsed } from '../types';
 
-const mockGetCurrentTerm = mocked(getCurrentTerm);
-const mockGetCatalogIdForTerm = mocked(getCatalogIdForTerm);
+const mockGetCurrentTerm = jest.mocked(getCurrentTerm);
+const mockGetCatalogIdForTerm = jest.mocked(getCatalogIdForTerm);
 
 const nockCourseCatalog = (term: string) => {
   nock('https://uvic.kuali.co')
