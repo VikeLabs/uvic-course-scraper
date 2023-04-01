@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import got from 'got';
+import axios from 'axios';
 import yargs from 'yargs/yargs';
 
 import { detailedClassInformationUrl } from '../common/urls';
@@ -25,8 +25,8 @@ const argv = yargs(process.argv.slice(2)).options({
 }).argv;
 
 const handleClass = async (term: string, crn: string) => {
-  const response = await got(detailedClassInformationUrl(term, crn));
-  await fs.promises.writeFile(`tmp/${term}_${crn}.html`, response.rawBody);
+  const response = await axios.get(detailedClassInformationUrl(term, crn));
+  await fs.promises.writeFile(`tmp/${term}_${crn}.html`, response.data);
 };
 
 const main = async () => {

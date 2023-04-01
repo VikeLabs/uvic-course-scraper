@@ -1,7 +1,7 @@
 import fs from 'fs';
 
-import cheerio from 'cheerio';
-import got from 'got';
+import axios from 'axios';
+import  { load } from 'cheerio';
 
 import { detailedClassInformationUrl } from '../common/urls';
 import { classScheduleListingExtractor } from '../pages/courseListingEntries';
@@ -15,22 +15,22 @@ export const sectionsUtil = async (term: string) => {
   const paths: string[] = namePathPairs.map((namePathPair) => namePathPair[1]);
 
   const parseCRNsFromClassScheduleListing = async (path: string): Promise<void> => {
-    const $ = cheerio.load(await fs.promises.readFile(path));
+    const $ = load(await fs.promises.readFile(path));
     const parsed = await classScheduleListingExtractor($);
     CRNs.push(...parsed.map((section) => section.crn));
   };
 
   const writeCourseSectionsToFS = async (crn: string) => {
     const url = detailedClassInformationUrl(term, crn);
-    const res = await got(url);
-    if (res.body.search(/No classes were found that meet your search criteria/) === -1) {
+    const res = await axios.get(url);
+    if (res.data.search(/No classes were found that meet your search criteria/) === -1) {
       const destDir = `static/sections/${term}`;
       const destFilePath = `${destDir}/${crn}.html`;
 
       if (!fs.existsSync(destDir)) {
         fs.mkdirSync(destDir, { recursive: true });
       }
-      await fs.promises.writeFile(destFilePath, res.rawBody);
+      await fs.promises.writeFile(destFilePath, res.data);
     }
   };
 

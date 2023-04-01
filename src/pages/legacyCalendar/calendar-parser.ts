@@ -19,7 +19,6 @@ interface Course {
  */
 export const parseDepartments = async ($: CheerioAPI) => {
   try {
-    // const response = await got(BASE_URL);
     const departments: string[] = [];
     $('a').each((index, element) => {
       const department = $(element).attr('href');
@@ -43,8 +42,6 @@ export const parseDepartments = async ($: CheerioAPI) => {
  */
 export const parseCourseCodes = async ($: CheerioAPI, department: string) => {
   try {
-    // const response = await got(`${BASE_URL}${department}`);
-
     const courses: string[] = [];
     $('a').each((index, element) => {
       const course = $(element).attr('href');
@@ -69,7 +66,6 @@ export const parseSections = async ($: CheerioAPI, params: string) => {
   try {
     // response = await request(url, { family: 4 });
     // console.log(`${SECTIONS_URL}${params}`);
-    // const response = await got(`${SECTIONS_URL}${params}`);
 
     const crns: string[] = [];
     $('a').each((index, element) => {
@@ -102,7 +98,6 @@ export const parseSections = async ($: CheerioAPI, params: string) => {
  */
 export const parseOffered = async ($: CheerioAPI, subject: string, code: string) => {
   try {
-    // const response = await got(`${BASE_URL}${subject}/${code}.html`);
     const title = $('h2').text();
 
     const schedules: string[] = [];

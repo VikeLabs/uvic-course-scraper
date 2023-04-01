@@ -1,10 +1,13 @@
 import fs from 'fs';
 import { performance } from 'perf_hooks';
 
-import got from 'got';
+
+
+import axios from 'axios';
 
 import { courseDetailUrl, coursesUrl } from '../common/urls';
 import { getCatalogIdForTerm } from '../common/utils';
+import { KualiCourseItemParser } from '../kuali/catalog';
 import { KualiCourseItem } from '../types';
 
 import { forEachHelper } from './utils';
@@ -32,14 +35,16 @@ export const coursesUtil = async (term: string): Promise<void> => {
   // gets the catalog course id for a given.
   const catalogId = getCatalogIdForTerm(term);
   const courseMapper = async (kualiCourseItem: KualiCourseItem) => {
-    Object.assign(kualiCourseItem, await got(courseDetailUrl(catalogId, kualiCourseItem.pid)).json());
+    const res = await axios.get<KualiCourseItem>(courseDetailUrl(catalogId, kualiCourseItem.pid));
+    // const parsed = KualiCourseItemParser(data);
+    Object.assign(kualiCourseItem, res.data);
   };
 
   // Start timer
   const start = performance.now();
 
   console.log('Downloading all courses');
-  const kualiCourseItems: KualiCourseItem[] = await got(coursesUrl(catalogId)).json();
+  const kualiCourseItems: KualiCourseItem[] = await axios.get(coursesUrl(catalogId));
 
   console.log('Downloading details for each course');
   await forEachHelper(kualiCourseItems, courseMapper, 35);

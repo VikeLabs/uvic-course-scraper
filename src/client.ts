@@ -1,5 +1,5 @@
-import * as cheerio from 'cheerio';
-import got from 'got';
+import axios from 'axios';
+import { load } from 'cheerio';
 
 import {
   classScheduleListingUrl,
@@ -33,8 +33,8 @@ export class UVicCourseScraper {
    */
   public static async getCourses(term = getCurrentTerm()): Promise<Response<KualiCourseCatalog[]>> {
     const url = coursesUrl(getCatalogIdForTerm(term));
-    const courseCatalog = await got(url).json<KualiCourseCatalog[]>();
-    return { response: courseCatalog, timestamp: new Date(), url };
+    const courseCatalog = await axios.get<KualiCourseCatalog[]>(url);
+    return { response: courseCatalog.data, timestamp: new Date(), url };
   }
 
   private static subjectCodeToPidMapper = (term: string, kuali: KualiCourseCatalog[]) => {
@@ -82,8 +82,8 @@ export class UVicCourseScraper {
     pid: string
   ): Promise<Response<KualiCourseItemParsed>> {
     const url = courseDetailUrl(getCatalogIdForTerm(term), pid);
-    const courseDetails = await got(url).json<KualiCourseItem>();
-    return { response: KualiCourseItemParser(courseDetails), timestamp: new Date(), url };
+    const courseDetails = await axios.get<KualiCourseItem>(url);
+    return { response: KualiCourseItemParser(courseDetails.data), timestamp: new Date(), url };
   }
 
   /**
@@ -99,9 +99,9 @@ export class UVicCourseScraper {
     code: string
   ): Promise<Response<ClassScheduleListing[]>> {
     const url = classScheduleListingUrl(term, subject.toUpperCase(), code);
-    const res = await got(url);
+    const res = await axios.get(url);
     return {
-      response: await classScheduleListingExtractor(cheerio.load(res.body)),
+      response: await classScheduleListingExtractor(load(res.data)),
       timestamp: new Date(),
       url,
     };
@@ -117,7 +117,7 @@ export class UVicCourseScraper {
     const url = detailedClassInformationUrl(term, crn);
     const res = await got(url);
     return {
-      response: detailedClassInfoExtractor(cheerio.load(res.body)),
+      response: detailedClassInfoExtractor(load(res.body)),
       timestamp: new Date(),
       url,
     };
@@ -140,7 +140,7 @@ export class UVicCourseScraper {
     const res = await got(url);
 
     return {
-      response: mapsAndBuildingsExtractor(cheerio.load(res.body)),
+      response: mapsAndBuildingsExtractor(load(res.body)),
       timestamp: new Date(),
       url,
     };

@@ -4,21 +4,19 @@ Specifically focuses on how data from the sites we're hitting in this project is
 Feel free to make changes to this code and use it when working on tasks to experiment with ideas!
 */
 
-import cheerio from 'cheerio';
-import got from 'got';
-
-import Element = cheerio.Element;
+import axios from 'axios';
+import {load} from 'cheerio';
 
 console.log('Starting scraping...');
 
 (async () => {
   // Make a request to ECE 260's class schedule listing for the Sep - Dec 2020 term.
 
-  const html = await got(
+  const html = await axios.get(
     'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse?term_in=202009&subj_in=ECE&crse_in=260&schd_in='
   );
   // Load the HTML into a cheerio object
-  const $ = cheerio.load(html.body);
+  const $ = load(html.body);
 
   // Get the part of the HTML response that includes a table with the following summary's tbody
   const table = $(
