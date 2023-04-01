@@ -1,7 +1,6 @@
 import fs from 'fs';
 
 import * as cheerio from 'cheerio';
-import each from 'jest-each';
 
 import { assertPageTitle } from '../../common/assertions';
 import { getScheduleFileByCourse, getSchedulePathsBySubject } from '../../dev/path-builders';
@@ -31,7 +30,7 @@ describe('a example test using Jest and Cheerio', () => {
 describe('a example test using Jest and Cheerio with parameters', (): void => {
   const namePathPairs: string[][] = getSchedulePathsBySubject('202009', 'CSC');
 
-  each(namePathPairs).it.concurrent('%s has the expected title ', async (name: string, path: string) => {
+  it.each(namePathPairs)('%s has the expected title ', async (name: string, path: string) => {
     const $ = cheerio.load(await fs.promises.readFile(path));
 
     try {

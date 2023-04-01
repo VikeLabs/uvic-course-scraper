@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 
 import * as cheerio from 'cheerio';
-import each from 'jest-each';
 
 import { getDetailPathsByTerm, getScheduleFileByCourse, getSectionFileByCRN } from '../../../dev/path-builders';
 import { detailedClassInfoExtractor } from '../index';
@@ -566,7 +565,7 @@ describe('Detailed Class Information Parser All', () => {
   describe('202009 term', () => {
     const namePathPairs: string[][] = getDetailPathsByTerm('202009');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    it.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -574,7 +573,7 @@ describe('Detailed Class Information Parser All', () => {
   describe('202101 term', () => {
     const namePathPairs: string[][] = getDetailPathsByTerm('202101');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    it.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -582,7 +581,7 @@ describe('Detailed Class Information Parser All', () => {
   describe('202105 term', () => {
     const namePathPairs: string[][] = getDetailPathsByTerm('202105');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    it.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -590,7 +589,7 @@ describe('Detailed Class Information Parser All', () => {
   describe('202109 term', () => {
     const namePathPairs: string[][] = getDetailPathsByTerm('202109');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    it.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -598,7 +597,7 @@ describe('Detailed Class Information Parser All', () => {
   describe('202201 term', () => {
     const namePathPairs: string[][] = getDetailPathsByTerm('202109');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    it.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -606,7 +605,7 @@ describe('Detailed Class Information Parser All', () => {
   describe('202205 term', () => {
     const namePathPairs: string[][] = getDetailPathsByTerm('202105');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    it.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -614,7 +613,7 @@ describe('Detailed Class Information Parser All', () => {
   describe('202209 term', () => {
     const namePathPairs: string[][] = getDetailPathsByTerm('202109');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    it.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -622,7 +621,7 @@ describe('Detailed Class Information Parser All', () => {
   describe('202301 term', () => {
     const namePathPairs: string[][] = getDetailPathsByTerm('202301');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    it.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
