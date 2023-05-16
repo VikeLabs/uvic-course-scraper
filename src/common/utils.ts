@@ -89,6 +89,8 @@ export function getCatalogIdForTerm(term: string): string {
       return '620d23ca4bbc91fd3dbe3f64';
     case '202305':
       return '63580b862ddbf3001d4805b5';
+    case '202309':
+      return '63f510ea5295ea001cb85899';
     default:
       return '';
   }
