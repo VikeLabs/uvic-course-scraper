@@ -91,6 +91,9 @@ export function getCatalogIdForTerm(term: string): string {
       return '63580b862ddbf3001d4805b5';
     case '202309':
       return '63f510ea5295ea001cb85899';
+    case '202401':
+      // TODO: remove when catalog is updated
+      return '63f510ea5295ea001cb85899';
     default:
       return '';
   }
