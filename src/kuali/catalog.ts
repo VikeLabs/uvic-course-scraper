@@ -106,7 +106,7 @@ function hoursCatalog(hours: string[]) {
 
 export function KualiCourseItemParser(course: KualiCourseItem): KualiCourseItemParsed {
   // strip HTML tags from courseDetails.description
-  course.description = course.description.replace(/(<([^>]+)>)/gi, '');
+  course.description = course.description ? course.description.replace(/(<([^>]+)>)/gi, '') : '';
 
   const { hoursCatalogText, preAndCorequisites, preOrCorequisites } = course;
 
