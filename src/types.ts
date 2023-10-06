@@ -1,8 +1,8 @@
-export const COURSES_URL_F2020 = 'https://uvic.kuali.co/api/v1/catalog/courses/5d9ccc4eab7506001ae4c225';
-export const COURSES_URL_W2021 = 'https://uvic.kuali.co/api/v1/catalog/courses/5f21b66d95f09c001ac436a0';
-export const COURSE_DETAIL_URL = 'https://uvic.kuali.co/api/v1/catalog/course/5d9ccc4eab7506001ae4c225/';
-
-export * from './types';
+export interface Response<T> {
+  response: T;
+  timestamp: Date;
+  url: string;
+}
 
 export interface SubjectCode {
   name: string;
@@ -11,6 +11,12 @@ export interface SubjectCode {
   linkedGroup: string;
 }
 
+export interface KualiSubject {
+  subject: string;
+  title: string;
+}
+
+// KualiCourseCatalog is returned the index of courses from Kuali
 export interface KualiCourseCatalog {
   __catalogCourseId: string;
   __passedCatalogQuery: boolean;
@@ -23,6 +29,8 @@ export interface KualiCourseCatalog {
   _score: number;
 }
 
+// KualiCourseItem is the full version of KualiCourseCatalog
+// This is retrieved one-by-one from a Kuali endpoint.
 export interface KualiCourseItem extends KualiCourseCatalog {
   description: string;
   supplementalNotes?: string;
@@ -34,7 +42,12 @@ export interface KualiCourseItem extends KualiCourseCatalog {
       min: string;
       max: string;
     };
-    value: string;
+    value:
+      | string
+      | {
+          min: string;
+          max: string;
+        };
     chosen: string;
   };
   crossListedCourses?: {
@@ -42,15 +55,51 @@ export interface KualiCourseItem extends KualiCourseCatalog {
     pid: string;
     title: string;
   }[];
-  //This has two types because the JSON returned from uvic is a
-  //string so we parse it to turn into an object type after the parsing is done.
-  hoursCatalogText?: string | { lecture: string; lab: string; tutorial: string };
+  hoursCatalogText?: string;
   repeatableCatalogText?: string;
+  preAndCorequisites?: string;
+  preOrCorequisites?: string;
 }
 
+export type KualiCourseItemParsed = Omit<
+  KualiCourseItem,
+  'hoursCatalogText' | 'preAndCorequisites' | 'preOrCorequisites'
+> & {
+  hoursCatalog?: {
+    lecture: string;
+    tutorial: string;
+    lab: string;
+  }[];
+  preAndCorequisites?: Array<NestedPreCoRequisites | Course | string>;
+  preOrCorequisites?: Array<NestedPreCoRequisites | Course | string>;
+};
+
+export type Course = {
+  subject: string;
+  code: string;
+  pid?: string;
+};
+
+export type NestedPreCoRequisites = {
+  // How many of the reqs need to be completed
+  quantity?: number | 'ALL';
+  // Is a coreq or not
+  coreq?: boolean;
+  // How many accumulative units of the given reqs are needed
+  units?: boolean;
+  // Minimum grade needed from the following reqs
+  grade?: string;
+  // Minimum GPA needed from the following reqs
+  gpa?: string;
+  // Data the function fails to parse
+  unparsed?: string;
+  // Array of reqs
+  reqList?: Array<NestedPreCoRequisites | Course | string>;
+};
+
 export type levelType = 'law' | 'undergraduate' | 'graduate';
-export type sectionType = 'lecture' | 'lab' | 'tutorial';
-export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5';
+export type sectionType = 'lecture' | 'lab' | 'tutorial' | 'gradable lab' | 'lecture topic';
+export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5' | 'unclassified';
 
 export interface MeetingTimes {
   type: string;
@@ -63,6 +112,7 @@ export interface MeetingTimes {
 }
 
 export interface ClassScheduleListing {
+  title: string;
   crn: string;
   sectionCode: string;
   additionalNotes?: string;
@@ -88,14 +138,63 @@ export interface Seating {
   remaining: number;
 }
 
-interface Requirements {
+export interface Requirements {
   level: levelType[];
   fieldOfStudy?: string[];
   classification?: classification[];
+  negClassification?: classification[];
+  degree?: string[];
+  program?: string[];
+  negProgram?: string[];
+  college?: string[];
+  negCollege?: string[];
+  major?: string[];
+}
+
+export interface requirementObject {
+  known: true | false;
+  requirement: string;
+  idx: number;
 }
 
 export interface DetailedClassInformation {
+  title: string;
   seats: Seating;
   waitListSeats: Seating;
   requirements?: Requirements;
 }
+export interface DetailedClassInformationRes {
+  data: DetailedClassInformation;
+  timestamp: string;
+  url: string;
+}
+
+// BOOKSTORE TYPES
+export type Textbook = {
+  bookstoreUrl?: string;
+  imageUrl?: string;
+  title: string;
+  authors?: string[];
+  required: boolean;
+  // prices stored in the following format '$78.95'
+  // TODO: format these in cents and store as number
+  price: {
+    newCad?: string;
+    usedCad?: string;
+    digitalAccessCad?: string;
+    newAndDigitalAccessCad?: string;
+  };
+  isbn?: string;
+  instructor?: string;
+};
+
+export type CourseTextbooks = {
+  subject: string;
+  code: string;
+  section?: string;
+  additionalInfo?: string[];
+  instructor?: string;
+  textbooks: Textbook[];
+};
+
+export type BuildingInfo = { title: string; long?: string; short?: string; url?: string };

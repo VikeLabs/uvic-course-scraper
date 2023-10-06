@@ -30,23 +30,26 @@ const handleClass = async (term: string, crn: string) => {
 };
 
 const main = async () => {
-  switch (argv.type) {
+  const args = await argv;
+
+  switch (args.type) {
     case 'courses':
-      await coursesUtil();
+      await coursesUtil(args.term);
       break;
     case 'schedules':
-      await scheduleUtil(argv.term);
+      await scheduleUtil(args.term);
       break;
     case 'class':
-      if (!argv.crn) {
+      if (!args.crn) {
         console.error('require CRN flag for class ');
         return;
       }
-      await handleClass(argv.term, argv.crn);
+      await handleClass(args.term, args.crn);
       break;
     case 'sections':
-      await sectionsUtil(argv.term);
+      await sectionsUtil(args.term);
       break;
   }
 };
+
 main();

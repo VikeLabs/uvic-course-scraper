@@ -1,11 +1,11 @@
-import * as cheerio from 'cheerio';
+import { CheerioAPI } from 'cheerio';
 
 import { assertPageTitle } from '../../common/assertions';
 
 export type TermValue = { term: string; text: string };
 
 // https://www.uvic.ca/BAN1P/bwckctlg.p_disp_dyn_ctlg
-export const extractSubjects = ($: cheerio.Root): TermValue[] => {
+export const extractSubjects = ($: CheerioAPI): TermValue[] => {
   assertPageTitle('Search for Courses', $);
 
   const termElements = $('select > option');
