@@ -1,8 +1,6 @@
 import fs from 'fs';
 import { performance } from 'perf_hooks';
 
-import got from 'got';
-
 import { courseDetailUrl, coursesUrl } from '../common/urls';
 import { getCatalogIdForTerm } from '../common/utils';
 import { KualiCourseItem } from '../types';
@@ -32,14 +30,18 @@ export const coursesUtil = async (term: string): Promise<void> => {
   // gets the catalog course id for a given.
   const catalogId = getCatalogIdForTerm(term);
   const courseMapper = async (kualiCourseItem: KualiCourseItem) => {
-    Object.assign(kualiCourseItem, await got(courseDetailUrl(catalogId, kualiCourseItem.pid)).json());
+    // rewrite using fetch
+    const response = await fetch(courseDetailUrl(catalogId, kualiCourseItem.pid));
+    const body = await response.json();
+    Object.assign(kualiCourseItem, body);
   };
 
   // Start timer
   const start = performance.now();
 
   console.log('Downloading all courses');
-  const kualiCourseItems: KualiCourseItem[] = await got(coursesUrl(catalogId)).json();
+  const response = await fetch(coursesUrl(catalogId));
+  const kualiCourseItems = (await response.json()) as KualiCourseItem[];
 
   console.log('Downloading details for each course');
   await forEachHelper(kualiCourseItems, courseMapper, 35);

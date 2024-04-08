@@ -14,11 +14,11 @@ console.log('Starting scraping...');
 (async () => {
   // Make a request to ECE 260's class schedule listing for the Sep - Dec 2020 term.
 
-  const html = await got(
+  const html = await fetch(
     'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse?term_in=202009&subj_in=ECE&crse_in=260&schd_in='
   );
   // Load the HTML into a cheerio object
-  const $ = cheerio.load(html.body);
+  const $ = cheerio.load(await html.text());
 
   // Get the part of the HTML response that includes a table with the following summary's tbody
   const table = $(

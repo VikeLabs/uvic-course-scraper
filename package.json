@@ -1,15 +1,18 @@
 {
   "name": "@vikelabs/uvic-course-scraper",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.9",
   "description": "UVic Course Scrapper",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
-  "repository": "github:vikelabs/uvic-course-scraper",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vikelabs/uvic-course-scraper.git"
+  },
   "scripts": {
     "dump": "ts-node src/dev/cli.ts",
-    "test": "jest",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "test": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{t,j}s{x,}\"",
     "build": "tsc"
   },
@@ -17,43 +20,27 @@
   "license": "GPL-3.0",
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
-    "dayjs": "^1.10.7",
-    "got": "^11.8.2"
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "@types/app-root-path": "^1.2.4",
-    "@types/async": "^3.2.8",
+    "@types/app-root-path": "^1.2.8",
     "@types/glob": "^7.1.4",
-    "@types/jest": "^27.0.2",
-    "@types/progress": "^2.0.5",
+    "@types/progress": "^2.0.7",
     "@types/yargs": "^17.0.3",
-    "@typescript-eslint/eslint-plugin": "^4.32.0",
-    "@typescript-eslint/parser": "^4.32.0",
-    "app-root-path": "^3.0.0",
-    "async": "^3.2.1",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.24.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^3.4.1",
+    "app-root-path": "^3.1.0",
+    "dayjs": "^1.11.10",
+    "eslint": "^8.57.0",
     "glob": "^7.2.0",
-    "jest": "^27.2.4",
-    "jest-each": "^27.2.4",
-    "nock": "^13.1.3",
-    "prettier": "^2.4.1",
+    "nock": "^13.5.4",
+    "prettier": "^3.2.5",
     "progress": "^2.0.3",
-    "ts-jest": "^27.0.5",
-    "ts-node-dev": "^1.1.8",
-    "typescript": "^4.4.3",
-    "yargs": "^17.2.1"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.4",
+    "typescript-eslint": "^7.5.0",
+    "vitest": "^1.4.0",
+    "yargs": "^17.7.2"
   },
   "files": [
     "dist/**/*"
-  ],
-  "jest": {
-    "testPathIgnorePatterns": [
-      "src/dev/**",
-      "src/example/**"
-    ]
-  }
+  ]
 }

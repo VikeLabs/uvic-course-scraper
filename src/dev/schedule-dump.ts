@@ -1,8 +1,6 @@
 import * as fs from 'fs';
 import { performance } from 'perf_hooks';
 
-import got from 'got';
-
 import { classScheduleListingUrl } from '../common/urls';
 import { KualiCourseItem } from '../types';
 
@@ -14,8 +12,9 @@ export const scheduleUtil = async (term: string): Promise<void> => {
     const code = kualiCourseItem.__catalogCourseId.slice(subject.length);
 
     const url = classScheduleListingUrl(term, subject, code);
-    const res = await got(url);
-    if (res.body.search(/No classes were found that meet your search criteria/) === -1) {
+    const res = await fetch(url);
+    const body = await res.text();
+    if (body.search(/No classes were found that meet your search criteria/) === -1) {
       const destDir = `static/schedule/${term}/${subject}`;
       const destFilePath = `${destDir}/${subject}_${code}.html`;
 
@@ -25,7 +24,7 @@ export const scheduleUtil = async (term: string): Promise<void> => {
         fs.mkdirSync(destDir, { recursive: true });
       }
 
-      await fs.promises.writeFile(destFilePath, res.rawBody);
+      await fs.promises.writeFile(destFilePath, body);
     }
   };
 

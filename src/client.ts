@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-import got from 'got';
+import fetch from 'node-fetch';
 
 import {
   classScheduleListingUrl,
@@ -33,7 +33,8 @@ export class UVicCourseScraper {
    */
   public static async getCourses(term = getCurrentTerm()): Promise<Response<KualiCourseCatalog[]>> {
     const url = coursesUrl(getCatalogIdForTerm(term));
-    const courseCatalog = await got(url).json<KualiCourseCatalog[]>();
+    const res = await fetch(url);
+    const courseCatalog = (await res.json()) as KualiCourseCatalog[];
     return { response: courseCatalog, timestamp: new Date(), url };
   }
 
@@ -82,7 +83,8 @@ export class UVicCourseScraper {
     pid: string
   ): Promise<Response<KualiCourseItemParsed>> {
     const url = courseDetailUrl(getCatalogIdForTerm(term), pid);
-    const courseDetails = await got(url).json<KualiCourseItem>();
+    const res = await fetch(url);
+    const courseDetails = (await res.json()) as KualiCourseItem;
     return { response: KualiCourseItemParser(courseDetails), timestamp: new Date(), url };
   }
 
@@ -99,9 +101,10 @@ export class UVicCourseScraper {
     code: string
   ): Promise<Response<ClassScheduleListing[]>> {
     const url = classScheduleListingUrl(term, subject.toUpperCase(), code);
-    const res = await got(url);
+    const res = await fetch(url);
+    const body = await res.text();
     return {
-      response: await classScheduleListingExtractor(cheerio.load(res.body)),
+      response: await classScheduleListingExtractor(cheerio.load(body)),
       timestamp: new Date(),
       url,
     };
@@ -115,9 +118,10 @@ export class UVicCourseScraper {
    */
   public static async getSectionSeats(term: string, crn: string): Promise<Response<DetailedClassInformation>> {
     const url = detailedClassInformationUrl(term, crn);
-    const res = await got(url);
+    const res = await fetch(url);
+    const body = await res.text();
     return {
-      response: detailedClassInfoExtractor(cheerio.load(res.body)),
+      response: detailedClassInfoExtractor(cheerio.load(body)),
       timestamp: new Date(),
       url,
     };
@@ -128,7 +132,9 @@ export class UVicCourseScraper {
    * @param term i.e. '202009', '202101'
    */
   public static async getSubjects(term = getCurrentTerm()): Promise<KualiSubject[]> {
-    return await got(subjectsUrl(getCatalogIdForTerm(term))).json<KualiSubject[]>();
+    const res = await fetch(subjectsUrl(getCatalogIdForTerm(term)));
+    const data = (await res.json()) as KualiSubject[];
+    return data;
   }
 
   /**
@@ -137,10 +143,11 @@ export class UVicCourseScraper {
    */
   public static async getBuildings(): Promise<Response<BuildingInfo[]>> {
     const url = 'https://www.uvic.ca/search/maps-buildings/index.php';
-    const res = await got(url);
+    const res = await fetch(url);
+    const body = await res.text();
 
     return {
-      response: mapsAndBuildingsExtractor(cheerio.load(res.body)),
+      response: mapsAndBuildingsExtractor(cheerio.load(body)),
       timestamp: new Date(),
       url,
     };

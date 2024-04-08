@@ -180,7 +180,7 @@ const assertFields = async (path: string) => {
 describe('Class Schedule Listing Parser (CRN) CSC', () => {
   const namePathPairs = [...getSchedulePathsBySubject('202009', 'CSC'), ...getSchedulePathsBySubject('202101', 'CSC')];
 
-  each(namePathPairs).it('%s has the expected title ', async (name: string, path: string) => {
+  test.each(namePathPairs)('%s has the expected title ', async (name: string, path: string) => {
     await assertFields(path);
   });
 });
@@ -189,7 +189,7 @@ describe('Class Schedule Listing Parser All', () => {
   describe('202009 term', () => {
     const namePathPairs: string[][] = getSchedulePathsByTerm('202009');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    test.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -197,7 +197,7 @@ describe('Class Schedule Listing Parser All', () => {
   describe('202101 term', () => {
     const namePathPairs: string[][] = getSchedulePathsByTerm('202101');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    test.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -205,7 +205,7 @@ describe('Class Schedule Listing Parser All', () => {
   describe('202105 term', () => {
     const namePathPairs: string[][] = getSchedulePathsByTerm('202105');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    test.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -213,7 +213,7 @@ describe('Class Schedule Listing Parser All', () => {
   describe('202109 term', () => {
     const namePathPairs: string[][] = getSchedulePathsByTerm('202109');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    test.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -221,7 +221,7 @@ describe('Class Schedule Listing Parser All', () => {
   describe('202201 term', () => {
     const namePathPairs: string[][] = getSchedulePathsByTerm('202109');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    test.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -229,7 +229,7 @@ describe('Class Schedule Listing Parser All', () => {
   describe('202205 term', () => {
     const namePathPairs: string[][] = getSchedulePathsByTerm('202105');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    test.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -237,7 +237,7 @@ describe('Class Schedule Listing Parser All', () => {
   describe('202209 term', () => {
     const namePathPairs: string[][] = getSchedulePathsByTerm('202109');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    test.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
@@ -245,7 +245,7 @@ describe('Class Schedule Listing Parser All', () => {
   describe('202301 term', () => {
     const namePathPairs: string[][] = getSchedulePathsByTerm('202301');
 
-    each(namePathPairs).it('%s parses correctly', async (name: string, path: string) => {
+    test.each(namePathPairs)('%s parses correctly', async (name: string, path: string) => {
       await assertFields(path);
     });
   });
