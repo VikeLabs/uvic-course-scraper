@@ -1,5 +1,4 @@
-import * as cheerio from 'cheerio';
-
+import { load } from 'cheerio';
 import { Course, KualiCourseItem, KualiCourseItemParsed, NestedPreCoRequisites } from '../types';
 
 /**
@@ -16,7 +15,7 @@ function parsePreCoReqs(preCoReqs: string): Array<NestedPreCoRequisites | Course
   const earnMinimumRegex = /Earn(ed)? a minimum (?<unit>grade|GPA) of (?<min>[^ ]+) (in (?<quantity>\d+))?/;
   const courseRegex = /(?<subject>\w{2,4})(?<code>\d{3}\w?)/;
 
-  const $ = cheerio.load(preCoReqs);
+  const $ = load(preCoReqs);
 
   // Iterate through each unordered list in the HTML
   $('ul')

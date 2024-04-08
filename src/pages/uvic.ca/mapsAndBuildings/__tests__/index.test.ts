@@ -1,5 +1,4 @@
-import * as cheerio from 'cheerio';
-
+import { load } from 'cheerio';
 import { mapsAndBuildingsExtractor } from '..';
 import { getMapsAndBuildings } from '../../../../dev/path-builders';
 import { BuildingInfo } from '../../../../types';
@@ -8,7 +7,7 @@ describe('UVic Maps & Buildings', () => {
   it('parses the buildings correctly', async () => {
     const data = await getMapsAndBuildings();
 
-    const $ = cheerio.load(data);
+    const $ = load(data);
     const buildings = mapsAndBuildingsExtractor($);
 
     // Campus Bike Centre

@@ -1,12 +1,10 @@
 import fs from 'fs';
-
-import * as cheerio from 'cheerio';
-
 import { textbookExtractor } from '..';
+import { load } from 'cheerio';
 
 describe('bookstore parser', () => {
   it('should parse every course', async () => {
-    const $ = cheerio.load(await fs.promises.readFile(`static/misc/textbooks.html`));
+    const $ = load(await fs.promises.readFile(`static/misc/textbooks.html`));
     const textbooks = textbookExtractor($);
 
     expect(textbooks.length).toStrictEqual(1004);
@@ -15,7 +13,7 @@ describe('bookstore parser', () => {
   // No required books
   describe('CSC 111 A02', () => {
     it('should have the correct data', async () => {
-      const $ = cheerio.load(await fs.promises.readFile(`static/misc/textbooks.html`));
+      const $ = load(await fs.promises.readFile(`static/misc/textbooks.html`));
       const textbooks = textbookExtractor($);
 
       const csc111 = textbooks.find(
@@ -44,7 +42,7 @@ describe('bookstore parser', () => {
   // Required and optional books
   describe('CSC 226 A01', () => {
     it('should have the correct data', async () => {
-      const $ = cheerio.load(await fs.promises.readFile(`static/misc/textbooks.html`));
+      const $ = load(await fs.promises.readFile(`static/misc/textbooks.html`));
       const textbooks = textbookExtractor($);
 
       const csc226 = textbooks.find(
@@ -100,7 +98,7 @@ describe('bookstore parser', () => {
   // A course that's listed with all sections together i.e. 'A01/A02/A03'
   describe('CYC 152 B01', () => {
     it('should have the correct data', async () => {
-      const $ = cheerio.load(await fs.promises.readFile(`static/misc/textbooks.html`));
+      const $ = load(await fs.promises.readFile(`static/misc/textbooks.html`));
       const textbooks = textbookExtractor($);
 
       const cyc152 = textbooks.find(
@@ -143,7 +141,7 @@ describe('bookstore parser', () => {
   // Multiple additional info elements
   describe('CIVE 351 A01', () => {
     it('should have the correct data', async () => {
-      const $ = cheerio.load(await fs.promises.readFile(`static/misc/textbooks.html`));
+      const $ = load(await fs.promises.readFile(`static/misc/textbooks.html`));
       const textbooks = textbookExtractor($);
 
       const cive351 = textbooks.find(
@@ -159,7 +157,7 @@ describe('bookstore parser', () => {
   // No section listed
   describe('CHEM 362', () => {
     it('should have the correct data', async () => {
-      const $ = cheerio.load(await fs.promises.readFile(`static/misc/textbooks.html`));
+      const $ = load(await fs.promises.readFile(`static/misc/textbooks.html`));
       const textbooks = textbookExtractor($);
 
       const chem362 = textbooks.find((textbook) => textbook.subject === 'CHEM' && textbook.code === '362');

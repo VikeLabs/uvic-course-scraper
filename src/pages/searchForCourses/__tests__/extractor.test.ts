@@ -1,11 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-
 import appRoot from 'app-root-path';
-import * as cheerio from 'cheerio';
-
 import { getScheduleFileByCourse } from '../../../dev/path-builders';
 import { extractSubjects } from '../extractor';
+import { load } from 'cheerio';
 
 // title: Search for Courses
 // https://www.uvic.ca/BAN1P/bwckctlg.p_disp_cat_term_date
@@ -19,7 +17,7 @@ const getFilePath = (file: string) => {
 
 describe('page extractor: Search for Courses', (): void => {
   it('should throw error when wrong page type is given', async () => {
-    const $ = cheerio.load(await getScheduleFileByCourse('202009', 'CHEM', '101'));
+    const $ = load(await getScheduleFileByCourse('202009', 'CHEM', '101'));
 
     await expect(async () => await extractSubjects($)).rejects.toThrowError('wrong page type for parser');
   });
@@ -27,7 +25,7 @@ describe('page extractor: Search for Courses', (): void => {
   // pass the HTML file to cheerio to interact with the DOM
   it('has page has the expected title', async () => {
     // pull from local filesystem
-    const $ = cheerio.load(await fs.promises.readFile(getFilePath('misc/UVIC_SearchForCourses.html')));
+    const $ = load(await fs.promises.readFile(getFilePath('misc/UVIC_SearchForCourses.html')));
     expect($('title').first().text()).toBe('Search for Courses');
   });
 });

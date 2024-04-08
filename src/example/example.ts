@@ -4,10 +4,7 @@ Specifically focuses on how data from the sites we're hitting in this project is
 Feel free to make changes to this code and use it when working on tasks to experiment with ideas!
 */
 
-import cheerio from 'cheerio';
-import got from 'got';
-
-import Element = cheerio.Element;
+import { load } from 'cheerio';
 
 console.log('Starting scraping...');
 
@@ -18,7 +15,7 @@ console.log('Starting scraping...');
     'https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse?term_in=202009&subj_in=ECE&crse_in=260&schd_in='
   );
   // Load the HTML into a cheerio object
-  const $ = cheerio.load(await html.text());
+  const $ = load(await html.text());
 
   // Get the part of the HTML response that includes a table with the following summary's tbody
   const table = $(
@@ -29,7 +26,7 @@ console.log('Starting scraping...');
   const tableRows = table.find('tr');
 
   // Since there are multiple table rows in tableRows, we can iterate through them all
-  tableRows.each((i: number, el: Element) => {
+  tableRows.each((_, el) => {
     const info = $(el)
       .text() // get the text attributes of what we found
       .split('\n') // split the text into an array, splitting at any new line

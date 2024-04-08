@@ -1,14 +1,13 @@
 import fs from 'fs';
 
-import * as cheerio from 'cheerio';
-
 import { assertPageTitle } from '../../common/assertions';
 import { getScheduleFileByCourse, getSchedulePathsBySubject } from '../../dev/path-builders';
+import { load } from 'cheerio';
 
 describe('a example test using Jest and Cheerio', () => {
   it('has page has the expected title', async () => {
     //   pass the HTML file for ECE260 in term 202009 to cheerio to interact with the DOM
-    const $ = cheerio.load(await getScheduleFileByCourse('202009', 'ECE', '260'));
+    const $ = load(await getScheduleFileByCourse('202009', 'ECE', '260'));
 
     try {
       // expect this title for all BAN1P pages
@@ -24,7 +23,7 @@ describe('a example test using Jest and Cheerio with parameters', (): void => {
   const namePathPairs: string[][] = getSchedulePathsBySubject('202009', 'CSC');
 
   test.each(namePathPairs)('%s has the expected title ', async (name: string, path: string) => {
-    const $ = cheerio.load(await fs.promises.readFile(path));
+    const $ = load(await fs.promises.readFile(path));
 
     try {
       assertPageTitle('Class Schedule Listing', $);

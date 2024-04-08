@@ -1,8 +1,5 @@
 import * as fs from 'fs';
-
-import * as cheerio from 'cheerio';
-import each from 'jest-each';
-
+import { load } from 'cheerio';
 import {
   getScheduleFileByCourse,
   getSchedulePathsBySubject,
@@ -13,7 +10,7 @@ import { classScheduleListingExtractor } from '../index';
 
 describe('Class Schedule Listing Parser', () => {
   it('should throw error when wrong page type is given', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '10953'));
+    const $ = load(await getSectionFileByCRN('202009', '10953'));
 
     await expect(async () => await classScheduleListingExtractor($)).rejects.toThrowError('wrong page type for parser');
   });
@@ -21,7 +18,7 @@ describe('Class Schedule Listing Parser', () => {
   describe('Fall 2020', () => {
     it('parses ECE260 correctly', async () => {
       const f = await getScheduleFileByCourse('202009', 'ECE', '260');
-      const $ = cheerio.load(f);
+      const $ = load(f);
       const parsed = await classScheduleListingExtractor($);
 
       expect(parsed[0].crn).toBe('10953');
@@ -41,7 +38,7 @@ describe('Class Schedule Listing Parser', () => {
 
     it('parses SENG480B correctly', async () => {
       const f = await getScheduleFileByCourse('202009', 'SENG', '480B');
-      const $ = cheerio.load(f);
+      const $ = load(f);
       const parsed = await classScheduleListingExtractor($);
       expect(parsed[0].title).toStrictEqual('TOPICS:SOFTWARE ENGINEER: Music Retrieval Techniques');
       expect(parsed[0].crn).toBe('13660');
@@ -62,7 +59,7 @@ describe('Class Schedule Listing Parser', () => {
 
     it('parses CHEM101 correctly', async () => {
       const f = await getScheduleFileByCourse('202009', 'CHEM', '101');
-      const $ = cheerio.load(f);
+      const $ = load(f);
       const parsed = await classScheduleListingExtractor($);
 
       expect(parsed[0].crn).toBe('10487');
@@ -89,7 +86,7 @@ describe('Class Schedule Listing Parser', () => {
   describe('Fall 2021', () => {
     it('parses CHEM101 A01', async () => {
       const f = await getScheduleFileByCourse('202109', 'CHEM', '101');
-      const $ = cheerio.load(f);
+      const $ = load(f);
       const parsed = await classScheduleListingExtractor($);
 
       expect(parsed[0].crn).toBe('10485');
@@ -117,7 +114,7 @@ describe('Class Schedule Listing Parser', () => {
 
     it('parses ECE260 A01 correctly', async () => {
       const f = await getScheduleFileByCourse('202109', 'ECE', '260');
-      const $ = cheerio.load(f);
+      const $ = load(f);
       const parsed = await classScheduleListingExtractor($);
 
       expect(parsed[0].crn).toBe('10971');
@@ -142,7 +139,7 @@ describe('Class Schedule Listing Parser', () => {
 
     it('parses ECE260 T01 correctly', async () => {
       const f = await getScheduleFileByCourse('202109', 'ECE', '260');
-      const $ = cheerio.load(f);
+      const $ = load(f);
       const parsed = await classScheduleListingExtractor($);
 
       expect(parsed[2].crn).toBe('10973');
@@ -167,7 +164,7 @@ describe('Class Schedule Listing Parser', () => {
 });
 
 const assertFields = async (path: string) => {
-  const $ = cheerio.load(await fs.promises.readFile(path));
+  const $ = load(await fs.promises.readFile(path));
   const parsed = await classScheduleListingExtractor($);
 
   parsed.forEach((e) => {

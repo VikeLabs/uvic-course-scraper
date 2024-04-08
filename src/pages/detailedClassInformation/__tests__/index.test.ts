@@ -1,25 +1,23 @@
 import * as fs from 'fs';
-
-import * as cheerio from 'cheerio';
-
 import { getDetailPathsByTerm, getScheduleFileByCourse, getSectionFileByCRN } from '../../../dev/path-builders';
 import { detailedClassInfoExtractor } from '../index';
+import { load } from 'cheerio';
 
 const assertFields = async (path: string) => {
-  const $ = cheerio.load(await fs.promises.readFile(path));
+  const $ = load(await fs.promises.readFile(path));
   const parsed = detailedClassInfoExtractor($);
   expect(parsed.seats.capacity).toBeGreaterThanOrEqual(0);
 };
 
 describe('Detailed Class Information', () => {
   it('should throw error when wrong page type is given', async () => {
-    const $ = cheerio.load(await getScheduleFileByCourse('202009', 'CHEM', '101'));
+    const $ = load(await getScheduleFileByCourse('202009', 'CHEM', '101'));
 
     await expect(async () => detailedClassInfoExtractor($)).rejects.toThrowError('wrong page type for parser');
   });
 
   it('parses SENG480B correctly', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '13660'));
+    const $ = load(await getSectionFileByCRN('202009', '13660'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.title).toStrictEqual('TOPICS:SOFTWARE ENGINEER: Music Retrieval Techniques');
@@ -37,7 +35,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses AHVS 430 correctly - case with levels, fields, classifications', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '10076'));
+    const $ = load(await getSectionFileByCRN('202009', '10076'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(10);
@@ -58,7 +56,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses CYC 423 correctly - case with no end string', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '10888'));
+    const $ = load(await getSectionFileByCRN('202009', '10888'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(60);
@@ -79,7 +77,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses ECE260 correctly - case with levels, fields', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '10953'));
+    const $ = load(await getSectionFileByCRN('202009', '10953'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(130);
@@ -105,7 +103,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses CSC 110 correctly - case with levels, classifications', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '10720'));
+    const $ = load(await getSectionFileByCRN('202009', '10720'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(39);
@@ -126,7 +124,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses GNDR 100 correctly - case with levels, negative classifications', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '11787'));
+    const $ = load(await getSectionFileByCRN('202009', '11787'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(50);
@@ -147,7 +145,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses CSC355 correctly - case with levels', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '10801'));
+    const $ = load(await getSectionFileByCRN('202009', '10801'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(32);
@@ -168,7 +166,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses COM 400 correctly - case with levels, degrees, fields, classifications', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '10673'));
+    const $ = load(await getSectionFileByCRN('202009', '10673'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(55);
@@ -191,7 +189,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses COM 402 correctly - case with levels, degrees, classifications', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '10677'));
+    const $ = load(await getSectionFileByCRN('202009', '10677'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(60);
@@ -214,7 +212,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses NURS 425 correctly - case with levels, degrees, field', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '12359'));
+    const $ = load(await getSectionFileByCRN('202009', '12359'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(60);
@@ -237,7 +235,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses ENGR 112 correctly - case with levels, degrees', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '11400'));
+    const $ = load(await getSectionFileByCRN('202009', '11400'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(40);
@@ -260,7 +258,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses EDCI 336 correctly - case with programs, levels, fields', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '11193'));
+    const $ = load(await getSectionFileByCRN('202009', '11193'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(33);
@@ -285,7 +283,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses EDCI 315 correctly - case with programs, levels', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '11189'));
+    const $ = load(await getSectionFileByCRN('202009', '11189'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(33);
@@ -310,7 +308,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses EDCI 402 correctly - case with programs, levels, classifications', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '11204'));
+    const $ = load(await getSectionFileByCRN('202009', '11204'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(33);
@@ -335,7 +333,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses CSC 111 correctly - case with programs, levels, colleges', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '10728'));
+    const $ = load(await getSectionFileByCRN('202009', '10728'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(195);
@@ -362,7 +360,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses EPHE 310 correctly - case with programs, levels, colleges, negative classifications', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '11533'));
+    const $ = load(await getSectionFileByCRN('202009', '11533'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(32);
@@ -389,7 +387,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses EPHE 435 correctly - case with programs, levels, colleges, fields, classifications', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '11552'));
+    const $ = load(await getSectionFileByCRN('202009', '11552'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(35);
@@ -416,7 +414,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses EPHE 441 correctly - case with levels, colleges, fields, classifications', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '11553'));
+    const $ = load(await getSectionFileByCRN('202009', '11553'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(60);
@@ -451,7 +449,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses CSC 110 correctly - case with negative programs, levels, negative colleges', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '10714'));
+    const $ = load(await getSectionFileByCRN('202009', '10714'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(90);
@@ -488,7 +486,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses EPHE 344 correctly - case with levels, fields, negative classifications', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '11534'));
+    const $ = load(await getSectionFileByCRN('202009', '11534'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(45);
@@ -527,7 +525,7 @@ describe('Detailed Class Information', () => {
   });
 
   it('parses NURS 430 correctly - case with levels, majors', async () => {
-    const $ = cheerio.load(await getSectionFileByCRN('202009', '12367'));
+    const $ = load(await getSectionFileByCRN('202009', '12367'));
     const parsed = await detailedClassInfoExtractor($);
 
     expect(parsed.seats.capacity).toBe(35);

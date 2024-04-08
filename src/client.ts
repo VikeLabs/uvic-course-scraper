@@ -1,4 +1,3 @@
-import * as cheerio from 'cheerio';
 import fetch from 'node-fetch';
 
 import {
@@ -23,6 +22,7 @@ import {
   KualiCourseItemParsed,
   BuildingInfo,
 } from './types';
+import { load } from 'cheerio';
 
 export class UVicCourseScraper {
   private static subjectCodeToPidMap: Map<string, string> = new Map();
@@ -104,7 +104,7 @@ export class UVicCourseScraper {
     const res = await fetch(url);
     const body = await res.text();
     return {
-      response: await classScheduleListingExtractor(cheerio.load(body)),
+      response: await classScheduleListingExtractor(load(body)),
       timestamp: new Date(),
       url,
     };
@@ -121,7 +121,7 @@ export class UVicCourseScraper {
     const res = await fetch(url);
     const body = await res.text();
     return {
-      response: detailedClassInfoExtractor(cheerio.load(body)),
+      response: detailedClassInfoExtractor(load(body)),
       timestamp: new Date(),
       url,
     };
@@ -147,7 +147,7 @@ export class UVicCourseScraper {
     const body = await res.text();
 
     return {
-      response: mapsAndBuildingsExtractor(cheerio.load(body)),
+      response: mapsAndBuildingsExtractor(load(body)),
       timestamp: new Date(),
       url,
     };

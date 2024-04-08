@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import cheerio from 'cheerio';
+import cheerio, { load } from 'cheerio';
 
 import { detailedClassInformationUrl } from '../common/urls';
 import { classScheduleListingExtractor } from '../pages/courseListingEntries';
@@ -14,7 +14,7 @@ export const sectionsUtil = async (term: string) => {
   const paths: string[] = namePathPairs.map((namePathPair) => namePathPair[1]);
 
   const parseCRNsFromClassScheduleListing = async (path: string): Promise<void> => {
-    const $ = cheerio.load(await fs.promises.readFile(path));
+    const $ = load(await fs.promises.readFile(path));
     const parsed = await classScheduleListingExtractor($);
     CRNs.push(...parsed.map((section) => section.crn));
   };
