@@ -1,11 +1,6 @@
 import { CheerioAPI } from 'cheerio';
-import dayjs from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-
 import { assertPageTitle } from '../../common/assertions';
 import { ClassScheduleListing, MeetingTimes, levelType, sectionType } from '../../types';
-
-dayjs.extend(customParseFormat);
 
 export const classScheduleListingExtractor = async ($: CheerioAPI): Promise<ClassScheduleListing[]> => {
   assertPageTitle('Class Schedule Listing', $);
@@ -77,8 +72,27 @@ export const classScheduleListingExtractor = async ($: CheerioAPI): Promise<Clas
         associatedStartRegex.test(associatedTerm) &&
         yearRegex.test(associatedTerm)
       ) {
-        const associatedStart = dayjs(associatedStartRegex.exec(associatedTerm)![1], 'MMM').format('MM');
-        const associatedEnd = dayjs(associatedEndRegex.exec(associatedTerm)![1], 'MMM').format('MM');
+        const months: readonly string[] = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ];
+
+        const associatedStart = (months.indexOf(associatedStartRegex.exec(associatedTerm)![1]) + 1)
+          .toString()
+          .padStart(2, '0');
+        const associatedEnd = (months.indexOf(associatedEndRegex.exec(associatedTerm)![1]) + 1)
+          .toString()
+          .padStart(2, '0');
         const year = yearRegex.exec(associatedTerm)![0];
         classSchedule.associatedTerm = {
           start: year + associatedStart,

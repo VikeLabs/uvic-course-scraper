@@ -1,12 +1,83 @@
-import dayjs from 'dayjs';
-
 import { getCatalogIdForTerm, getCurrentTerm } from '../utils';
 
 describe('getCurrentTerm', () => {
-  it('returns the current term', () => {
-    const date = dayjs('2021-01-01');
+  it('returns the correct term for January', () => {
+    const date = new Date('2021-01-05T00:00:00Z');
     const term = getCurrentTerm(date);
     expect(term).toEqual('202101');
+  });
+
+  it('returns the correct term for February', () => {
+    const date = new Date('2021-02-01T00:00:00Z');
+    const term = getCurrentTerm(date);
+    expect(term).toEqual('202101');
+  });
+
+  it('returns the correct term for March', () => {
+    const date = new Date('2021-03-01T00:00:00Z');
+    const term = getCurrentTerm(date);
+    expect(term).toEqual('202101');
+  });
+
+  it('returns the correct term for April', () => {
+    const date = new Date('2021-04-01T00:00:00Z');
+    const term = getCurrentTerm(date);
+    expect(term).toEqual('202101');
+  });
+
+  it('returns the correct term for May', () => {
+    const date = new Date('2021-05-05T00:00:00Z');
+    const term = getCurrentTerm(date);
+    expect(term).toEqual('202105');
+  });
+
+  it('returns the correct term for June', () => {
+    const date = new Date('2021-06-01T00:00:00Z');
+    const term = getCurrentTerm(date);
+    expect(term).toEqual('202105');
+  });
+
+  it('returns the correct term for July', () => {
+    const date = new Date('2021-07-01T00:00:00Z');
+    const term = getCurrentTerm(date);
+    expect(term).toEqual('202105');
+  });
+
+  it('returns the correct term for August', () => {
+    const date = new Date('2021-08-01T00:00:00Z');
+    const term = getCurrentTerm(date);
+    expect(term).toEqual('202105');
+  });
+
+  it('returns the correct term for September', () => {
+    const date = new Date('2021-09-02T00:00:00Z');
+    const term = getCurrentTerm(date);
+    expect(term).toEqual('202109');
+  });
+
+  it('returns the correct term for October', () => {
+    const date = new Date('2021-10-01T00:00:00Z');
+    const term = getCurrentTerm(date);
+    expect(term).toEqual('202109');
+  });
+
+  it('returns the correct term for November', () => {
+    const date = new Date('2021-11-01T00:00:00Z');
+    const term = getCurrentTerm(date);
+    expect(term).toEqual('202109');
+  });
+
+  it('returns the correct term for December', () => {
+    const date = new Date('2021-12-01T00:00:00Z');
+    const term = getCurrentTerm(date);
+    expect(term).toEqual('202109');
+  });
+
+  it('returns the current term when no date is provided', () => {
+    const date = new Date();
+    const term = getCurrentTerm(date);
+    const expectedTerm = getCurrentTerm();
+    expect(term).toEqual(expectedTerm);
   });
 });
 

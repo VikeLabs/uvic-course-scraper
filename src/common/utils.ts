@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 enum term {
   '01',
   '05',
@@ -51,16 +49,34 @@ export function getCurrentTerms(plusMinus: number): string[] {
   return terms.sort();
 }
 
-export function getCurrentTerm(date: dayjs.Dayjs = dayjs()): string {
-  const year = date.year().toString();
-  const currMonth = date.month();
+/**
+ * Returns the current term in the format 'YYYYMM', where YYYY is the year and MM is the month code.
+ * The month codes are:
+ * - '01' for January to April
+ * - '05' for May to August
+ * - '09' for September to December
+ *
+ * If the month is December (index 11), the function calculates the term for the next year by setting
+ * the month to '01' and calculating the next year by adding 1 to the current year.
+ *
+ * @param date - The date for which the term needs to be calculated. If not provided, the current date and time will be used.
+ * @returns The current term in the format 'YYYYMM'.
+ *
+ * @example
+ * // Using the current date and time
+ * const currentTerm = getCurrentTerm();
+ * console.log(currentTerm); // Output: e.g., '202305' for May 2023
+ */
+export function getCurrentTerm(date: Date = new Date()): string {
+  const year = date.getFullYear().toString();
+  const currentMonth = date.getMonth() + 1;
   let month = '';
 
-  if (0 <= currMonth && currMonth < 4) {
+  if (0 <= currentMonth && currentMonth < 4) {
     month = '01';
-  } else if (4 <= currMonth && currMonth < 10) {
+  } else if (4 <= currentMonth && currentMonth < 9) {
     month = '05';
-  } else {
+  } else if (currentMonth >= 9) {
     month = '09';
   }
 
