@@ -12,7 +12,7 @@ import {
   getScheduleFileByCourse,
   getSectionFileByCRN,
 } from '../dev/path-builders';
-import { KualiCourseItemParsed } from '../types';
+import { KualiCourseItemParsed } from '../kuali/types';
 
 const mockGetCurrentTerm = vi.mocked(getCurrentTerm);
 const mockGetCatalogIdForTerm = vi.mocked(getCatalogIdForTerm);
@@ -37,7 +37,7 @@ describe('call getCourses()', () => {
   it('should have all expected data for a course', async () => {
     nockCourseCatalog('202101');
 
-    const { response: allCourses } = await UVicCourseScraper.getCourses('202101');
+    const { data: allCourses } = await UVicCourseScraper.getCourses('202101');
 
     const courseIdx = Math.floor(Math.random() * allCourses.length);
 
@@ -114,7 +114,7 @@ describe('call getCourseDetails()', () => {
 
     expect(response).toBeDefined();
     if (response) {
-      expectSENG360(pid, response.response);
+      expectSENG360(pid, response.data);
     }
   });
 });
@@ -125,7 +125,7 @@ describe('call getCourseDetailsByPid()', () => {
     const term = '202101';
     nockCourseDetails(term, pid);
 
-    const { response: courseDetails } = await UVicCourseScraper.getCourseDetailsByPid(term, pid);
+    const { data: courseDetails } = await UVicCourseScraper.getCourseDetailsByPid(term, pid);
 
     expectSENG360(pid, courseDetails);
   });
@@ -140,7 +140,7 @@ describe('call getCourseSections', () => {
     nock('https://www.uvic.ca')
       .get('/BAN1P/bwckctlg.p_disp_listcrse?term_in=' + term + '&subj_in=' + subject + '&crse_in=' + code + '&schd_in=')
       .reply(200, sectionsResponse);
-    const { response: courseSections } = await UVicCourseScraper.getCourseSections(term, subject, code);
+    const { data: courseSections } = await UVicCourseScraper.getCourseSections(term, subject, code);
 
     expect(courseSections.length).toEqual(4);
 
@@ -175,7 +175,7 @@ describe('call getSectionSeats()', () => {
     nock('https://www.uvic.ca')
       .get('/BAN1P/bwckschd.p_disp_detail_sched?term_in=' + term + '&crn_in=' + crn)
       .reply(200, htmlResponse);
-    const { response: classSeats } = await UVicCourseScraper.getSectionSeats(term, crn);
+    const { data: classSeats } = await UVicCourseScraper.getSectionSeats(term, crn);
 
     const seats = classSeats.seats;
     const waitListSeats = classSeats.waitListSeats;
@@ -224,6 +224,6 @@ describe('call getBuildings()', () => {
     nock('https://www.uvic.ca')
       .get('/search/maps-buildings/index.php')
       .reply(200, await getMapsAndBuildings());
-    expect((await UVicCourseScraper.getBuildings()).response.length).toBeGreaterThan(0);
+    expect((await UVicCourseScraper.getBuildings()).data.length).toBeGreaterThan(0);
   });
 });

@@ -1,5 +1,8 @@
 import { load } from 'cheerio';
-import { Course, KualiCourseItem, KualiCourseItemParsed, NestedPreCoRequisites } from '../types';
+import { NestedPreCoRequisites } from "./types";
+import { Course } from "./types";
+import { KualiCourseItemParsed } from "./types";
+import { KualiCourseItem } from "./types";
 
 /**
  * Parses the pre and co-reqs from the Kuali data into a usable format.

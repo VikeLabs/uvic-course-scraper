@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-
+import { load } from 'cheerio';
 import {
   classScheduleListingUrl,
   courseDetailUrl,
@@ -13,16 +13,16 @@ import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
 import { mapsAndBuildingsExtractor } from './pages/uvic.ca/mapsAndBuildings';
 import {
-  KualiCourseCatalog,
-  KualiCourseItem,
   DetailedClassInformation,
   ClassScheduleListing,
-  KualiSubject,
   Response,
-  KualiCourseItemParsed,
   BuildingInfo,
 } from './types';
-import { load } from 'cheerio';
+import { KualiCourseItemParsed } from "./kuali/types";
+import { KualiCourseItem } from "./kuali/types";
+import { KualiCourseCatalog } from "./kuali/types";
+import { KualiSubject } from "./kuali/types";
+
 
 export class UVicCourseScraper {
   private static subjectCodeToPidMap: Map<string, string> = new Map();
@@ -35,7 +35,7 @@ export class UVicCourseScraper {
     const url = coursesUrl(getCatalogIdForTerm(term));
     const res = await fetch(url);
     const courseCatalog = (await res.json()) as KualiCourseCatalog[];
-    return { response: courseCatalog, timestamp: new Date(), url };
+    return { data: courseCatalog, timestamp: new Date(), url };
   }
 
   private static subjectCodeToPidMapper = (term: string, kuali: KualiCourseCatalog[]) => {
@@ -58,7 +58,7 @@ export class UVicCourseScraper {
     code: string
   ): Promise<Response<KualiCourseItemParsed> | void> {
     if (UVicCourseScraper.subjectCodeToPidMap.size === 0) {
-      const { response: courseCatalog } = await UVicCourseScraper.getCourses(term);
+      const { data: courseCatalog } = await UVicCourseScraper.getCourses(term);
       UVicCourseScraper.subjectCodeToPidMapper(term, courseCatalog);
     }
 
@@ -68,8 +68,8 @@ export class UVicCourseScraper {
       return;
     }
 
-    const { response, url } = await UVicCourseScraper.getCourseDetailsByPid(term, pid);
-    return { response, timestamp: new Date(), url };
+    const { data: response, url } = await UVicCourseScraper.getCourseDetailsByPid(term, pid);
+    return { data: response, timestamp: new Date(), url };
   }
 
   /**
@@ -85,7 +85,7 @@ export class UVicCourseScraper {
     const url = courseDetailUrl(getCatalogIdForTerm(term), pid);
     const res = await fetch(url);
     const courseDetails = (await res.json()) as KualiCourseItem;
-    return { response: KualiCourseItemParser(courseDetails), timestamp: new Date(), url };
+    return { data: KualiCourseItemParser(courseDetails), timestamp: new Date(), url };
   }
 
   /**
@@ -104,7 +104,7 @@ export class UVicCourseScraper {
     const res = await fetch(url);
     const body = await res.text();
     return {
-      response: await classScheduleListingExtractor(load(body)),
+      data: await classScheduleListingExtractor(load(body)),
       timestamp: new Date(),
       url,
     };
@@ -121,7 +121,7 @@ export class UVicCourseScraper {
     const res = await fetch(url);
     const body = await res.text();
     return {
-      response: detailedClassInfoExtractor(load(body)),
+      data: detailedClassInfoExtractor(load(body)),
       timestamp: new Date(),
       url,
     };
@@ -147,7 +147,7 @@ export class UVicCourseScraper {
     const body = await res.text();
 
     return {
-      response: mapsAndBuildingsExtractor(load(body)),
+      data: mapsAndBuildingsExtractor(load(body)),
       timestamp: new Date(),
       url,
     };
