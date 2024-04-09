@@ -5,7 +5,7 @@ import { UVicCourseScraper } from '..';
 import coursesJSON from '../../static/courses/courses-202009.json';
 import subjects202009 from '../../static/subjects/subjects-202009.json';
 import subjects202105 from '../../static/subjects/subjects-202105.json';
-import { getCatalogIdForTerm, getCurrentTerm } from '../common/utils';
+import { getCatalogIdForTerm, getCurrentTerm } from '../common/term';
 import {
   getCourseDetailByPidSync,
   getMapsAndBuildings,

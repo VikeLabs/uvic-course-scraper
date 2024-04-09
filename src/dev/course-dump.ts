@@ -2,7 +2,7 @@ import fs from 'fs';
 import { performance } from 'perf_hooks';
 import { courseDetailUrl } from '../uvic.kuali.co/urls';
 import { coursesUrl } from '../uvic.kuali.co/urls';
-import { getCatalogIdForTerm } from '../common/utils';
+import { getCatalogIdForTerm } from '../common/term';
 import { forEachHelper } from './async';
 import { KualiCourseItem } from '../uvic.kuali.co';
 

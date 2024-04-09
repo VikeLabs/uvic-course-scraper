@@ -7,7 +7,7 @@ import {
 } from './uvic.ca/BAN1P/urls';
 import { courseDetailUrl } from './uvic.kuali.co/urls';
 import { coursesUrl } from './uvic.kuali.co/urls';
-import { getCatalogIdForTerm, getCurrentTerm } from './common/utils';
+import { getCatalogIdForTerm, getCurrentTerm } from './common/term';
 import { KualiCourseItemParser } from './uvic.kuali.co/catalog';
 import { classScheduleListingExtractor } from './uvic.ca/BAN1P/courseListingEntries';
 import { detailedClassInfoExtractor } from './uvic.ca/BAN1P/detailedClassInformation';

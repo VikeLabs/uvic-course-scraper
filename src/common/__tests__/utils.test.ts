@@ -1,4 +1,4 @@
-import { getCatalogIdForTerm, getCurrentTerm } from '../utils';
+import { getCatalogIdForTerm, getCurrentTerm } from '../term';
 
 describe('getCurrentTerm', () => {
   it('returns the correct term for January', () => {
