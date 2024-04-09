@@ -1,9 +1,9 @@
 import fs from 'fs/promises';
 import yargs from 'yargs/yargs';
-import { detailedClassInformationUrl } from '../common/urls';
-import { coursesUtil } from './course-dump';
-import { scheduleUtil } from './schedule-dump';
-import { sectionsUtil } from './section-dump';
+import { detailedClassInformationUrl } from '../src/uvic.ca/BAN1P/urls';
+import { coursesUtil } from '../src/dev/course-dump';
+import { scheduleUtil } from '../src/dev/schedule-dump';
+import { sectionsUtil } from '../src/dev/section-dump';
 
 const argv = yargs(process.argv.slice(2)).options({
   term: { type: 'string', demandOption: true, description: 'term eg. 202009' },

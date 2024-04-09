@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { performance } from 'perf_hooks';
-import { classScheduleListingUrl } from '../common/urls';
+import { classScheduleListingUrl } from '../uvic.ca/BAN1P/urls';
 import { forEachHelper } from './async';
 import { KualiCourseItem } from '../uvic.kuali.co';
 

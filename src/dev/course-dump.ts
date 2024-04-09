@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { performance } from 'perf_hooks';
-import { courseDetailUrl, coursesUrl } from '../common/urls';
+import { courseDetailUrl } from '../uvic.kuali.co/urls';
+import { coursesUrl } from '../uvic.kuali.co/urls';
 import { getCatalogIdForTerm } from '../common/utils';
 import { forEachHelper } from './async';
 import { KualiCourseItem } from '../uvic.kuali.co';

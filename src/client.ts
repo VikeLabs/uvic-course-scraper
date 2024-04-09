@@ -2,11 +2,11 @@ import fetch from 'node-fetch';
 import { load } from 'cheerio';
 import {
   classScheduleListingUrl,
-  courseDetailUrl,
-  coursesUrl,
   detailedClassInformationUrl,
   subjectsUrl,
-} from './common/urls';
+} from './uvic.ca/BAN1P/urls';
+import { courseDetailUrl } from './uvic.kuali.co/urls';
+import { coursesUrl } from './uvic.kuali.co/urls';
 import { getCatalogIdForTerm, getCurrentTerm } from './common/utils';
 import { KualiCourseItemParser } from './uvic.kuali.co/catalog';
 import { classScheduleListingExtractor } from './uvic.ca/BAN1P/courseListingEntries';

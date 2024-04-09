@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import cheerio, { load } from 'cheerio';
 
-import { detailedClassInformationUrl } from '../common/urls';
+import { detailedClassInformationUrl } from '../uvic.ca/BAN1P/urls';
 import { classScheduleListingExtractor } from '../uvic.ca/BAN1P/courseListingEntries';
 
 import { getSchedulePathsByTerm } from './path-builders';
