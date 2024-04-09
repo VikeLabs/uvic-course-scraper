@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { performance } from 'perf_hooks';
 import { classScheduleListingUrl } from '../common/urls';
-import { forEachHelper } from './utils';
+import { forEachHelper } from './async';
 import { KualiCourseItem } from '../uvic.kuali.co';
 
 export const scheduleUtil = async (term: string): Promise<void> => {

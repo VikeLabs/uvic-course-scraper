@@ -6,7 +6,7 @@ import { detailedClassInformationUrl } from '../common/urls';
 import { classScheduleListingExtractor } from '../uvic.ca/BAN1P/courseListingEntries';
 
 import { getSchedulePathsByTerm } from './path-builders';
-import { forEachHelper } from './utils';
+import { forEachHelper } from './async';
 
 export const sectionsUtil = async (term: string) => {
   const CRNs: string[] = [];

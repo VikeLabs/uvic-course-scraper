@@ -1,9 +1,8 @@
 import fs from 'fs';
 import { performance } from 'perf_hooks';
-
 import { courseDetailUrl, coursesUrl } from '../common/urls';
 import { getCatalogIdForTerm } from '../common/utils';
-import { forEachHelper } from './utils';
+import { forEachHelper } from './async';
 import { KualiCourseItem } from '../uvic.kuali.co';
 
 const writeCoursesToFS = (term: string, kualiCourseItem: KualiCourseItem[]) => {
