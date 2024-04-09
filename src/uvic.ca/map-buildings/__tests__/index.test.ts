@@ -1,7 +1,7 @@
 import { load } from 'cheerio';
 import { mapsAndBuildingsExtractor } from '..';
-import { getMapsAndBuildings } from '../../../../dev/path-builders';
-import { BuildingInfo } from '../../../../types';
+import { getMapsAndBuildings } from '../../../dev/path-builders';
+import { BuildingInfo } from '../types';
 
 describe('UVic Maps & Buildings', () => {
   it('parses the buildings correctly', async () => {
