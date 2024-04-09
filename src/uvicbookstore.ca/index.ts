@@ -1,6 +1,7 @@
 import { CheerioAPI } from 'cheerio';
 
-import { CourseTextbooks, Textbook } from '../../types';
+import { CourseTextbooks } from "./types";
+import { Textbook } from "./types";
 
 const BASE_URL = 'https://www.uvicbookstore.ca';
 const subjectAndCodeRegex = /(.*) (\w\d{2})?/;

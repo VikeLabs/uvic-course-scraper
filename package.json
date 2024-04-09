@@ -1,9 +1,11 @@
 {
   "name": "@vikelabs/uvic-course-scraper",
-  "version": "1.0.0-alpha.9",
+  "version": "1.0.0",
   "description": "UVic Course Scrapper",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "author": "VikeLabs",
+  "license": "GPL-3.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vikelabs/uvic-course-scraper.git"
@@ -14,13 +16,10 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.{t,j}s{x,}\"",
-    "build": "tsc"
+    "build": "tsup src/index.ts  --format esm,cjs --dts"
   },
-  "author": "VikeLabs",
-  "license": "GPL-3.0",
   "dependencies": {
     "cheerio": "^1.0.0-rc.12",
-    "dayjs": "^1.11.10",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
@@ -35,6 +34,7 @@
     "prettier": "^3.2.5",
     "progress": "^2.0.3",
     "ts-node": "^10.9.2",
+    "tsup": "^8.0.2",
     "typescript": "^5.4.4",
     "typescript-eslint": "^7.5.0",
     "vitest": "^1.4.0",
