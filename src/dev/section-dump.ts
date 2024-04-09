@@ -3,7 +3,7 @@ import fs from 'fs';
 import cheerio, { load } from 'cheerio';
 
 import { detailedClassInformationUrl } from '../common/urls';
-import { classScheduleListingExtractor } from '../pages/courseListingEntries';
+import { classScheduleListingExtractor } from '../uvic.ca/BAN1P/courseListingEntries';
 
 import { getSchedulePathsByTerm } from './path-builders';
 import { forEachHelper } from './utils';

@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import { getDetailPathsByTerm, getScheduleFileByCourse, getSectionFileByCRN } from '../../../dev/path-builders';
+import { getDetailPathsByTerm, getScheduleFileByCourse, getSectionFileByCRN } from '../../../../dev/path-builders';
 import { detailedClassInfoExtractor } from '../index';
 import { load } from 'cheerio';
 

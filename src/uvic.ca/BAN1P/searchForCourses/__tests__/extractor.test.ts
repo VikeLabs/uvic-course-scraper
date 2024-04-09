@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import appRoot from 'app-root-path';
-import { getScheduleFileByCourse } from '../../../dev/path-builders';
+import { getScheduleFileByCourse } from '../../../../dev/path-builders';
 import { extractSubjects } from '../extractor';
 import { load } from 'cheerio';
 

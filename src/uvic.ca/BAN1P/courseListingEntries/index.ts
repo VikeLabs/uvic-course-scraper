@@ -1,6 +1,6 @@
 import { CheerioAPI } from 'cheerio';
-import { assertPageTitle } from '../../common/assertions';
-import { ClassScheduleListing, MeetingTimes, levelType, sectionType } from '../../types';
+import { assertPageTitle } from '../../../common/assertions';
+import { ClassScheduleListing, MeetingTimes, levelType, sectionType } from '../../../types';
 
 export const classScheduleListingExtractor = async ($: CheerioAPI): Promise<ClassScheduleListing[]> => {
   assertPageTitle('Class Schedule Listing', $);

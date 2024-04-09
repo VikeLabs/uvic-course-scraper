@@ -5,7 +5,7 @@ import {
   getSchedulePathsBySubject,
   getSchedulePathsByTerm,
   getSectionFileByCRN,
-} from '../../../dev/path-builders';
+} from '../../../../dev/path-builders';
 import { classScheduleListingExtractor } from '../index';
 
 describe('Class Schedule Listing Parser', () => {

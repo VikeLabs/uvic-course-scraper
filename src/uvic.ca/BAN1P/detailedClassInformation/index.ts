@@ -1,7 +1,7 @@
 import { CheerioAPI } from 'cheerio';
 
-import { assertPageTitle } from '../../common/assertions';
-import { DetailedClassInformation, levelType, classification, Requirements, requirementObject } from '../../types';
+import { assertPageTitle } from '../../../common/assertions';
+import { DetailedClassInformation, levelType, classification, Requirements, requirementObject } from '../../../types';
 
 const transformSeating = (seatInfo: number[]) => ({
   seats: {
