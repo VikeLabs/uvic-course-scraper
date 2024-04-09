@@ -1,4 +1,4 @@
 export * from './types';
-export * from "./kuali";
+export * from './uvic.kuali.co';
 
 export { UVicCourseScraper } from './client';

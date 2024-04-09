@@ -1,10 +1,8 @@
 import * as fs from 'fs';
 import { performance } from 'perf_hooks';
-
 import { classScheduleListingUrl } from '../common/urls';
-import { KualiCourseItem } from '../types';
-
 import { forEachHelper } from './utils';
+import { KualiCourseItem } from '../uvic.kuali.co';
 
 export const scheduleUtil = async (term: string): Promise<void> => {
   const writeCourseScheduleToFS = async (kualiCourseItem: KualiCourseItem) => {

@@ -1,9 +1,6 @@
-import fs from 'fs';
-
+import fs from 'fs/promises';
 import yargs from 'yargs/yargs';
-
 import { detailedClassInformationUrl } from '../common/urls';
-
 import { coursesUtil } from './course-dump';
 import { scheduleUtil } from './schedule-dump';
 import { sectionsUtil } from './section-dump';
@@ -25,7 +22,7 @@ const argv = yargs(process.argv.slice(2)).options({
 
 const handleClass = async (term: string, crn: string) => {
   const response = await fetch(detailedClassInformationUrl(term, crn));
-  await fs.promises.writeFile(`tmp/${term}_${crn}.html`, await response.text());
+  await fs.writeFile(`tmp/${term}_${crn}.html`, await response.text());
 };
 
 const main = async () => {

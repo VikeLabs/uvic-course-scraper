@@ -8,24 +8,15 @@ import {
   subjectsUrl,
 } from './common/urls';
 import { getCatalogIdForTerm, getCurrentTerm } from './common/utils';
-import { KualiCourseItemParser } from './kuali/catalog';
+import { KualiCourseItemParser } from './uvic.kuali.co/catalog';
 import { classScheduleListingExtractor } from './pages/courseListingEntries';
 import { detailedClassInfoExtractor } from './pages/detailedClassInformation';
 import { mapsAndBuildingsExtractor } from './pages/uvic.ca/mapsAndBuildings';
-import {
-  DetailedClassInformation,
-  ClassScheduleListing,
-  Response,
-  BuildingInfo,
-} from './types';
-import { KualiCourseItemParsed } from "./kuali/types";
-import { KualiCourseItem } from "./kuali/types";
-import { KualiCourseCatalog } from "./kuali/types";
-import { KualiSubject } from "./kuali/types";
-
+import { DetailedClassInformation, ClassScheduleListing, Response, BuildingInfo } from './types';
+import type { KualiCourseItemParsed, KualiCourseItem, KualiCourseCatalog, KualiSubject } from './uvic.kuali.co/types';
 
 export class UVicCourseScraper {
-  private static subjectCodeToPidMap: Map<string, string> = new Map();
+  public static subjectCodeToPidMap: Map<string, string> = new Map();
 
   /**
    * Gets all courses from the Kuali catalog. Automatically uses the current term if not defined.
@@ -38,7 +29,7 @@ export class UVicCourseScraper {
     return { data: courseCatalog, timestamp: new Date(), url };
   }
 
-  private static subjectCodeToPidMapper = (term: string, kuali: KualiCourseCatalog[]) => {
+  public static subjectCodeToPidMapper = (term: string, kuali: KualiCourseCatalog[]) => {
     kuali.forEach((v) => {
       UVicCourseScraper.subjectCodeToPidMap.set(`${term}${v.__catalogCourseId}`, v.pid);
     });

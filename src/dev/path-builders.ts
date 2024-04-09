@@ -3,8 +3,7 @@ import path from 'path';
 
 import appRoot from 'app-root-path';
 import { glob } from 'glob';
-
-import { KualiCourseItem } from '../types';
+import { KualiCourseItem } from '../uvic.kuali.co';
 
 const courses: { [term: string]: KualiCourseItem[] } = {};
 

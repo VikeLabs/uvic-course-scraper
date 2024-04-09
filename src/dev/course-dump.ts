@@ -3,9 +3,8 @@ import { performance } from 'perf_hooks';
 
 import { courseDetailUrl, coursesUrl } from '../common/urls';
 import { getCatalogIdForTerm } from '../common/utils';
-import { KualiCourseItem } from '../types';
-
 import { forEachHelper } from './utils';
+import { KualiCourseItem } from '../uvic.kuali.co';
 
 const writeCoursesToFS = (term: string, kualiCourseItem: KualiCourseItem[]) => {
   fs.writeFileSync(`static/courses/courses-${term}.json`, JSON.stringify(kualiCourseItem));

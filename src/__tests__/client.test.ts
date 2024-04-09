@@ -12,7 +12,7 @@ import {
   getScheduleFileByCourse,
   getSectionFileByCRN,
 } from '../dev/path-builders';
-import { KualiCourseItemParsed } from '../kuali/types';
+import { KualiCourseItemParsed } from '../uvic.kuali.co/types';
 
 const mockGetCurrentTerm = vi.mocked(getCurrentTerm);
 const mockGetCatalogIdForTerm = vi.mocked(getCatalogIdForTerm);

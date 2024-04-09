@@ -29,18 +29,19 @@ export interface KualiCourseItem extends KualiCourseCatalog {
   description: string;
   supplementalNotes?: string;
   formerlyNotesText?: string;
-  allGradingTypes?: { [key: string]: string; };
+  allGradingTypes?: { [key: string]: string };
   proForma: string;
   credits: {
     credits: {
       min: string;
       max: string;
     };
-    value: string |
-    {
-      min: string;
-      max: string;
-    };
+    value:
+      | string
+      | {
+          min: string;
+          max: string;
+        };
     chosen: string;
   };
   crossListedCourses?: {
@@ -55,7 +56,8 @@ export interface KualiCourseItem extends KualiCourseCatalog {
 }
 
 export type KualiCourseItemParsed = Omit<
-  KualiCourseItem, 'hoursCatalogText' | 'preAndCorequisites' | 'preOrCorequisites'
+  KualiCourseItem,
+  'hoursCatalogText' | 'preAndCorequisites' | 'preOrCorequisites'
 > & {
   hoursCatalog?: {
     lecture: string;
@@ -88,4 +90,3 @@ export type NestedPreCoRequisites = {
   // Array of reqs
   reqList?: Array<NestedPreCoRequisites | Course | string>;
 };
-
