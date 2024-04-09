@@ -1,6 +1,4 @@
 /* eslint-disable camelcase */
-import * as qs from 'querystring';
-
 const BASE_URL = 'https://www.uvic.ca/BAN1P';
 
 // URL builders for known pages on UVic BAN1P.
@@ -9,21 +7,21 @@ const BASE_URL = 'https://www.uvic.ca/BAN1P';
 // GET: Class Schedule Listing
 // eg. https://www.uvic.ca/BAN1P/bwckctlg.p_disp_listcrse?term_in=202009&subj_in=PAAS&crse_in=138&schd_in=
 export const classScheduleListingUrl = (term: string, subject: string, course: string): string => {
-  const params = qs.stringify({
+  const params = new URLSearchParams({
     term_in: term,
     subj_in: subject,
     crse_in: course,
     schd_in: '',
   });
-  return `${BASE_URL}/bwckctlg.p_disp_listcrse?${params}`;
+  return `${BASE_URL}/bwckctlg.p_disp_listcrse?${params.toString()}`;
 };
 // GET: Detailed Class Information
 export const detailedClassInformationUrl = (term: string, crn: string): string => {
-  const params = qs.stringify({
+  const params = new URLSearchParams({
     term_in: term,
     crn_in: crn,
   });
-  return `${BASE_URL}/bwckschd.p_disp_detail_sched?${params}`;
+  return `${BASE_URL}/bwckschd.p_disp_detail_sched?${params.toString()}`;
 };
 
 // GET: Course Listing Entries
@@ -31,7 +29,7 @@ export const detailedClassInformationUrl = (term: string, crn: string): string =
 // eg. https://www.uvic.ca/BAN1P/bwckctlg.p_display_courses?term_in=202009&one_subj=PAAS&sel_crse_strt=138&sel_crse_end=138&sel_subj=&sel_levl=&sel_schd=&sel_coll=&sel_divs=&sel_dept=&sel_attr=
 export const courseListingsEntriesUrl = (term: string, subject: string, course: string): string => {
   // TODO: figure out what the result of the fields mean.
-  const params = qs.stringify({
+  const params = new URLSearchParams({
     term_in: term,
     one_subj: subject,
     sel_crse_strt: course,
@@ -44,19 +42,19 @@ export const courseListingsEntriesUrl = (term: string, subject: string, course: 
     sel_dept: '',
     sel_attr: '',
   });
-  return `${BASE_URL}/bwckctlg.p_display_courses?${params}`;
+  return `${BASE_URL}/bwckctlg.p_display_courses?${params.toString()}`;
 };
 
 // POST: Course Listing Term
 // eg. https://www.uvic.ca/BAN1P/bwckctlg.p_disp_cat_term_date
 // qs: call_proc_in=bwckctlg.p_disp_dyn_ctlg&cat_term_in=202001
 export const courseListingTermUrl = (term: string): string => {
-  const params = qs.stringify({
-    //   TODO: not sure what this does
+  const params = new URLSearchParams({
+    // TODO: not sure what this does
     call_proc_in: 'bwckctlg.p_disp_dyn_ctlg',
     cat_term_in: term,
   });
-  return `${BASE_URL}/bwckctlg.p_disp_cat_term_date?${params}`;
+  return `${BASE_URL}/bwckctlg.p_disp_cat_term_date?${params.toString()}`;
 };
 
 // construct subjects endpoint
