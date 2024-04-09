@@ -1,10 +1,3 @@
-
-export interface Response<T> {
-  data: T;
-  timestamp: Date;
-  url: string;
-}
-
 export type levelType = 'law' | 'undergraduate' | 'graduate';
 export type sectionType = 'lecture' | 'lab' | 'tutorial' | 'gradable lab' | 'lecture topic';
 export type classification = 'YEAR_1' | 'YEAR_2' | 'YEAR_3' | 'YEAR_4' | 'YEAR_5' | 'unclassified';
@@ -77,5 +70,3 @@ export interface DetailedClassInformationRes {
   timestamp: string;
   url: string;
 }
-
-export type BuildingInfo = { title: string; long?: string; short?: string; url?: string };

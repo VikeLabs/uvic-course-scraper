@@ -11,9 +11,16 @@ import { getCatalogIdForTerm, getCurrentTerm } from './common/utils';
 import { KualiCourseItemParser } from './uvic.kuali.co/catalog';
 import { classScheduleListingExtractor } from './uvic.ca/BAN1P/courseListingEntries';
 import { detailedClassInfoExtractor } from './uvic.ca/BAN1P/detailedClassInformation';
-import { DetailedClassInformation, ClassScheduleListing, Response, BuildingInfo } from './types';
+import { DetailedClassInformation, ClassScheduleListing } from './uvic.ca/BAN1P/types';
+import { BuildingInfo } from './uvic.ca/map-buildings/types';
 import type { KualiCourseItemParsed, KualiCourseItem, KualiCourseCatalog, KualiSubject } from './uvic.kuali.co/types';
-import { mapsAndBuildingsExtractor } from './uvic.ca/mapsAndBuildings';
+import { mapsAndBuildingsExtractor } from './uvic.ca/map-buildings';
+
+export interface Response<T> {
+  data: T;
+  timestamp: Date;
+  url: string;
+}
 
 export class UVicCourseScraper {
   public static subjectCodeToPidMap: Map<string, string> = new Map();
