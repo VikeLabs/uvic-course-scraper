@@ -5,3 +5,4 @@ export * from './uvic.kuali.co';
 export * from './uvicbookstore.ca/types';
 
 export { UVicCourseScraper } from './client';
+export { UVicCourseScraper as default } from './client';
