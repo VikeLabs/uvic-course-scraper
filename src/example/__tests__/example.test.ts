@@ -6,7 +6,7 @@ import each from 'jest-each';
 import { assertPageTitle } from '../../common/assertions';
 import { getScheduleFileByCourse, getSchedulePathsBySubject } from '../../dev/path-builders';
 
-test('example test', () => {
+describe('example test', () => {
   // this test is pretty useless but shows the basic structure of a Jest test.
   describe('an assertion', () => {
     expect('hello').toBe('hello');

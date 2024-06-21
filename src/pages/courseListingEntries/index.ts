@@ -1,4 +1,4 @@
-import cheerio from 'cheerio';
+import { CheerioAPI } from 'cheerio';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 
@@ -7,7 +7,7 @@ import { ClassScheduleListing, MeetingTimes, levelType, sectionType } from '../.
 
 dayjs.extend(customParseFormat);
 
-export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<ClassScheduleListing[]> => {
+export const classScheduleListingExtractor = async ($: CheerioAPI): Promise<ClassScheduleListing[]> => {
   assertPageTitle('Class Schedule Listing', $);
 
   const regex = /(.+) - (\d+) - ([\w|-]{0,4} \w?\d+\w?) - ([A|B|T]\d+)/;
@@ -23,6 +23,10 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Cl
       classSchedule.crn = m[2];
       classSchedule.sectionCode = m[4];
     }
+
+    const titleRegex = /(.*) - \d{5}/;
+    const titleInfo = titleRegex.exec(title.text())![1].trim();
+    classSchedule.title = titleInfo;
 
     // Section info is divided into 2 table rows, here we get the second one
     const sectionEntry = sectionEntries[sectionIdx + 1];
@@ -144,7 +148,8 @@ export const classScheduleListingExtractor = async ($: cheerio.Root): Promise<Cl
         where: scheduleEntries[3],
         dateRange: scheduleEntries[4],
         scheduleType: scheduleEntries[5],
-        instructors: scheduleEntries[6].split(/\s*,\s*/),
+        // normalize the whitespace
+        instructors: scheduleEntries[6].split(/\s*,\s*/).map((instructor) => instructor.replace(/\s+/g, ' ').trim()),
       });
     }
     classSchedule.meetingTimes = meetingTimes;

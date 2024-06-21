@@ -1,4 +1,4 @@
-import * as cheerio from 'cheerio';
+import { CheerioAPI } from 'cheerio';
 
 /**
  * This is the scraper for the old API. The API changed 2020-05
@@ -17,7 +17,7 @@ interface Course {
  *
  * @returns {string[]} an array of department codes
  */
-export const parseDepartments = async ($: cheerio.Root) => {
+export const parseDepartments = async ($: CheerioAPI) => {
   try {
     // const response = await got(BASE_URL);
     const departments: string[] = [];
@@ -41,7 +41,7 @@ export const parseDepartments = async ($: cheerio.Root) => {
  *
  * @returns {string[]} an array of course codes
  */
-export const parseCourseCodes = async ($: cheerio.Root, department: string) => {
+export const parseCourseCodes = async ($: CheerioAPI, department: string) => {
   try {
     // const response = await got(`${BASE_URL}${department}`);
 
@@ -65,7 +65,7 @@ export const parseCourseCodes = async ($: cheerio.Root, department: string) => {
  *
  * @returns {number[]} - an array of crns
  */
-export const parseSections = async ($: cheerio.Root, params: string) => {
+export const parseSections = async ($: CheerioAPI, params: string) => {
   try {
     // response = await request(url, { family: 4 });
     // console.log(`${SECTIONS_URL}${params}`);
@@ -100,7 +100,7 @@ export const parseSections = async ($: cheerio.Root, params: string) => {
  *
  * @returns {Course} - an array of all courses currently offered
  */
-export const parseOffered = async ($: cheerio.Root, subject: string, code: string) => {
+export const parseOffered = async ($: CheerioAPI, subject: string, code: string) => {
   try {
     // const response = await got(`${BASE_URL}${subject}/${code}.html`);
     const title = $('h2').text();
